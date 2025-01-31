@@ -1,0 +1,39 @@
+﻿@model BibliotekaPPP.Models.BusinessObjects.GradjaBO
+
+@{
+	ViewData["Title"] = Model.Naslov;
+
+	// Formiranje putanje ka slici naslovne strane gradje
+	string putanjaNaslovne = ViewData["PutanjaNaslovnihStrana"]?.ToString() + "/" + Model.NaslovnaStranaPath;
+
+	// Formiranje liste imena i prezimena autora koji ce se prikazati
+	List<string> autori = new List<string>();
+	foreach (AutorBO autorBO in Model.Autori)
+	{
+		autori.Add(autorBO.ImePrezime);
+	}
+
+	// Formiranje stringa izdavanja
+	string izdavanje = $"{Model.Izdavanje?.NaseljeIzdavanja}, {Model.Izdavanje?.NazivIzdavaca}, {Model.Izdavanje?.GodinaIzdavanja}";
+}
+
+@section Stylesheets {
+	<link href="~/css/biblioteka.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+<div class="row">
+	<div class="col-3 naslovna-strana-gradje">
+		<img src="@putanjaNaslovne" />
+	</div>
+	<div class="col-9 d-flex flex-column justify-content-between">
+		<div>
+			<h2>@Model.Naslov</h2>
+			<h5>@string.Join(", ", autori)</h5>
+			<hr />
+			<p class="gradja-opis">@Model.Opis</p>
+		</div>
+		<div>
+			<p class="gradja-izdavanje">@izdavanje</p>
+		</div>
+	</div>
+</div>

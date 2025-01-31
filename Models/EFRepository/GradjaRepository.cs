@@ -121,5 +121,19 @@ namespace BibliotekaPPP.Models.EFRepository
 
             return gradjaBOList;
         }
+
+        // [1.1.1.2] Prikaz podataka o specifičnoj građi
+        public GradjaBO? TraziGradjuPoID(int gradjaID)
+        {
+            Gradja? trazenaGradja = bibliotekaEntities.Gradjas
+                                    .Include(g => g.AutorFks)
+                                    .FirstOrDefault(g => g.GradjaId == gradjaID);
+
+            if(trazenaGradja == null)
+                return null;
+
+            GradjaBO pronadjenaGradja = ConvertGradjaToGradjaBO(trazenaGradja);
+            return pronadjenaGradja;
+        }
     }
 }

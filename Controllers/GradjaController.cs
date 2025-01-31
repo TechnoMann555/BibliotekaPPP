@@ -36,5 +36,17 @@ namespace BibliotekaPPP.Controllers
             ViewBag.Gradja = pretrazenaGradja;
             return View("Pretraga", gradja);
         }
+
+        // [1.1.1.2] Prikaz podataka o specifičnoj građi
+        [HttpGet]
+        public IActionResult Prikaz(int gradjaID)
+        {
+            GradjaBO? trazenaGradja = gradjaRepository.TraziGradjuPoID(gradjaID);
+
+            if(trazenaGradja == null)
+                return RedirectToAction("Pretraga");
+
+            return View(trazenaGradja);
+        }
     }
 }
