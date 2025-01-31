@@ -1,0 +1,15 @@
+﻿.naslovna-strana-gradje > img {
+    width: 100%;
+}
+
+.gradja-opis {
+    text-align: justify;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-height: 100px;
+}
+
+.gradja-izdavanje {
+    color: #808080;
+}
