@@ -21,6 +21,8 @@ namespace BibliotekaPPP.Models.BusinessObjects
 
         public List<AutorBO> Autori { get; set; }
 
+        public bool ImaSlobodnihPrimeraka { get; set; }
+
         public GradjaBO()
         {
             Autori = new List<AutorBO>();

@@ -9,6 +9,7 @@ namespace BibliotekaPPP.Models.Interfaces
             string? naslov = null,
             string? imePrezimeAutora = null,
             string? naseljeIzdavanja = null,
+            string? nazivIzdavaca = null,
             decimal? godinaIzdavanja = null,
             string? udk = null,
             string? ogranak = null,

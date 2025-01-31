@@ -7,16 +7,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Antigona.png" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Božanstvena komedija.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Don Kihot.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Evgenije Onjegin.png" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Faust.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Hamlet.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Lovac u žitu.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Proces.png" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Rat i mir , Tom 1.png" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Rat i mir , Tom 2.png" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Ujka Vanja.png" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Zapisi iz podzemlja.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Zli dusi , Knj. 1.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Zli dusi , Knj. 2.jpg" />
+    <None Include="wwwroot\Slike\NaslovneStraneGradje\Životinjska farma.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
 </Project>
