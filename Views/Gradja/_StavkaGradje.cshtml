@@ -1,7 +1,7 @@
 ﻿@model BibliotekaPPP.Models.BusinessObjects.GradjaBO
 @{
 	// Formiranje putanje ka slici naslovne strane gradje
-	string putanjaNaslovne = ViewData["PutanjaNaslovnihStrana"]?.ToString() + Model.NaslovnaStranaPath;
+	string putanjaNaslovne = ViewData["PutanjaNaslovnihStrana"]?.ToString() + "/" + Model.NaslovnaStranaPath;
 
 	// Formiranje liste imena i prezimena autora koji ce se prikazati
 	List<string> autori = new List<string>();
@@ -24,11 +24,14 @@
 			<div class="col-2 naslovna-strana-gradje">
 				<img src="@putanjaNaslovne" />
 			</div>
-			<div class="col-10 detalji-gradje d-flex flex-column justify-content-between">
+			<div class="col-10 d-flex flex-column justify-content-between">
 				<div id="glavni-detalji">
-					<h3>@Model.Naslov</h3>
+					<h3>
+						<a asp-controller="Gradja" asp-action="Prikaz" asp-route-gradjaID="@Model.GradjaId" class="text-dark">
+							@Model.Naslov
+						</a>
+					</h3>
 					<h5>@string.Join(", ", autori)</h5>
-					<p class="gradja-opis">@Model.Opis</p>
 				</div>
 				<div id="sporedni-detalji">
 					<p class="gradja-izdavanje">@izdavanje</p>

@@ -15,5 +15,8 @@ namespace BibliotekaPPP.Models.Interfaces
             string? ogranak = null,
             bool statusDostupnosti = false
         );
+
+        // [1.1.1.2] Prikaz podataka o specifičnoj građi
+        public GradjaBO? TraziGradjuPoID(int gradjaID);
     }
 }

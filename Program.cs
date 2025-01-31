@@ -22,6 +22,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Gradja}/{action=Pretraga}/{id?}");
+    pattern: "{controller=Gradja}/{action=Pretraga}/{gradjaID?}");
 
 app.Run();
