@@ -19,13 +19,9 @@ public partial class BibliotekaContext : DbContext
 
     public virtual DbSet<Bibliotekar> Bibliotekars { get; set; }
 
-    public virtual DbSet<BibliotekarskiNalog> BibliotekarskiNalogs { get; set; }
-
     public virtual DbSet<Clan> Clans { get; set; }
 
     public virtual DbSet<Clanarina> Clanarinas { get; set; }
-
-    public virtual DbSet<ClanskiKorisnickiNalog> ClanskiKorisnickiNalogs { get; set; }
 
     public virtual DbSet<Gradja> Gradjas { get; set; }
 
@@ -43,10 +39,6 @@ public partial class BibliotekaContext : DbContext
 
     public virtual DbSet<PrimerakGradje> PrimerakGradjes { get; set; }
 
-    public virtual DbSet<StatusPrimerka> StatusPrimerkas { get; set; }
-
-    public virtual DbSet<UserRole> UserRoles { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=DESKTOP-RICUM2T;Database=Biblioteka;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;");
@@ -55,11 +47,11 @@ public partial class BibliotekaContext : DbContext
     {
         modelBuilder.Entity<Autor>(entity =>
         {
-            entity.HasKey(e => e.AutorId).HasName("PK__Autor__F58AE90909926CBB");
+            entity.HasKey(e => e.AutorId).HasName("PK__Autor__F58AE909F4B51697");
 
             entity.ToTable("Autor");
 
-            entity.HasIndex(e => e.ImePrezime, "UQ__Autor__1613B02682FE75B1").IsUnique();
+            entity.HasIndex(e => e.ImePrezime, "UQ__Autor__1613B026F60AED30").IsUnique();
 
             entity.Property(e => e.AutorId)
                 .ValueGeneratedNever()
@@ -69,15 +61,20 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Bibliotekar>(entity =>
         {
-            entity.HasKey(e => e.BibliotekarId).HasName("PK__Bibliote__ABB78DE632A5060C");
+            entity.HasKey(e => e.BibliotekarId).HasName("PK__Bibliote__ABB78DE6891D7B96");
 
             entity.ToTable("Bibliotekar");
+
+            entity.HasIndex(e => e.AdminNalogFk, "uq_AdminNalog").IsUnique();
+
+            entity.HasIndex(e => e.Email, "uq_Email").IsUnique();
 
             entity.HasIndex(e => e.Jbb, "uq_JBB").IsUnique();
 
             entity.Property(e => e.BibliotekarId)
                 .ValueGeneratedNever()
                 .HasColumnName("BibliotekarID");
+            entity.Property(e => e.AdminNalogFk).HasColumnName("AdminNalogFK");
             entity.Property(e => e.Email).HasMaxLength(40);
             entity.Property(e => e.ImePrezime).HasMaxLength(80);
             entity.Property(e => e.Jbb)
@@ -86,39 +83,20 @@ public partial class BibliotekaContext : DbContext
                 .HasColumnName("JBB");
             entity.Property(e => e.OgranakFk).HasColumnName("OgranakFK");
 
+            entity.HasOne(d => d.AdminNalogFkNavigation).WithOne(p => p.Bibliotekar)
+                .HasForeignKey<Bibliotekar>(d => d.AdminNalogFk)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_bibliotekar_nalog");
+
             entity.HasOne(d => d.OgranakFkNavigation).WithMany(p => p.Bibliotekars)
                 .HasForeignKey(d => d.OgranakFk)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_bibliotekar_ogranak");
         });
 
-        modelBuilder.Entity<BibliotekarskiNalog>(entity =>
-        {
-            entity.HasKey(e => new { e.NalogFk, e.BibliotekarFk }).HasName("PK__Bibliote__623812E20A571797");
-
-            entity.ToTable("BibliotekarskiNalog");
-
-            entity.HasIndex(e => e.BibliotekarFk, "uq_bibliotekar").IsUnique();
-
-            entity.HasIndex(e => e.NalogFk, "uq_bibliotekarskinalog").IsUnique();
-
-            entity.Property(e => e.NalogFk).HasColumnName("NalogFK");
-            entity.Property(e => e.BibliotekarFk).HasColumnName("BibliotekarFK");
-
-            entity.HasOne(d => d.BibliotekarFkNavigation).WithOne(p => p.BibliotekarskiNalog)
-                .HasForeignKey<BibliotekarskiNalog>(d => d.BibliotekarFk)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_bibliotekarskinalog_bibliotekar");
-
-            entity.HasOne(d => d.NalogFkNavigation).WithOne(p => p.BibliotekarskiNalog)
-                .HasForeignKey<BibliotekarskiNalog>(d => d.NalogFk)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_bibliotekarskinalog_nalog");
-        });
-
         modelBuilder.Entity<Clan>(entity =>
         {
-            entity.HasKey(e => e.ClanId).HasName("PK__Clan__EC03AA445A600FE4");
+            entity.HasKey(e => e.ClanId).HasName("PK__Clan__EC03AA447943FFCC");
 
             entity.ToTable("Clan");
 
@@ -129,6 +107,8 @@ public partial class BibliotekaContext : DbContext
             entity.HasIndex(e => e.KontaktMejl, "uq_KontaktMejl_clan").IsUnique();
 
             entity.HasIndex(e => e.KontaktTelefon, "uq_KontaktTelefon_clan").IsUnique();
+
+            entity.HasIndex(e => e.KorisnickiNalogFk, "uq_KorisnickiNalog_clan").IsUnique();
 
             entity.Property(e => e.ClanId).HasColumnName("ClanID");
             entity.Property(e => e.AdresaStanovanja).HasMaxLength(80);
@@ -147,16 +127,23 @@ public partial class BibliotekaContext : DbContext
                 .HasMaxLength(13)
                 .IsUnicode(false)
                 .IsFixedLength();
+            entity.Property(e => e.KorisnickiNalogFk)
+                .HasDefaultValueSql("(NULL)")
+                .HasColumnName("KorisnickiNalogFK");
             entity.Property(e => e.Zanimanje).HasMaxLength(50);
+
+            entity.HasOne(d => d.KorisnickiNalogFkNavigation).WithOne(p => p.Clan)
+                .HasForeignKey<Clan>(d => d.KorisnickiNalogFk)
+                .HasConstraintName("fk_clan_nalog");
         });
 
         modelBuilder.Entity<Clanarina>(entity =>
         {
-            entity.HasKey(e => new { e.ClanFk, e.Rbr }).HasName("PK__Clanarin__C0AC8B8FB3969814");
+            entity.HasKey(e => new { e.ClanFk, e.Rbr }).HasName("PK__Clanarin__C0AC8B8FF9948170");
 
             entity.ToTable("Clanarina");
 
-            entity.HasIndex(e => e.DatumPocetka, "uq_DatumPocetka_clanarina").IsUnique();
+            entity.HasIndex(e => new { e.ClanFk, e.DatumPocetka }, "uq_DatumPocetka_clanarina").IsUnique();
 
             entity.Property(e => e.ClanFk).HasColumnName("ClanFK");
             entity.Property(e => e.Rbr).ValueGeneratedOnAdd();
@@ -168,33 +155,9 @@ public partial class BibliotekaContext : DbContext
                 .HasConstraintName("fk_clanarina_clan");
         });
 
-        modelBuilder.Entity<ClanskiKorisnickiNalog>(entity =>
-        {
-            entity.HasKey(e => new { e.NalogFk, e.ClanFk }).HasName("PK__ClanskiK__064353997E586160");
-
-            entity.ToTable("ClanskiKorisnickiNalog");
-
-            entity.HasIndex(e => e.ClanFk, "uq_clan").IsUnique();
-
-            entity.HasIndex(e => e.NalogFk, "uq_clanskikorisnickinalog").IsUnique();
-
-            entity.Property(e => e.NalogFk).HasColumnName("NalogFK");
-            entity.Property(e => e.ClanFk).HasColumnName("ClanFK");
-
-            entity.HasOne(d => d.ClanFkNavigation).WithOne(p => p.ClanskiKorisnickiNalog)
-                .HasForeignKey<ClanskiKorisnickiNalog>(d => d.ClanFk)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_clanskikorisnickinalog_clan");
-
-            entity.HasOne(d => d.NalogFkNavigation).WithOne(p => p.ClanskiKorisnickiNalog)
-                .HasForeignKey<ClanskiKorisnickiNalog>(d => d.NalogFk)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_clanskikorisnickinalog_nalog");
-        });
-
         modelBuilder.Entity<Gradja>(entity =>
         {
-            entity.HasKey(e => e.GradjaId).HasName("PK__Gradja__8EF0C7DB67FC8564");
+            entity.HasKey(e => e.GradjaId).HasName("PK__Gradja__8EF0C7DB30E3F2F9");
 
             entity.ToTable("Gradja");
 
@@ -234,7 +197,7 @@ public partial class BibliotekaContext : DbContext
                         .HasConstraintName("fk_gradjaautor_gradja"),
                     j =>
                     {
-                        j.HasKey("GradjaFk", "AutorFk").HasName("PK__GradjaAu__D1A8738B244D2948");
+                        j.HasKey("GradjaFk", "AutorFk").HasName("PK__GradjaAu__D1A8738B7EF3B26D");
                         j.ToTable("GradjaAutor");
                         j.IndexerProperty<int>("GradjaFk").HasColumnName("GradjaFK");
                         j.IndexerProperty<int>("AutorFk").HasColumnName("AutorFK");
@@ -243,7 +206,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<IzdavanjeGradje>(entity =>
         {
-            entity.HasKey(e => e.IzdavanjeId).HasName("PK__Izdavanj__689FB24479D72F90");
+            entity.HasKey(e => e.IzdavanjeId).HasName("PK__Izdavanj__689FB244FAF22424");
 
             entity.ToTable("IzdavanjeGradje");
 
@@ -259,25 +222,18 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Nalog>(entity =>
         {
-            entity.HasKey(e => e.NalogId).HasName("PK__Nalog__D88333179D8C4497");
+            entity.HasKey(e => e.NalogId).HasName("PK__Nalog__D8833317A0FCDC92");
 
             entity.ToTable("Nalog");
 
-            entity.Property(e => e.NalogId)
-                .ValueGeneratedNever()
-                .HasColumnName("NalogID");
-            entity.Property(e => e.Password).HasMaxLength(30);
-            entity.Property(e => e.UserRoleFk).HasColumnName("UserRoleFK");
-
-            entity.HasOne(d => d.UserRoleFkNavigation).WithMany(p => p.Nalogs)
-                .HasForeignKey(d => d.UserRoleFk)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_nalog_userrole");
+            entity.Property(e => e.NalogId).HasColumnName("NalogID");
+            entity.Property(e => e.Lozinka).HasMaxLength(255);
+            entity.Property(e => e.Uloga).HasMaxLength(30);
         });
 
         modelBuilder.Entity<Naselje>(entity =>
         {
-            entity.HasKey(e => e.NaseljeId).HasName("PK__Naselje__1B116FA471AD9911");
+            entity.HasKey(e => e.NaseljeId).HasName("PK__Naselje__1B116FA426A4DEA4");
 
             entity.ToTable("Naselje");
 
@@ -291,28 +247,27 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<OcenaProcitaneGradje>(entity =>
         {
-            entity.HasKey(e => new { e.GradjaFk, e.ClanskiKorisnickiNalogNalogFk, e.ClanskiKorisnickiNalogClanFk }).HasName("PK__OcenaPro__49E36130352D45A3");
+            entity.HasKey(e => new { e.GradjaFk, e.ClanskiKorisnickiNalogFk }).HasName("PK__OcenaPro__B7C7FD00A7F576CD");
 
             entity.ToTable("OcenaProcitaneGradje");
 
             entity.Property(e => e.GradjaFk).HasColumnName("GradjaFK");
-            entity.Property(e => e.ClanskiKorisnickiNalogNalogFk).HasColumnName("ClanskiKorisnickiNalog_NalogFK");
-            entity.Property(e => e.ClanskiKorisnickiNalogClanFk).HasColumnName("ClanskiKorisnickiNalog_ClanFK");
+            entity.Property(e => e.ClanskiKorisnickiNalogFk).HasColumnName("ClanskiKorisnickiNalogFK");
+
+            entity.HasOne(d => d.ClanskiKorisnickiNalogFkNavigation).WithMany(p => p.OcenaProcitaneGradjes)
+                .HasForeignKey(d => d.ClanskiKorisnickiNalogFk)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_ocenaprocitanegradje_clanskikorisnickinalog");
 
             entity.HasOne(d => d.GradjaFkNavigation).WithMany(p => p.OcenaProcitaneGradjes)
                 .HasForeignKey(d => d.GradjaFk)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_ocenaprocitanegradje_gradja");
-
-            entity.HasOne(d => d.ClanskiKorisnickiNalog).WithMany(p => p.OcenaProcitaneGradjes)
-                .HasForeignKey(d => new { d.ClanskiKorisnickiNalogNalogFk, d.ClanskiKorisnickiNalogClanFk })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_ocenaprocitanegradje_clanskikorisnickinalog");
         });
 
         modelBuilder.Entity<Ogranak>(entity =>
         {
-            entity.HasKey(e => e.OgranakId).HasName("PK__Ogranak__C1854282E36BFB47");
+            entity.HasKey(e => e.OgranakId).HasName("PK__Ogranak__C1854282EB72CF01");
 
             entity.ToTable("Ogranak");
 
@@ -334,7 +289,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Pozajmica>(entity =>
         {
-            entity.HasKey(e => new { e.ClanarinaClanFk, e.ClanarinaFk, e.Rbr }).HasName("PK__Pozajmic__DFC4A8CA413C2A81");
+            entity.HasKey(e => new { e.ClanarinaClanFk, e.ClanarinaFk, e.Rbr }).HasName("PK__Pozajmic__DFC4A8CAAA837ADE");
 
             entity.ToTable("Pozajmica");
 
@@ -358,7 +313,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<PrimerakGradje>(entity =>
         {
-            entity.HasKey(e => new { e.GradjaFk, e.OgranakFk, e.RbrUokviruOgranka }).HasName("PK__Primerak__CD993853BAAADD57");
+            entity.HasKey(e => new { e.GradjaFk, e.OgranakFk, e.RbrUokviruOgranka }).HasName("PK__Primerak__CD9938539E03F92E");
 
             entity.ToTable("PrimerakGradje");
 
@@ -372,7 +327,7 @@ public partial class BibliotekaContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength();
             entity.Property(e => e.Signatura).HasMaxLength(80);
-            entity.Property(e => e.StatusFk).HasColumnName("StatusFK");
+            entity.Property(e => e.Status).HasMaxLength(20);
 
             entity.HasOne(d => d.GradjaFkNavigation).WithMany(p => p.PrimerakGradjes)
                 .HasForeignKey(d => d.GradjaFk)
@@ -383,39 +338,6 @@ public partial class BibliotekaContext : DbContext
                 .HasForeignKey(d => d.OgranakFk)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_primerakgradje_ogranak");
-
-            entity.HasOne(d => d.StatusFkNavigation).WithMany(p => p.PrimerakGradjes)
-                .HasForeignKey(d => d.StatusFk)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_primerakgradje_statusprimerka");
-        });
-
-        modelBuilder.Entity<StatusPrimerka>(entity =>
-        {
-            entity.HasKey(e => e.StatusId).HasName("PK__StatusPr__C8EE2043B82228FB");
-
-            entity.ToTable("StatusPrimerka");
-
-            entity.HasIndex(e => e.Naziv, "uq_naziv_statusa").IsUnique();
-
-            entity.Property(e => e.StatusId)
-                .ValueGeneratedNever()
-                .HasColumnName("StatusID");
-            entity.Property(e => e.Naziv).HasMaxLength(20);
-        });
-
-        modelBuilder.Entity<UserRole>(entity =>
-        {
-            entity.HasKey(e => e.UserRoleId).HasName("PK__UserRole__3D978A55DD7B2988");
-
-            entity.ToTable("UserRole");
-
-            entity.HasIndex(e => e.Naziv, "uq_naziv_userrole").IsUnique();
-
-            entity.Property(e => e.UserRoleId)
-                .ValueGeneratedNever()
-                .HasColumnName("UserRoleID");
-            entity.Property(e => e.Naziv).HasMaxLength(20);
         });
 
         OnModelCreatingPartial(modelBuilder);

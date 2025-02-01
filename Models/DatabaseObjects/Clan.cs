@@ -27,7 +27,9 @@ public partial class Clan
 
     public string KontaktMejl { get; set; } = null!;
 
+    public int? KorisnickiNalogFk { get; set; }
+
     public virtual ICollection<Clanarina> Clanarinas { get; set; } = new List<Clanarina>();
 
-    public virtual ClanskiKorisnickiNalog? ClanskiKorisnickiNalog { get; set; }
+    public virtual Nalog? KorisnickiNalogFkNavigation { get; set; }
 }

@@ -7,13 +7,13 @@ public partial class Nalog
 {
     public int NalogId { get; set; }
 
-    public string Password { get; set; } = null!;
+    public string Lozinka { get; set; } = null!;
 
-    public int UserRoleFk { get; set; }
+    public string Uloga { get; set; } = null!;
 
-    public virtual BibliotekarskiNalog? BibliotekarskiNalog { get; set; }
+    public virtual Bibliotekar? Bibliotekar { get; set; }
 
-    public virtual ClanskiKorisnickiNalog? ClanskiKorisnickiNalog { get; set; }
+    public virtual Clan? Clan { get; set; }
 
-    public virtual UserRole UserRoleFkNavigation { get; set; } = null!;
+    public virtual ICollection<OcenaProcitaneGradje> OcenaProcitaneGradjes { get; set; } = new List<OcenaProcitaneGradje>();
 }

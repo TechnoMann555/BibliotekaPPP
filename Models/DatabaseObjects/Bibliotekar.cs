@@ -15,7 +15,9 @@ public partial class Bibliotekar
 
     public int OgranakFk { get; set; }
 
-    public virtual BibliotekarskiNalog? BibliotekarskiNalog { get; set; }
+    public int AdminNalogFk { get; set; }
+
+    public virtual Nalog AdminNalogFkNavigation { get; set; } = null!;
 
     public virtual Ogranak OgranakFkNavigation { get; set; } = null!;
 }
