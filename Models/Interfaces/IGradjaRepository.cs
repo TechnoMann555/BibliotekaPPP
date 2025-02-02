@@ -5,7 +5,7 @@ namespace BibliotekaPPP.Models.Interfaces
     public interface IGradjaRepository
     {
         // [1.1.1.1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
-        public IEnumerable<GradjaBO> TraziGradju(
+        public Task<IEnumerable<GradjaBO>> TraziGradju(
             string? naslov = null,
             string? imePrezimeAutora = null,
             string? naseljeIzdavanja = null,
@@ -17,6 +17,6 @@ namespace BibliotekaPPP.Models.Interfaces
         );
 
         // [1.1.1.2] Prikaz podataka o specifičnoj građi
-        public GradjaBO? TraziGradjuPoID(int gradjaID);
+        public Task<GradjaBO?> TraziGradjuPoID(int gradjaID);
     }
 }

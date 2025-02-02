@@ -11,7 +11,7 @@ namespace BibliotekaPPP.Models.EFRepository
 
         #region Metode za prevodjenje tipova
 
-        private GradjaBO ConvertGradjaToGradjaBO(Gradja gradja)
+        private async Task<GradjaBO> ConvertGradjaToGradjaBO(Gradja gradja)
         {
             // Ako postoji bar jedan slobodan primerak gradje, azuriraj status dostupnosti da je true
             bool statusDostupnosti = false;
@@ -29,8 +29,8 @@ namespace BibliotekaPPP.Models.EFRepository
                 ImaSlobodnihPrimeraka = statusDostupnosti
             };
 
-            IzdavanjeGradje? izdavanje = bibliotekaEntities.IzdavanjeGradjes
-                                         .FirstOrDefault(iz => iz.IzdavanjeId == gradja.IzdavanjeFk);
+            IzdavanjeGradje? izdavanje = await bibliotekaEntities.IzdavanjeGradjes
+                                         .FirstOrDefaultAsync(iz => iz.IzdavanjeId == gradja.IzdavanjeFk);
 
             if(izdavanje == null)
                 gradjaBO.Izdavanje = null;
@@ -49,7 +49,7 @@ namespace BibliotekaPPP.Models.EFRepository
         #endregion
 
         // [1.1.1.1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
-        public IEnumerable<GradjaBO> TraziGradju(
+        public async Task<IEnumerable<GradjaBO>> TraziGradju(
             string? naslov = null,
             string? imePrezimeAutora = null,
             string? naseljeIzdavanja = null,
@@ -113,13 +113,13 @@ namespace BibliotekaPPP.Models.EFRepository
             gradjaQuery = gradjaQuery.Include(g => g.PrimerakGradjes);
 
             // Izvrsavanje upita
-            List<Gradja> gradjaList = gradjaQuery.ToList();
+            List<Gradja> gradjaList = await gradjaQuery.ToListAsync();
             
             // Kreiranje i punjenje GradjaBO liste
             List<GradjaBO> gradjaBOList = new List<GradjaBO>();
             foreach(Gradja gradja in gradjaList)
             {
-                GradjaBO gradjaBO = ConvertGradjaToGradjaBO(gradja);
+                GradjaBO gradjaBO = await ConvertGradjaToGradjaBO(gradja);
                 gradjaBOList.Add(gradjaBO);
             }
 
@@ -127,16 +127,16 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [1.1.1.2] Prikaz podataka o specifičnoj građi
-        public GradjaBO? TraziGradjuPoID(int gradjaID)
+        public async Task<GradjaBO?> TraziGradjuPoID(int gradjaID)
         {
-            Gradja? trazenaGradja = bibliotekaEntities.Gradjas
+            Gradja? trazenaGradja = await bibliotekaEntities.Gradjas
                                     .Include(g => g.AutorFks)
-                                    .FirstOrDefault(g => g.GradjaId == gradjaID);
+                                    .FirstOrDefaultAsync(g => g.GradjaId == gradjaID);
 
             if(trazenaGradja == null)
                 return null;
 
-            GradjaBO pronadjenaGradja = ConvertGradjaToGradjaBO(trazenaGradja);
+            GradjaBO pronadjenaGradja = await ConvertGradjaToGradjaBO(trazenaGradja);
             return pronadjenaGradja;
         }
     }
