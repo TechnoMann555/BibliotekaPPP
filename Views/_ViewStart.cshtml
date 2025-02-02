@@ -1,4 +1,9 @@
-﻿@{
+﻿@using System.Text.Json
+
+@{
     Layout = "_Layout";
     ViewData["PutanjaNaslovnihStrana"] = "/Slike/NaslovneStraneGradje";
+
+    string? ulogovanNalog = Context.Request.Cookies["Korisnik"];
+    ViewBag.Korisnik = (ulogovanNalog != null) ? JsonSerializer.Deserialize<NalogBO>(ulogovanNalog) : null;
 }
