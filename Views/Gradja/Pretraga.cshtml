@@ -5,7 +5,7 @@
 }
 
 @section Stylesheets {
-	<link href="~/css/biblioteka.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/biblioteka.css" rel="stylesheet" asp-append-version="true"/>
 }
 
 
@@ -65,11 +65,7 @@
     <section class="mt-3">
         @if(ViewBag.Gradja.Count == 0)
         {
-            <div class="card text-dark bg-warning">
-                <div class="card-body">
-                    <p class="card-text">Ne postoji gradja sa unetim parametrima.</p>
-                </div>
-            </div>
+            await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", new Poruka("Ne postoji građa sa unetim parametrima.", TipPoruke.Upozorenje));
         }
         else
         {
@@ -77,7 +73,7 @@
             <hr />
             foreach(GradjaBO gradjaBO in ViewBag.Gradja)
             {
-                @await Html.PartialAsync("_StavkaGradje.cshtml", gradjaBO)
+                await Html.RenderPartialAsync("_StavkaGradje.cshtml", gradjaBO);
             }
         }
     </section>

@@ -1,0 +1,23 @@
+﻿@model BibliotekaPPP.Models.Poruka
+
+@{
+    string porukaStil = "";
+    switch (Model.Tip)
+    {
+        case TipPoruke.Uspeh:
+            porukaStil = "text-white bg-success";
+            break;
+        case TipPoruke.Upozorenje:
+            porukaStil = "text-dark bg-warning";
+            break;
+        case TipPoruke.Greska:
+            porukaStil = "text-white bg-danger";
+        break;
+    }
+}
+
+<div class="card mb-3 @porukaStil">
+    <div class="card-body">
+        <p class="card-text">@Model.Tekst</p>
+    </div>
+</div>
