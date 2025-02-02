@@ -48,7 +48,7 @@ namespace BibliotekaPPP.Models.EFRepository
 
         #endregion
 
-        // [1.1.1.1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
+        // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
         public async Task<IEnumerable<GradjaBO>> TraziGradju(
             string? naslov = null,
             string? imePrezimeAutora = null,
@@ -126,7 +126,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return gradjaBOList;
         }
 
-        // [1.1.1.2] Prikaz podataka o specifičnoj građi
+        // [SK1] Prikaz podataka o specifičnoj građi
         public async Task<GradjaBO?> TraziGradjuPoID(int gradjaID)
         {
             Gradja? trazenaGradja = await bibliotekaEntities.Gradjas

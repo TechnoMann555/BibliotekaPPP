@@ -3,6 +3,7 @@ using BibliotekaPPP.Models.EFRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text.Json;
 
 namespace BibliotekaPPP.Filters
 {
@@ -18,7 +19,7 @@ namespace BibliotekaPPP.Filters
             else
             {
                 NalogRepository nalogRepository = new NalogRepository();
-                NalogBO korisnickiNalog = nalogRepository.TraziNalogPoID(Convert.ToInt32(korisnik));
+                NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(korisnik);
 
                 if(korisnickiNalog.Uloga != "Korisnik_Clan")
                 {

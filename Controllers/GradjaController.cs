@@ -3,6 +3,7 @@ using BibliotekaPPP.Models.ViewModels;
 using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.EFRepository;
 using Microsoft.Identity.Client;
+using BibliotekaPPP.Filters;
 
 namespace BibliotekaPPP.Controllers
 {
@@ -10,7 +11,7 @@ namespace BibliotekaPPP.Controllers
     {
         GradjaRepository gradjaRepository = new GradjaRepository();
 
-        // [1.1.1.1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
+        // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
         [HttpGet]
         public IActionResult Pretraga()
         {
@@ -18,7 +19,7 @@ namespace BibliotekaPPP.Controllers
             return View("Pretraga", null);
         }
 
-        // [1.1.1.1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
+        // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
         [HttpPost]
         public async Task<IActionResult> Pretraga(GradjaPretragaViewModel gradja)
         {
@@ -37,8 +38,9 @@ namespace BibliotekaPPP.Controllers
             return View("Pretraga", gradja);
         }
 
-        // [1.1.1.2] Prikaz podataka o specifičnoj građi
+        // [SK1] Prikaz podataka o specifičnoj građi
         [HttpGet]
+        [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> Prikaz(int gradjaID)
         {
             GradjaBO? trazenaGradja = await gradjaRepository.TraziGradjuPoID(gradjaID);

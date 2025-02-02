@@ -23,9 +23,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Pretraga gradje</a>
                         </li>
-                        <li class="nav-item">
-                            <h1>@ViewData["NalogID"]</h1>
-                        </li>
+                        @if(ViewBag.Korisnik != null)
+                        {
+                            <li class="nav-item">
+                                <h3>
+                                    @(((NalogBO)ViewBag.Korisnik).NalogId)
+                                     -
+                                    @(((NalogBO)ViewBag.Korisnik).Uloga)
+                                </h3>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
