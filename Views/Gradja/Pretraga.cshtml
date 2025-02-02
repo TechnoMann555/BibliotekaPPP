@@ -73,7 +73,7 @@
             <hr />
             foreach(GradjaBO gradjaBO in ViewBag.Gradja)
             {
-                @await Html.PartialAsync("_StavkaGradje.cshtml", gradjaBO)
+                await Html.RenderPartialAsync("_StavkaGradje.cshtml", gradjaBO);
             }
         }
     </section>
