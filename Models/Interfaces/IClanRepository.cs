@@ -1,4 +1,6 @@
-﻿namespace BibliotekaPPP.Models.Interfaces
+﻿using BibliotekaPPP.Models.BusinessObjects;
+
+namespace BibliotekaPPP.Models.Interfaces
 {
     public interface IClanRepository
     {
