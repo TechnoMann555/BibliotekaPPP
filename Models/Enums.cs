@@ -11,6 +11,7 @@
     public enum TipPoruke
     {
         Uspeh = 0,
+        Upozorenje,
         Greska
     }
 }

@@ -11,22 +11,7 @@
             <hr />
             @if(Model != null && Model.PorukaKorisniku != null)
             {
-                string porukaStil = "";
-                switch(Model.PorukaKorisniku.Tip)
-                {
-                    case TipPoruke.Uspeh:
-                        porukaStil = "text-white bg-success";    
-                    break;
-                    case TipPoruke.Greska:
-                        porukaStil = "text-white bg-danger";
-                    break;
-                }
-
-                <div class="card mb-3 @porukaStil">
-                    <div class="card-body">
-                        <p class="card-text">@Model.PorukaKorisniku.Tekst</p>
-                    </div>
-                </div>
+                await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", Model.PorukaKorisniku);
             }
             <form asp-controller="Nalog" asp-action="RegistracijaClan" method="post">
                 <div class="mb-3">
