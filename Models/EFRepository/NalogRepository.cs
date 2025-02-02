@@ -1,4 +1,5 @@
-﻿using BibliotekaPPP.Models.DatabaseObjects;
+﻿using BibliotekaPPP.Models.BusinessObjects;
+using BibliotekaPPP.Models.DatabaseObjects;
 using BibliotekaPPP.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,38 @@ namespace BibliotekaPPP.Models.EFRepository
             await bibliotekaContext.SaveChangesAsync();
 
             return KreiranjeNalogaResult.Uspeh;
+        }
+
+        public async Task<NalogBO?> LoginClanKorisnik(string email, string lozinka)
+        {
+            Clan? trazenClan = await bibliotekaContext.Clans.FirstOrDefaultAsync(cl => cl.KontaktMejl == email);
+
+            if(trazenClan == null)
+                return null;
+
+            if(trazenClan.KorisnickiNalogFk == null)
+                return null;
+
+            Nalog korisnickiNalog = await bibliotekaContext.Nalogs.FirstOrDefaultAsync(n => n.NalogId == trazenClan.KorisnickiNalogFk);
+
+            if(korisnickiNalog.Lozinka != lozinka)
+                return null;
+
+            NalogBO ulogovanNalog = new NalogBO(korisnickiNalog);
+
+            return ulogovanNalog;
+        }
+
+        public NalogBO? TraziNalogPoID(int nalogID)
+        {
+            Nalog? trazenNalog = bibliotekaContext.Nalogs.FirstOrDefault(n => n.NalogId == nalogID);
+
+            if(trazenNalog == null)
+                return null;
+
+            NalogBO pronadjenNalog = new NalogBO(trazenNalog);
+
+            return pronadjenNalog;
         }
 
         //public async Task<ClanBO> TraziClanaPoJCB(string JCB)

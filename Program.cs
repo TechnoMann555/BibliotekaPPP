@@ -1,7 +1,21 @@
+using BibliotekaPPP.Filters;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Dodavanje filtera za autorizaciju
+builder.Services.AddScoped<KorisnikClanRequiredFilter>();
+
+// Omogucavanje sesija
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 

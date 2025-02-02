@@ -1,4 +1,5 @@
 ﻿using BibliotekaPPP.Models;
+using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.EFRepository;
 using BibliotekaPPP.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,46 @@ namespace BibliotekaPPP.Controllers
             }
 
             return View(regPodaci);
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginClan(LoginViewModel loginPodaci)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View("Login", loginPodaci);
+            }
+
+            NalogBO? nalogZaLogovanje = await nalogRepository.LoginClanKorisnik(
+                email: loginPodaci.Email,
+                lozinka: loginPodaci.Lozinka
+            );
+
+            if(nalogZaLogovanje == null)
+            {
+                loginPodaci.PorukaKorisniku = new Poruka(
+                    tekst: "Došlo je do greške pri logovanju.",
+                    tip: TipPoruke.Greska
+                );
+            }
+            else
+            {
+                Response.Cookies.Append("Korisnik", nalogZaLogovanje.NalogId.ToString(), new CookieOptions()
+                {
+                    Secure = true,
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SameSite = SameSiteMode.Strict
+                });
+            }
+
+            return View("Login", loginPodaci);
         }
     }
 }

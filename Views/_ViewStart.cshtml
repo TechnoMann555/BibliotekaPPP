@@ -1,4 +1,8 @@
 ﻿@{
     Layout = "_Layout";
     ViewData["PutanjaNaslovnihStrana"] = "/Slike/NaslovneStraneGradje";
+
+    string? nalogID = Context.Request.Cookies.FirstOrDefault(c => c.Key == "Korisnik").Value;
+    if (nalogID != null)
+        ViewData["NalogID"] = nalogID;
 }

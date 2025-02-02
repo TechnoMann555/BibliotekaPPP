@@ -1,4 +1,6 @@
-﻿namespace BibliotekaPPP.Models.Interfaces
+﻿using BibliotekaPPP.Models.BusinessObjects;
+
+namespace BibliotekaPPP.Models.Interfaces
 {
     public interface INalogRepository
     {
@@ -8,6 +10,10 @@
             string email,
             string lozinka
         );
+
+        public Task<NalogBO?> LoginClanKorisnik(string email, string lozinka);
+
+        public NalogBO? TraziNalogPoID(int nalogID);
 
         // public Task<ClanBO> TraziClanaPoJCB(string JCB);
     }
