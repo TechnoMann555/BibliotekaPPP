@@ -20,9 +20,9 @@ namespace BibliotekaPPP.Controllers
 
         // [1.1.1.1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
         [HttpPost]
-        public IActionResult Pretraga(GradjaPretragaViewModel gradja)
+        public async Task<IActionResult> Pretraga(GradjaPretragaViewModel gradja)
         {
-            List<GradjaBO> pretrazenaGradja = (List<GradjaBO>)gradjaRepository.TraziGradju(
+            List<GradjaBO> pretrazenaGradja = (List<GradjaBO>) await gradjaRepository.TraziGradju(
                 naslov: gradja.Naslov,
                 imePrezimeAutora: gradja.Autor,
                 naseljeIzdavanja: gradja.NaseljeIzdavanja,
@@ -39,9 +39,9 @@ namespace BibliotekaPPP.Controllers
 
         // [1.1.1.2] Prikaz podataka o specifičnoj građi
         [HttpGet]
-        public IActionResult Prikaz(int gradjaID)
+        public async Task<IActionResult> Prikaz(int gradjaID)
         {
-            GradjaBO? trazenaGradja = gradjaRepository.TraziGradjuPoID(gradjaID);
+            GradjaBO? trazenaGradja = await gradjaRepository.TraziGradjuPoID(gradjaID);
 
             if(trazenaGradja == null)
                 return RedirectToAction("Pretraga");
