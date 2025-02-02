@@ -40,7 +40,6 @@ namespace BibliotekaPPP.Controllers
 
         // [SK1] Prikaz podataka o specifičnoj građi
         [HttpGet]
-        [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> Prikaz(int gradjaID)
         {
             GradjaBO? trazenaGradja = await gradjaRepository.TraziGradjuPoID(gradjaID);
