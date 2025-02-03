@@ -13,7 +13,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BibliotekaPPP</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Biblioteka</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,17 +23,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Pretraga gradje</a>
                         </li>
-                        @if(ViewBag.Korisnik != null)
-                        {
-                            <li class="nav-item">
-                                <h3>
-                                    @(((NalogBO)ViewBag.Korisnik).NalogId)
-                                     -
-                                    @(((NalogBO)ViewBag.Korisnik).Uloga)
-                                </h3>
-                            </li>
-                        }
                     </ul>
+                    @if (ViewBag.Korisnik != null)
+                    {
+                        if( ((NalogBO)ViewBag.Korisnik).Uloga == "Korisnik_Clan" )
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="clan-korisnik-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Članske funkcionalnosti <!-- TODO: Ime, prezime, JCB? -->
+                                </button>
+                                <ul class="dropdown-menu w-100" aria-labelledby="clan-korisnik-dropdown">
+                                    <li><a asp-controller="Clan" asp-action="LicniPodaci" class="dropdown-item">Lični i članski podaci</a></li>
+                                    <li><a class="dropdown-item" href="#">Članarine</a></li>
+                                    <li><a class="dropdown-item" href="#">Pozajmice</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Log out</a></li>
+                                </ul>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </nav>

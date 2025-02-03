@@ -1,0 +1,60 @@
+﻿@model BibliotekaPPP.Models.BusinessObjects.ClanBO
+
+<div class="row">
+	<div class="col-6">
+		<h2>Članski podaci</h2>
+		<hr />
+		<table class="table table-striped">
+			<tbody>
+				<tr>
+					<th scope="row">Jedinstveni Članski Broj (JČB)</th>
+					<td>@Model.Jcb</td>
+				</tr>
+				<tr>
+					<th scope="row">Datum učlanjenja</th>
+					<td>@Model.DatumUclanjenja.ToString("dd/MMM/yyyy")</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-6">
+		<h2>Lični podaci</h2>
+		<hr />
+		<table class="table table-striped">
+			<tbody>
+				<tr>
+					<th scope="row">Broj lične karte</th>
+					<td>@Model.BrLicneKarte</td>
+				</tr>
+				<tr>
+					<th scope="row">Ime i prezime</th>
+					<td>@Model.ImePrezime</td>
+				</tr>
+				<tr>
+					<th scope="row">Datum rođenja</th>
+					<td>@Model.DatumRodjenja.ToString("dd/MMM/yyyy")</td>
+				</tr>
+				<tr>
+					<th scope="row">Ime jednog roditelja</th>
+					<td>@Model.ImeRoditelja</td>
+				</tr>
+				<tr>
+					<th scope="row">Adresa stanovanja</th>
+					<td>@Model.AdresaStanovanja</td>
+				</tr>
+				<tr>
+					<th scope="row">Zanimanje</th>
+					<td>@Model.Zanimanje</td>
+				</tr>
+				<tr>
+					<th scope="row">Kontakt telefon</th>
+					<td>@Model.KontaktTelefon</td>
+				</tr>
+				<tr>
+					<th scope="row">Kontakt mejl</th>
+					<td>@Model.KontaktMejl</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
