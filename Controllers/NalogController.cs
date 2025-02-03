@@ -78,23 +78,36 @@ namespace BibliotekaPPP.Controllers
                 return View("Login", loginPodaci);
             }
 
-            NalogBO? nalogZaLogovanje = await nalogRepository.LoginClanKorisnik(
+            (NalogBO? nalogBO, KorisnikLoginResult rezultat) loginRezultat = await nalogRepository.LoginClanKorisnik(
                 email: loginPodaci.Email,
                 lozinka: loginPodaci.Lozinka
             );
 
-            if(nalogZaLogovanje == null)
+            if(loginRezultat.nalogBO == null)
             {
-                loginPodaci.PorukaKorisniku = new Poruka(
-                    tekst: "Došlo je do greške pri logovanju na korisnički nalog.",
-                    tip: TipPoruke.Greska
-                );
+                switch(loginRezultat.rezultat)
+                {
+                    case KorisnikLoginResult.NalogNePostoji:
+                        loginPodaci.PorukaKorisniku = new Poruka(
+                            tekst: "Ne postoji korisnički nalog vezan za unetu e-mail adresu.",
+                            tip: TipPoruke.Greska
+                        );
+                    break;
+                    case KorisnikLoginResult.PogresnaLozinka:
+                        loginPodaci.PorukaKorisniku = new Poruka(
+                            tekst: "Pogrešna lozinka.",
+                            tip: TipPoruke.Greska
+                        );
+                    break;
+                }
+
+                return View("Login", loginPodaci);
             }
             else
             {
                 Response.Cookies.Append(
                     "Korisnik",
-                    JsonSerializer.Serialize(nalogZaLogovanje),
+                    JsonSerializer.Serialize(loginRezultat.nalogBO),
                     new CookieOptions()
                     {
                         Secure = true,
@@ -103,9 +116,9 @@ namespace BibliotekaPPP.Controllers
                         SameSite = SameSiteMode.Strict
                     }
                 );
-            }
 
-            return RedirectToAction("LicniPodaci", "Clan");
+                return RedirectToAction("LicniPodaci", "Clan");
+            }
         }
     }
 }

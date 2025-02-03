@@ -12,7 +12,7 @@ namespace BibliotekaPPP.Models.Interfaces
         );
 
         // [SK3] Logovanje na korisnički nalog
-        public Task<NalogBO?> LoginClanKorisnik(string email, string lozinka);
+        public Task<(NalogBO?, KorisnikLoginResult)> LoginClanKorisnik(string email, string lozinka);
 
         public NalogBO? TraziNalogPoID(int nalogID);
 

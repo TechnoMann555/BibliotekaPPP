@@ -8,6 +8,13 @@
         NalogVecPostoji
     }
 
+    public enum KorisnikLoginResult
+    {
+        Uspeh = 0,
+        NalogNePostoji,
+        PogresnaLozinka
+    }
+
     public enum TipPoruke
     {
         Uspeh = 0,
