@@ -4,10 +4,12 @@
     {
         public int ClanId { get; set; }
 
+        // Clanski podaci
         public string Jcb { get; set; } = null!;
 
         public DateOnly DatumUclanjenja { get; set; }
 
+        // Licni podaci
         public string BrLicneKarte { get; set; } = null!;
 
         public string ImePrezime { get; set; } = null!;

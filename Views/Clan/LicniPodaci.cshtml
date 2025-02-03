@@ -1,0 +1,11 @@
+﻿@model BibliotekaPPP.Models.BusinessObjects.ClanBO
+
+@section Stylesheets {
+	<link href="~/css/tablestylesheet.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+<h1>Prikaz ličnih i članskih podataka</h1>
+<hr class="mb-5"/>
+@{
+	await Html.RenderPartialAsync("~/Views/Shared/_PrikazPodatakaClan.cshtml", Model);
+}
