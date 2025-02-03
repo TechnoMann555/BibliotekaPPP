@@ -1,4 +1,5 @@
 ﻿using BibliotekaPPP.Filters;
+using BibliotekaPPP.Models;
 using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.EFRepository;
 using BibliotekaPPP.Models.ViewModels;
@@ -38,7 +39,16 @@ namespace BibliotekaPPP.Controllers
                 clanFK: (int)korisnickiNalog.ClanId,
                 rbrClanarine: clanarina.ClanarinaRbr
             );
-            ViewBag.Pozajmice = listaPozajmica.OrderByDescending(poz => poz.DatumPocetka).ToList();
+            if(listaPozajmica.Count > 0)
+                ViewBag.Pozajmice = listaPozajmica.OrderByDescending(poz => poz.DatumPocetka).ToList();
+            else
+            {
+                ViewBag.Pozajmice = listaPozajmica;
+                clanarina.PorukaKorisniku = new Poruka(
+                    tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
+                    tip: TipPoruke.Upozorenje
+                );
+            }
 
             return View(clanarina);
         }
