@@ -6,12 +6,13 @@ using System.Text.Json;
 
 namespace BibliotekaPPP.Controllers
 {
-    [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
     public class ClanController : Controller
     {
         private ClanRepository clanRepository = new ClanRepository();
 
         [HttpGet]
+        [Route("LicniPodaci")]
+        [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> LicniPodaci()
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
