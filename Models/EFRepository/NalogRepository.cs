@@ -58,7 +58,9 @@ namespace BibliotekaPPP.Models.EFRepository
                 return null;
 
             // Dohvatanje korisnickog naloga clana
-            Nalog korisnickiNalog = await bibliotekaContext.Nalogs.FirstOrDefaultAsync(n => n.NalogId == trazenClan.KorisnickiNalogFk);
+            Nalog korisnickiNalog = await bibliotekaContext.Nalogs
+                                          .Include(n => n.Clan)
+                                          .FirstOrDefaultAsync(n => n.NalogId == trazenClan.KorisnickiNalogFk);
 
             // Uneta lozinka se ne poklapa sa lozinkom naloga
             if(korisnickiNalog.Lozinka != lozinka)
@@ -71,7 +73,10 @@ namespace BibliotekaPPP.Models.EFRepository
 
         public NalogBO? TraziNalogPoID(int nalogID)
         {
-            Nalog? trazenNalog = bibliotekaContext.Nalogs.FirstOrDefault(n => n.NalogId == nalogID);
+            Nalog? trazenNalog = bibliotekaContext.Nalogs
+                                 .Include(n => n.Clan)
+                                 .Include(n => n.Bibliotekar)
+                                 .FirstOrDefault(n => n.NalogId == nalogID);
 
             if(trazenNalog == null)
                 return null;
