@@ -4,6 +4,7 @@ namespace BibliotekaPPP.Models.Interfaces
 {
     public interface IClanRepository
     {
-        public Task<ClanBO?> TraziClanaPoNalogID(int nalogID);
+        // [SK4] Prikaz ličnih i članskih podataka
+        public Task<ClanBO?> TraziClanaPoClanID(int clanID);
     }
 }

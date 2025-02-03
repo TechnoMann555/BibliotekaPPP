@@ -18,10 +18,9 @@ namespace BibliotekaPPP.Controllers
         public async Task<IActionResult> Pozajmice()
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
-            List<ClanarinaBO> clanarineBO = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoNalogID(korisnickiNalog.NalogId);
+            List<ClanarinaBO> clanarineBO = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoClanID((int)korisnickiNalog.ClanId);
 
             ViewBag.Clanarine = clanarineBO.OrderByDescending(cl => cl.DatumPocetka).ToList();
-            ViewBag.ClanId = korisnickiNalog.ClanId;
             return View();
         }
 
@@ -32,12 +31,11 @@ namespace BibliotekaPPP.Controllers
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
 
-            List<ClanarinaBO> listaClanarina = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoNalogID(korisnickiNalog.NalogId);
+            List<ClanarinaBO> listaClanarina = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoClanID((int)korisnickiNalog.ClanId);
             ViewBag.Clanarine = listaClanarina.OrderByDescending(cl => cl.DatumPocetka).ToList();
-            ViewBag.ClanId = korisnickiNalog.ClanId;
 
             List<PozajmicaBO> listaPozajmica = (List<PozajmicaBO>)await pozajmicaRepository.TraziPozajmicePoClanarini(
-                clanFK: clanarina.ClanId,
+                clanFK: (int)korisnickiNalog.ClanId,
                 rbrClanarine: clanarina.ClanarinaRbr
             );
             ViewBag.Pozajmice = listaPozajmica.OrderByDescending(poz => poz.DatumPocetka).ToList();

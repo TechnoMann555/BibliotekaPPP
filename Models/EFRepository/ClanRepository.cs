@@ -11,7 +11,7 @@ namespace BibliotekaPPP.Models.EFRepository
 
         #region Metode za prevodjenje tipova
 
-        private async Task<ClanBO> ConvertClanToClanBO(Clan clan, NalogBO? korisnickiNalog = null)
+        private async Task<ClanBO> ConvertClanToClanBO(Clan clan)
         {
             ClanBO clanBO = new ClanBO()
             {
@@ -28,27 +28,23 @@ namespace BibliotekaPPP.Models.EFRepository
                 KontaktMejl = clan.KontaktMejl
             };
 
-            if(korisnickiNalog != null)
-                clanBO.KorisnickiNalog = korisnickiNalog;
-            else
-            {
-                Nalog? nalog = await bibliotekaContext.Nalogs.FirstOrDefaultAsync(n => n.NalogId == clan.KorisnickiNalogFk);
-                clanBO.KorisnickiNalog = (nalog == null) ? null : new NalogBO(nalog);
-            }
-
+            Nalog? nalog = await bibliotekaContext.Nalogs.FirstOrDefaultAsync(n => n.NalogId == clan.KorisnickiNalogFk);
+            clanBO.KorisnickiNalog = (nalog == null) ? null : new NalogBO(nalog);
+            
             return clanBO;
         }
 
         #endregion
 
-        public async Task<ClanBO?> TraziClanaPoNalogID(int nalogID)
+        // [SK4] Prikaz ličnih i članskih podataka
+        public async Task<ClanBO?> TraziClanaPoClanID(int clanID)
         {
-            Nalog? korisnickiNalog = await bibliotekaContext.Nalogs.Include(n => n.Clan).FirstOrDefaultAsync(n => n.NalogId == nalogID);
+            Clan? clan = await bibliotekaContext.Clans.FirstOrDefaultAsync(c => c.ClanId == clanID);
 
-            if(korisnickiNalog == null)
+            if(clan == null)
                 return null;
 
-            ClanBO nadjenClan = await ConvertClanToClanBO(korisnickiNalog.Clan, new NalogBO(korisnickiNalog));
+            ClanBO nadjenClan = await ConvertClanToClanBO(clan);
 
             return nadjenClan;
         }
