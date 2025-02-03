@@ -11,13 +11,14 @@ namespace BibliotekaPPP.Controllers
     {
         private ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
 
+        // [SK5] Prikaz informacija o članarinama
         [HttpGet]
         [Route("Clanarine")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> Clanarine()
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
-            List<ClanarinaBO> clanarineBO = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoNalogID(korisnickiNalog.NalogId);
+            List<ClanarinaBO> clanarineBO = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoClanID((int)korisnickiNalog.ClanId);
 
             return View(clanarineBO.OrderByDescending(cl => cl.DatumPocetka).ToList());
         }

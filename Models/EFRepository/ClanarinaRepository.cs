@@ -9,19 +9,19 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         private BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
-        public async Task<IEnumerable<ClanarinaBO>?> TraziClanarinePoNalogID(int nalogID)
+        // [SK5] Prikaz informacija o članarinama
+        public async Task<IEnumerable<ClanarinaBO>?> TraziClanarinePoClanID(int clanID)
         {
-            Nalog? korisnickiNalog = await bibliotekaContext.Nalogs
-                                           .Include(n => n.Clan)
-                                           .ThenInclude(c => c.Clanarinas)
-                                           .FirstOrDefaultAsync(n => n.NalogId == nalogID);
+            Clan? clan = await bibliotekaContext.Clans
+                               .Include(c => c.Clanarinas)
+                               .FirstOrDefaultAsync(c => c.ClanId == clanID);
 
-            if(korisnickiNalog == null)
+            if(clan == null)
                 return null;
 
             List<ClanarinaBO> listaClanarina = new List<ClanarinaBO>();
 
-            foreach(Clanarina clanarina in korisnickiNalog.Clan.Clanarinas)
+            foreach(Clanarina clanarina in clan.Clanarinas)
             {
                 ClanarinaBO clanarinaBO = new ClanarinaBO(clanarina);
                 listaClanarina.Add(clanarinaBO);

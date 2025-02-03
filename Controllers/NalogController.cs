@@ -105,8 +105,7 @@ namespace BibliotekaPPP.Controllers
                 );
             }
 
-            // TODO: Preusmeriti korisnika na prikaz clanskih i licnih podataka
-            return View("Login", loginPodaci);
+            return RedirectToAction("LicniPodaci", "Clan");
         }
     }
 }
