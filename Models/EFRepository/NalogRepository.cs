@@ -47,15 +47,12 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [SK3] Logovanje na korisnički nalog
-        public async Task<NalogBO?> LoginClanKorisnik(string email, string lozinka)
+        public async Task<(NalogBO?, KorisnikLoginResult)> LoginClanKorisnik(string email, string lozinka)
         {
             Clan? trazenClan = await bibliotekaContext.Clans.FirstOrDefaultAsync(cl => cl.KontaktMejl == email);
 
-            // Ne postoji clan sa unetim mejlom ili pronadjen clan nema korisnicki nalog
-            if(trazenClan == null)
-                return null;
-            if(trazenClan.KorisnickiNalogFk == null)
-                return null;
+            if(trazenClan == null || (trazenClan != null && trazenClan.KorisnickiNalogFk == null))
+                return (null, KorisnikLoginResult.NalogNePostoji);
 
             // Dohvatanje korisnickog naloga clana
             Nalog korisnickiNalog = await bibliotekaContext.Nalogs
@@ -64,11 +61,11 @@ namespace BibliotekaPPP.Models.EFRepository
 
             // Uneta lozinka se ne poklapa sa lozinkom naloga
             if(korisnickiNalog.Lozinka != lozinka)
-                return null;
+                return (null, KorisnikLoginResult.PogresnaLozinka);
 
             NalogBO ulogovanNalog = new NalogBO(korisnickiNalog);
 
-            return ulogovanNalog;
+            return (ulogovanNalog, KorisnikLoginResult.Uspeh);
         }
 
         public NalogBO? TraziNalogPoID(int nalogID)
