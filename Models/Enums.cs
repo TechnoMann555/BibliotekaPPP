@@ -8,7 +8,7 @@
         NalogVecPostoji
     }
 
-    public enum KorisnikLoginResult
+    public enum LoginResult
     {
         Uspeh = 0,
         NalogNePostoji,

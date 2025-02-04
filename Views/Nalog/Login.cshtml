@@ -39,7 +39,27 @@
                 </form>
             </div>
             <div class="tab-pane fade" id="bibliotekar" role="tabpanel" aria-labelledby="bibliotekar-tab">
-
+                <h2>Login - bibliotekarski nalog</h2>
+                <hr />
+                @if (Model != null && Model.PorukaKorisniku != null)
+                {
+                    await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", Model.PorukaKorisniku);
+                }
+                <form asp-controller="Nalog" asp-action="LoginBibliotekar" method="post">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">E-mail adresa</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Lozinka" class="form-label">Lozinka</label>
+                        <input asp-for="Lozinka" class="form-control" />
+                        <span asp-validation-for="Lozinka" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex flex-row-reverse">
+                        <input type="submit" value="Uloguj me" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
         </div>
     </div>

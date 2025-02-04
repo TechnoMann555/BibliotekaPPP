@@ -47,12 +47,12 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [SK3] Logovanje na korisnički nalog
-        public async Task<(NalogBO?, KorisnikLoginResult)> LoginClanKorisnik(string email, string lozinka)
+        public async Task<(NalogBO?, LoginResult)> LoginKorisnikClan(string email, string lozinka)
         {
             Clan? trazenClan = await bibliotekaContext.Clans.FirstOrDefaultAsync(cl => cl.KontaktMejl == email);
 
             if(trazenClan == null || (trazenClan != null && trazenClan.KorisnickiNalogFk == null))
-                return (null, KorisnikLoginResult.NalogNePostoji);
+                return (null, LoginResult.NalogNePostoji);
 
             // Dohvatanje korisnickog naloga clana
             Nalog korisnickiNalog = await bibliotekaContext.Nalogs
@@ -61,11 +61,34 @@ namespace BibliotekaPPP.Models.EFRepository
 
             // Uneta lozinka se ne poklapa sa lozinkom naloga
             if(korisnickiNalog.Lozinka != lozinka)
-                return (null, KorisnikLoginResult.PogresnaLozinka);
+                return (null, LoginResult.PogresnaLozinka);
 
             NalogBO ulogovanNalog = new NalogBO(korisnickiNalog);
 
-            return (ulogovanNalog, KorisnikLoginResult.Uspeh);
+            return (ulogovanNalog, LoginResult.Uspeh);
+        }
+
+        // [SK8] Logovanje na administratorski nalog
+        public async Task<(NalogBO?, LoginResult)> LoginAdminBibliotekar(string email, string lozinka)
+        {
+            Bibliotekar? trazenBibliotekar = await bibliotekaContext.Bibliotekars
+                                             .FirstOrDefaultAsync(bib => bib.Email == email);
+
+            if(trazenBibliotekar == null)
+                return (null, LoginResult.NalogNePostoji);
+
+            // Dohvatanje administratorskog naloga bibliotekara
+            Nalog adminNalog = await bibliotekaContext.Nalogs
+                                     .Include(n => n.Bibliotekar)
+                                     .FirstOrDefaultAsync(n => n.NalogId == trazenBibliotekar.AdminNalogFk);
+
+            // Uneta lozinka se ne poklapa sa lozinkom naloga
+            if(adminNalog.Lozinka != lozinka)
+                return (null, LoginResult.PogresnaLozinka);
+
+            NalogBO ulogovanNalog = new NalogBO(adminNalog);
+
+            return (ulogovanNalog, LoginResult.Uspeh);
         }
 
         public NalogBO? TraziNalogPoID(int nalogID)

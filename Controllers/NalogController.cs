@@ -80,7 +80,7 @@ namespace BibliotekaPPP.Controllers
                 return View("Login", loginPodaci);
             }
 
-            (NalogBO? nalogBO, KorisnikLoginResult rezultat) loginRezultat = await nalogRepository.LoginClanKorisnik(
+            (NalogBO? nalogBO, LoginResult rezultat) loginRezultat = await nalogRepository.LoginKorisnikClan(
                 email: loginPodaci.Email,
                 lozinka: loginPodaci.Lozinka
             );
@@ -89,13 +89,13 @@ namespace BibliotekaPPP.Controllers
             {
                 switch(loginRezultat.rezultat)
                 {
-                    case KorisnikLoginResult.NalogNePostoji:
+                    case LoginResult.NalogNePostoji:
                         loginPodaci.PorukaKorisniku = new Poruka(
                             tekst: "Ne postoji korisnički nalog vezan za unetu e-mail adresu.",
                             tip: TipPoruke.Greska
                         );
                     break;
-                    case KorisnikLoginResult.PogresnaLozinka:
+                    case LoginResult.PogresnaLozinka:
                         loginPodaci.PorukaKorisniku = new Poruka(
                             tekst: "Pogrešna lozinka.",
                             tip: TipPoruke.Greska
@@ -123,6 +123,61 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
+        // TODO: Izvuci zajednicku metodu iz dve login akcije
+        // [SK8] Logovanje na administratorski nalog
+        [HttpPost]
+        public async Task<IActionResult> LoginBibliotekar(LoginViewModel loginPodaci)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View("Login", loginPodaci);
+            }
+
+            (NalogBO? nalogBO, LoginResult rezultat) loginRezultat = await nalogRepository.LoginAdminBibliotekar(
+                email: loginPodaci.Email,
+                lozinka: loginPodaci.Lozinka
+            );
+
+            if(loginRezultat.nalogBO == null)
+            {
+                switch(loginRezultat.rezultat)
+                {
+                    case LoginResult.NalogNePostoji:
+                    loginPodaci.PorukaKorisniku = new Poruka(
+                        tekst: "Ne postoji administratorski nalog vezan za unetu e-mail adresu.",
+                        tip: TipPoruke.Greska
+                    );
+                    break;
+                    case LoginResult.PogresnaLozinka:
+                    loginPodaci.PorukaKorisniku = new Poruka(
+                        tekst: "Pogrešna lozinka.",
+                        tip: TipPoruke.Greska
+                    );
+                    break;
+                }
+
+                return View("Login", loginPodaci);
+            }
+            else
+            {
+                Response.Cookies.Append(
+                    "Korisnik",
+                    JsonSerializer.Serialize(loginRezultat.nalogBO),
+                    new CookieOptions()
+                    {
+                        Secure = true,
+                        HttpOnly = true,
+                        Expires = DateTime.UtcNow.AddDays(7),
+                        SameSite = SameSiteMode.Strict
+                    }
+                );
+
+                // TODO: Promeniti da bude pretraga clanova po JCB
+                return RedirectToAction("Pretraga", "Gradja");
+            }
+        }
+
+        // TODO: Dokumentovati Logout funkcionalnost u Larmanu
         [HttpGet]
         public IActionResult Logout()
         {
