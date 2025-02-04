@@ -68,42 +68,49 @@ namespace BibliotekaPPP.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            ViewBag.Tab = "KorisnikLogin";
             return View();
         }
 
         // [SK3] Logovanje na korisnički nalog
         [HttpPost]
-        public async Task<IActionResult> LoginClan(LoginViewModel loginPodaci)
+        public async Task<IActionResult> LoginClan(string emailClan, string lozinkaClan)
         {
-            if(!ModelState.IsValid)
+            Poruka porukaKorisniku = new Poruka();
+
+            if(string.IsNullOrEmpty(emailClan) || string.IsNullOrEmpty(lozinkaClan))
             {
-                return View("Login", loginPodaci);
+                porukaKorisniku.Tekst = "Email i lozinka su obavezni za unos.";
+                porukaKorisniku.Tip = TipPoruke.Greska;
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "KorisnikLogin";
+
+                return View("Login");
             }
 
-            (NalogBO? nalogBO, KorisnikLoginResult rezultat) loginRezultat = await nalogRepository.LoginClanKorisnik(
-                email: loginPodaci.Email,
-                lozinka: loginPodaci.Lozinka
+            (NalogBO? nalogBO, LoginResult rezultat) loginRezultat = await nalogRepository.LoginKorisnikClan(
+                email: emailClan,
+                lozinka: lozinkaClan
             );
 
             if(loginRezultat.nalogBO == null)
             {
                 switch(loginRezultat.rezultat)
                 {
-                    case KorisnikLoginResult.NalogNePostoji:
-                        loginPodaci.PorukaKorisniku = new Poruka(
-                            tekst: "Ne postoji korisnički nalog vezan za unetu e-mail adresu.",
-                            tip: TipPoruke.Greska
-                        );
+                    case LoginResult.NalogNePostoji:
+                    porukaKorisniku.Tekst = "Ne postoji korisnički nalog vezan za unetu e-mail adresu.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
                     break;
-                    case KorisnikLoginResult.PogresnaLozinka:
-                        loginPodaci.PorukaKorisniku = new Poruka(
-                            tekst: "Pogrešna lozinka.",
-                            tip: TipPoruke.Greska
-                        );
+                    case LoginResult.PogresnaLozinka:
+                    porukaKorisniku.Tekst = "Pogrešna lozinka.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
                     break;
                 }
 
-                return View("Login", loginPodaci);
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "KorisnikLogin";
+
+                return View("Login");
             }
             else
             {
@@ -123,6 +130,67 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
+        // TODO: Izvuci zajednicku metodu iz dve login akcije
+        // [SK8] Logovanje na administratorski nalog
+        [HttpPost]
+        public async Task<IActionResult> LoginBibliotekar(string emailBibliotekar, string lozinkaBibliotekar)
+        {
+            Poruka porukaKorisniku = new Poruka();
+
+            if(string.IsNullOrEmpty(emailBibliotekar) || string.IsNullOrEmpty(lozinkaBibliotekar))
+            {
+                porukaKorisniku.Tekst = "Email i lozinka su obavezni za unos.";
+                porukaKorisniku.Tip = TipPoruke.Greska;
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "AdminLogin";
+
+                return View("Login");
+            }
+
+            (NalogBO? nalogBO, LoginResult rezultat) loginRezultat = await nalogRepository.LoginAdminBibliotekar(
+                email: emailBibliotekar,
+                lozinka: lozinkaBibliotekar
+            );
+
+            if(loginRezultat.nalogBO == null)
+            {
+                switch(loginRezultat.rezultat)
+                {
+                    case LoginResult.NalogNePostoji:
+                    porukaKorisniku.Tekst = "Ne postoji administratorski nalog vezan za unetu e-mail adresu.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
+                    break;
+                    case LoginResult.PogresnaLozinka:
+                    porukaKorisniku.Tekst = "Pogrešna lozinka.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
+                    break;
+                }
+
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "AdminLogin";
+
+                return View("Login");
+            }
+            else
+            {
+                Response.Cookies.Append(
+                    "Korisnik",
+                    JsonSerializer.Serialize(loginRezultat.nalogBO),
+                    new CookieOptions()
+                    {
+                        Secure = true,
+                        HttpOnly = true,
+                        Expires = DateTime.UtcNow.AddDays(7),
+                        SameSite = SameSiteMode.Strict
+                    }
+                );
+
+                // TODO: Promeniti da bude pretraga clanova po JCB
+                return RedirectToAction("Pretraga", "Gradja");
+            }
+        }
+
+        // TODO: Dokumentovati Logout funkcionalnost u Larmanu
         [HttpGet]
         public IActionResult Logout()
         {
