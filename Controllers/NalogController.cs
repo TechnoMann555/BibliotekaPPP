@@ -122,5 +122,12 @@ namespace BibliotekaPPP.Controllers
                 return RedirectToAction("LicniPodaci", "Clan");
             }
         }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("Korisnik");
+            return RedirectToAction("Pretraga", "Gradja");
+        }
     }
 }
