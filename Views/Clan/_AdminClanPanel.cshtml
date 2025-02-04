@@ -8,7 +8,7 @@
 		<div class="btn-group">
 			<a asp-controller="Clan" asp-action="PrikazLicnihPodataka" asp-route-id="@Model.ClanId" target="_blank" class="btn btn-primary">Lični i članski podaci</a>
 			<a asp-controller="Clanarina" asp-action="ClanarineClana" asp-route-id="@Model.ClanId" target="_blank" class="btn btn-primary">Članarine</a>
-			<a target="_blank" class="btn btn-primary" href="#">Pozajmice</a>
+			<a asp-controller="Pozajmica" asp-action="PozajmiceClana" asp-route-id="@Model.ClanId" target="_blank" class="btn btn-primary">Pozajmice</a>
 		</div>
 	</div>
 </div>

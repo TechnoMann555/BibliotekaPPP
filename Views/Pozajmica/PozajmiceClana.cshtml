@@ -1,0 +1,75 @@
+﻿@model BibliotekaPPP.Models.ViewModels.PozajmiceViewModel
+
+@{
+	ViewData["Title"] = "Pozajmice";
+}
+
+<h1>Prikaz pozajmica</h1>
+<hr class="mb-5" />
+
+<div class="mb-3">
+	<form asp-controller="Pozajmica" asp-action="PozajmiceClana" asp-route-id="@ViewBag.ClanID" method="post">
+		<select asp-for="ClanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
+			<option value="" selected disabled>-- Izaberite clanarinu --</option>
+			@foreach (ClanarinaBO clanarinaBO in ViewBag.Clanarine)
+			{
+				<option value="@clanarinaBO.Rbr">
+					@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")
+					-
+					@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")
+				</option>
+			}
+		</select>
+	</form>
+</div>
+@if (ViewBag.Pozajmice != null)
+{
+	if (ViewBag.Pozajmice.Count == 0)
+	{
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", Model.PorukaKorisniku);
+	}
+	else
+	{
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col">Građa</th>
+					<th scope="col">Inventarni broj</th>
+					<th scope="col">Ogranak</th>
+					<th scope="col">Datum početka</th>
+					<th scope="col">Rok razduženja</th>
+					<th scope="col">Datum razduženja</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (PozajmicaBO pozajmicaBO in ViewBag.Pozajmice)
+				{
+					string pozajmicaStil = "";
+
+					if (pozajmicaBO.DatumRazduzenja == null)
+					{
+						int brojPreostalihDana = pozajmicaBO.RokRazduzenja.Day - DateOnly.FromDateTime(DateTime.Now).Day;
+
+						if (brojPreostalihDana > 2)
+							pozajmicaStil = "table-primary";
+						else if (brojPreostalihDana >= 0 && brojPreostalihDana <= 2)
+							pozajmicaStil = "table-warning";
+						else
+							pozajmicaStil = "table-danger fw-bold";
+					}
+
+					<tr class="@pozajmicaStil">
+						<td>@pozajmicaBO.NaslovGradje</td>
+						<td>@pozajmicaBO.InventarniBrojPrimerka</td>
+						<td>@pozajmicaBO.NazivOgrankaPrimerka</td>
+						<td>@pozajmicaBO.DatumPocetka.ToString("dd/MMM/yyyy")</td>
+						<td>@pozajmicaBO.RokRazduzenja.ToString("dd/MMM/yyyy")</td>
+						<td>
+							@pozajmicaBO.DatumRazduzenja?.ToString("dd/MMM/yyyy")
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+}

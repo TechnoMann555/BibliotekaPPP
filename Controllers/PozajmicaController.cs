@@ -52,5 +52,50 @@ namespace BibliotekaPPP.Controllers
 
             return View(clanarina);
         }
+
+        [HttpGet]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> PozajmiceClana(int id)
+        {
+            List<ClanarinaBO>? clanarineBO = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID(id);
+
+            if(clanarineBO == null)
+                return RedirectToAction("Pretraga", "Clan");
+
+            ViewBag.Clanarine = clanarineBO.OrderByDescending(cl => cl.DatumPocetka).ToList();
+            ViewBag.ClanID = id;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> PozajmiceClana(int id, PozajmiceViewModel clanarina)
+        {
+            List<ClanarinaBO>? listaClanarina = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID(id);
+
+            if(listaClanarina == null)
+                return RedirectToAction("Pretraga", "Clan");
+
+            ViewBag.Clanarine = listaClanarina.OrderByDescending(cl => cl.DatumPocetka).ToList();
+            ViewBag.ClanID = id;
+
+            List<PozajmicaBO> listaPozajmica = (List<PozajmicaBO>)await pozajmicaRepository.TraziPozajmicePoClanarini(
+                clanFK: id,
+                rbrClanarine: clanarina.ClanarinaRbr
+            );
+            if(listaPozajmica.Count > 0)
+                ViewBag.Pozajmice = listaPozajmica.OrderByDescending(poz => poz.DatumPocetka).ToList();
+            else
+            {
+                ViewBag.Pozajmice = listaPozajmica;
+                clanarina.PorukaKorisniku = new Poruka(
+                    tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
+                    tip: TipPoruke.Upozorenje
+                );
+            }
+
+            return View(clanarina);
+        }
     }
 }
