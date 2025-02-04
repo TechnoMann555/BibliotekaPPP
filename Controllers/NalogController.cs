@@ -68,21 +68,29 @@ namespace BibliotekaPPP.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            ViewBag.Tab = "KorisnikLogin";
             return View();
         }
 
         // [SK3] Logovanje na korisnički nalog
         [HttpPost]
-        public async Task<IActionResult> LoginClan(LoginViewModel loginPodaci)
+        public async Task<IActionResult> LoginClan(string emailClan, string lozinkaClan)
         {
-            if(!ModelState.IsValid)
+            Poruka porukaKorisniku = new Poruka();
+
+            if(string.IsNullOrEmpty(emailClan) || string.IsNullOrEmpty(lozinkaClan))
             {
-                return View("Login", loginPodaci);
+                porukaKorisniku.Tekst = "Email i lozinka su obavezni za unos.";
+                porukaKorisniku.Tip = TipPoruke.Greska;
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "KorisnikLogin";
+
+                return View("Login");
             }
 
             (NalogBO? nalogBO, LoginResult rezultat) loginRezultat = await nalogRepository.LoginKorisnikClan(
-                email: loginPodaci.Email,
-                lozinka: loginPodaci.Lozinka
+                email: emailClan,
+                lozinka: lozinkaClan
             );
 
             if(loginRezultat.nalogBO == null)
@@ -90,20 +98,19 @@ namespace BibliotekaPPP.Controllers
                 switch(loginRezultat.rezultat)
                 {
                     case LoginResult.NalogNePostoji:
-                        loginPodaci.PorukaKorisniku = new Poruka(
-                            tekst: "Ne postoji korisnički nalog vezan za unetu e-mail adresu.",
-                            tip: TipPoruke.Greska
-                        );
+                    porukaKorisniku.Tekst = "Ne postoji korisnički nalog vezan za unetu e-mail adresu.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
                     break;
                     case LoginResult.PogresnaLozinka:
-                        loginPodaci.PorukaKorisniku = new Poruka(
-                            tekst: "Pogrešna lozinka.",
-                            tip: TipPoruke.Greska
-                        );
+                    porukaKorisniku.Tekst = "Pogrešna lozinka.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
                     break;
                 }
 
-                return View("Login", loginPodaci);
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "KorisnikLogin";
+
+                return View("Login");
             }
             else
             {
@@ -126,16 +133,23 @@ namespace BibliotekaPPP.Controllers
         // TODO: Izvuci zajednicku metodu iz dve login akcije
         // [SK8] Logovanje na administratorski nalog
         [HttpPost]
-        public async Task<IActionResult> LoginBibliotekar(LoginViewModel loginPodaci)
+        public async Task<IActionResult> LoginBibliotekar(string emailBibliotekar, string lozinkaBibliotekar)
         {
-            if(!ModelState.IsValid)
+            Poruka porukaKorisniku = new Poruka();
+
+            if(string.IsNullOrEmpty(emailBibliotekar) || string.IsNullOrEmpty(lozinkaBibliotekar))
             {
-                return View("Login", loginPodaci);
+                porukaKorisniku.Tekst = "Email i lozinka su obavezni za unos.";
+                porukaKorisniku.Tip = TipPoruke.Greska;
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "AdminLogin";
+
+                return View("Login");
             }
 
             (NalogBO? nalogBO, LoginResult rezultat) loginRezultat = await nalogRepository.LoginAdminBibliotekar(
-                email: loginPodaci.Email,
-                lozinka: loginPodaci.Lozinka
+                email: emailBibliotekar,
+                lozinka: lozinkaBibliotekar
             );
 
             if(loginRezultat.nalogBO == null)
@@ -143,20 +157,19 @@ namespace BibliotekaPPP.Controllers
                 switch(loginRezultat.rezultat)
                 {
                     case LoginResult.NalogNePostoji:
-                    loginPodaci.PorukaKorisniku = new Poruka(
-                        tekst: "Ne postoji administratorski nalog vezan za unetu e-mail adresu.",
-                        tip: TipPoruke.Greska
-                    );
+                    porukaKorisniku.Tekst = "Ne postoji administratorski nalog vezan za unetu e-mail adresu.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
                     break;
                     case LoginResult.PogresnaLozinka:
-                    loginPodaci.PorukaKorisniku = new Poruka(
-                        tekst: "Pogrešna lozinka.",
-                        tip: TipPoruke.Greska
-                    );
+                    porukaKorisniku.Tekst = "Pogrešna lozinka.";
+                    porukaKorisniku.Tip = TipPoruke.Greska;
                     break;
                 }
 
-                return View("Login", loginPodaci);
+                ViewBag.Poruka = porukaKorisniku;
+                ViewBag.Tab = "AdminLogin";
+
+                return View("Login");
             }
             else
             {
