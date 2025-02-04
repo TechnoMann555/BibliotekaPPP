@@ -47,7 +47,7 @@ namespace BibliotekaPPP.Controllers
             return PartialView("~/Views/Clan/_AdminClanPanel.cshtml", clanBO);
         }
 
-        // [SK9] Prikaz ličnih podataka o članu
+        // [SK10] Prikaz ličnih podataka o članu
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PrikazLicnihPodataka(int id)

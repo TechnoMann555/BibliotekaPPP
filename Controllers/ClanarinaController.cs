@@ -22,5 +22,18 @@ namespace BibliotekaPPP.Controllers
 
             return View(clanarineBO.OrderByDescending(cl => cl.DatumPocetka).ToList());
         }
+
+        // [SK11] Prikaz podataka o članarinama člana
+        [HttpGet]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> ClanarineClana(int id)
+        {
+            List<ClanarinaBO>? clanarine = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID(id);
+
+            if(clanarine == null)
+                return RedirectToAction("Pretraga", "Clan");
+
+            return View(clanarine.OrderByDescending(cl => cl.DatumPocetka).ToList());
+        }
     }
 }
