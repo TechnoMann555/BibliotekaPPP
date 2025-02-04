@@ -1,4 +1,5 @@
 ﻿using BibliotekaPPP.Filters;
+using BibliotekaPPP.Models;
 using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.EFRepository;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,30 @@ namespace BibliotekaPPP.Controllers
             ClanBO clanBO = await clanRepository.TraziClanaPoClanID((int)korisnickiNalog.ClanId);
 
             return View(clanBO);
+        }
+
+        // [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        [HttpGet]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public IActionResult Pretraga()
+        {
+            return View();
+        }
+
+        // [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> Pretraga(string jcb)
+        {
+            ClanBO? clanBO = await clanRepository.TraziClanaPoJCB(jcb);
+
+            if(clanBO == null)
+                return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", new Poruka(
+                    tekst: "Nije pronađen član biblioteke sa unetim Jedinstvenim Članskim Brojem.",
+                    tip: TipPoruke.Upozorenje
+                ));
+
+            return PartialView("~/Views/Clan/_AdminClanPanel.cshtml", clanBO);
         }
     }
 }

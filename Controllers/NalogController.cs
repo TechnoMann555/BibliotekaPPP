@@ -64,6 +64,7 @@ namespace BibliotekaPPP.Controllers
             return View(regPodaci);
         }
 
+        // TODO: Refaktorisati login metode i poglede da budu cistiji
         // [SK3] Logovanje na korisnički nalog
         [HttpGet]
         public IActionResult Login()

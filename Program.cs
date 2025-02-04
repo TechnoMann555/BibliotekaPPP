@@ -7,6 +7,7 @@ builder.Services.AddControllersWithViews();
 
 // Dodavanje filtera za autorizaciju
 builder.Services.AddScoped<KorisnikClanRequiredFilter>();
+builder.Services.AddScoped<AdminBibliotekarRequiredFilter>();
 
 // Omogucavanje sesija
 builder.Services.AddDistributedMemoryCache();

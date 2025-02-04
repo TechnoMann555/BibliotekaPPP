@@ -1,0 +1,33 @@
+﻿@{
+	ViewData["Title"] = "Pretraga člana";
+}
+
+<h1 class="text-center">Pretraga člana po Jedinstvenom Članskom Broju (JČB)</h1>
+<hr class="mb-5"/>
+
+<div class="input-group mb-3">
+	<input type="text" id="jcb-input" class="form-control form-control-lg" placeholder="Jedinstveni Članski Broj" />
+	<button class="btn btn-lg btn-primary" type="button" onclick="pretragaClana()">Pretraži</button>
+</div>
+
+<div id="rezultat-pretrage">
+
+</div>
+
+@section Scripts {
+	<script type="text/javascript" asp-append-version="true">
+		function pretragaClana()
+		{
+			const jcb_value = document.getElementById('jcb-input').value;
+
+			$.ajax({
+				url: '@Url.Action("Pretraga", "Clan")',
+				data: { jcb: jcb_value },
+				method: 'POST',
+				success: function(result) {
+					$('#rezultat-pretrage').html(result);
+				}
+			});
+		}
+	</script>
+}
