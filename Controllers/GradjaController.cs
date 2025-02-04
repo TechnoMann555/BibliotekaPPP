@@ -43,9 +43,9 @@ namespace BibliotekaPPP.Controllers
 
         // [SK1] Prikaz podataka o specifičnoj građi
         [HttpGet]
-        public async Task<IActionResult> Prikaz(int gradjaID)
+        public async Task<IActionResult> Prikaz(int id)
         {
-            GradjaBO? trazenaGradja = await gradjaRepository.TraziGradjuPoID(gradjaID);
+            GradjaBO? trazenaGradja = await gradjaRepository.TraziGradjuPoID(id);
 
             if(trazenaGradja == null)
                 return RedirectToAction("Pretraga");
@@ -58,12 +58,12 @@ namespace BibliotekaPPP.Controllers
                 if(nalogBO.Uloga == "Korisnik_Clan")
                 {
                     ViewBag.GradjaProcitana = await pozajmicaRepository.ClanProcitaoGradju(
-                        gradjaID: gradjaID,
+                        gradjaID: id,
                         clanID: (int)nalogBO.ClanId
                     );
 
                     OcenaProcitaneGradjeBO? ocenaGradje = await ocenaRepository.TraziOcenu(
-                        gradjaID: gradjaID,
+                        gradjaID: id,
                         korisnickiNalogID: nalogBO.NalogId
                     );
                     trazenaGradja.Ocena = ocenaGradje;

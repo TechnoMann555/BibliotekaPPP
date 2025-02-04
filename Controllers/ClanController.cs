@@ -46,5 +46,18 @@ namespace BibliotekaPPP.Controllers
 
             return PartialView("~/Views/Clan/_AdminClanPanel.cshtml", clanBO);
         }
+
+        // [SK9] Prikaz ličnih podataka o članu
+        [HttpGet]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> PrikazLicnihPodataka(int id)
+        {
+            ClanBO? trazenClan = await clanRepository.TraziClanaPoClanID(id);
+
+            if(trazenClan == null)
+                return RedirectToAction("Pretraga");
+
+            return View(trazenClan);
+        }
     }
 }

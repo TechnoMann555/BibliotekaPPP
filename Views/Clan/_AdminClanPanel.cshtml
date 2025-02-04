@@ -6,9 +6,9 @@
 			<span class="fw-bold">@Model.Jcb</span> - @Model.ImePrezime
 		</p>
 		<div class="btn-group">
-			<a class="btn btn-primary" href="#">Lični podaci</a>
-			<a class="btn btn-primary" href="#">Članarine</a>
-			<a class="btn btn-primary" href="#">Pozajmice</a>
+			<a asp-controller="Clan" asp-action="PrikazLicnihPodataka" asp-route-id="@Model.ClanId" target="_blank" class="btn btn-primary">Lični i članski podaci</a>
+			<a target="_blank" class="btn btn-primary" href="#">Članarine</a>
+			<a target="_blank" class="btn btn-primary" href="#">Pozajmice</a>
 		</div>
 	</div>
 </div>
