@@ -48,5 +48,18 @@ namespace BibliotekaPPP.Models.EFRepository
 
             return nadjenClan;
         }
+
+        // [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        public async Task<ClanBO?> TraziClanaPoJCB(string JCB)
+        {
+            Clan? clan = await bibliotekaContext.Clans.FirstOrDefaultAsync(c => c.Jcb == JCB);
+
+            if(clan == null)
+                return null;
+
+            ClanBO nadjenClan = await ConvertClanToClanBO(clan);
+
+            return nadjenClan;
+        }
     }
 }

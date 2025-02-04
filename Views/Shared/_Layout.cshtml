@@ -21,7 +21,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Pretraga gradje</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Pretraga građe</a>
                         </li>
                     </ul>
                     @if(ViewBag.Korisnik == null)
@@ -57,7 +57,7 @@
                                     Bibliotekarske funkcionalnosti <!-- TODO: Ime, prezime, JBB? -->
                                 </button>
                                 <ul class="dropdown-menu w-100" aria-labelledby="bibliotekar-admin-dropdown">
-                                    <li><a class="dropdown-item" href="#">Pretraga člana biblioteke</a></li>
+                                    <li><a asp-controller="Clan" asp-action="Pretraga" class="dropdown-item">Pretraga člana biblioteke</a></li>
                                     <li><a class="dropdown-item" href="#">Upis novog člana</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a asp-controller="Nalog" asp-action="Logout" class="dropdown-item">Log out</a></li>
