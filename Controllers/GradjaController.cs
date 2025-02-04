@@ -11,7 +11,7 @@ namespace BibliotekaPPP.Controllers
     public class GradjaController : Controller
     {
         GradjaRepository gradjaRepository = new GradjaRepository();
-        ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
+        PozajmicaRepository pozajmicaRepository = new PozajmicaRepository();
         OcenaProcitaneGradjeRepository ocenaRepository = new OcenaProcitaneGradjeRepository();
 
         // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
@@ -57,8 +57,10 @@ namespace BibliotekaPPP.Controllers
                 
                 if(nalogBO.Uloga == "Korisnik_Clan")
                 {
-                    List<ClanarinaBO>? clanarine = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID((int)nalogBO.ClanId);
-                    ViewBag.GradjaProcitana = clanarine.Any(cl => cl.ListaIDProcitaneGradje.Contains(gradjaID));
+                    ViewBag.GradjaProcitana = await pozajmicaRepository.ClanProcitaoGradju(
+                        gradjaID: gradjaID,
+                        clanID: (int)nalogBO.ClanId
+                    );
 
                     OcenaProcitaneGradjeBO? ocenaGradje = await ocenaRepository.TraziOcenu(
                         gradjaID: gradjaID,
