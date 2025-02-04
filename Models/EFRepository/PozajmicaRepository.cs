@@ -9,6 +9,17 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
+        public async Task<bool> ClanProcitaoGradju(int gradjaID, int clanID)
+        {
+            bool procitao = await bibliotekaContext.Pozajmicas.AnyAsync(
+                p => p.ClanarinaClanFk == clanID &&
+                     p.PrimerakGradjeGradjaFk == gradjaID &&
+                     p.DatumRazduzenja != null
+            );
+
+            return procitao;
+        }
+
         public async Task<IEnumerable<PozajmicaBO>> TraziPozajmicePoClanarini(int clanFK, int rbrClanarine)
         {
             List<Pozajmica> pozajmice = await bibliotekaContext.Pozajmicas

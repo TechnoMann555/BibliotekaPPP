@@ -11,12 +11,14 @@ namespace BibliotekaPPP.Controllers
     {
         NalogRepository nalogRepository = new NalogRepository();
 
+        // [SK2] Registracija clana na platformu biblioteke 
         [HttpGet]
         public IActionResult RegistracijaClan()
         {
             return View();
         }
 
+        // [SK2] Registracija clana na platformu biblioteke 
         [HttpPost]
         public async Task<IActionResult> RegistracijaClan(RegistracijaClanViewModel regPodaci)
         {

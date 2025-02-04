@@ -6,6 +6,12 @@
 
         public TipPoruke Tip { get; set; }
 
+        public Poruka()
+        {
+            this.Tekst = "### PRAZNA PORUKA ###";
+            this.Tip = TipPoruke.Greska;
+        }
+
         public Poruka(string tekst, TipPoruke tip)
         {
             this.Tekst = tekst;

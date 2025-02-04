@@ -24,7 +24,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Pretraga gradje</a>
                         </li>
                     </ul>
-                    @if (ViewBag.Korisnik != null)
+                    @if(ViewBag.Korisnik == null)
+                    {
+                        <a class="nav-link text-dark btn btn-light" asp-controller="Nalog" asp-action="RegistracijaClan">
+                            Registracija
+                        </a>
+                        <a class="nav-link text-dark btn btn-info ms-3" asp-controller="Nalog" asp-action="Login">
+                            Login
+                        </a>
+                    }
+                    else
                     {
                         if( ((NalogBO)ViewBag.Korisnik).Uloga == "Korisnik_Clan" )
                         {
