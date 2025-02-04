@@ -14,7 +14,12 @@ namespace BibliotekaPPP.Models.BusinessObjects
 
         public decimal Cena { get; set; }
 
-        public ClanarinaBO() { }
+        public List<int> ListaIDProcitaneGradje { get; set; }
+
+        public ClanarinaBO()
+        {
+            this.ListaIDProcitaneGradje = new List<int>();
+        }
 
         public ClanarinaBO(Clanarina clanarina)
         {
@@ -23,6 +28,17 @@ namespace BibliotekaPPP.Models.BusinessObjects
             this.DatumPocetka = clanarina.DatumPocetka;
             this.DatumZavrsetka = clanarina.DatumZavrsetka;
             this.Cena = clanarina.Cena;
+            this.ListaIDProcitaneGradje = new List<int>();
+        }
+
+        public ClanarinaBO(Clanarina clanarina, List<int> gradja)
+        {
+            this.ClanFk = clanarina.ClanFk;
+            this.Rbr = clanarina.Rbr;
+            this.DatumPocetka = clanarina.DatumPocetka;
+            this.DatumZavrsetka = clanarina.DatumZavrsetka;
+            this.Cena = clanarina.Cena;
+            this.ListaIDProcitaneGradje = gradja;
         }
     }
 }

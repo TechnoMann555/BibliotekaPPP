@@ -23,6 +23,8 @@ namespace BibliotekaPPP.Models.BusinessObjects
 
         public bool ImaSlobodnihPrimeraka { get; set; }
 
+        public OcenaProcitaneGradjeBO? Ocena { get; set; } = null;
+
         public GradjaBO()
         {
             Autori = new List<AutorBO>();

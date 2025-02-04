@@ -15,9 +15,18 @@
         PogresnaLozinka
     }
 
+    public enum OcenjivanjeGradjeResult
+    {
+        OcenaKreirana,
+        OcenaAzurirana,
+        OcenaIzbrisana,
+        Greska
+    }
+
     public enum TipPoruke
     {
         Uspeh = 0,
+        Obavestenje,
         Upozorenje,
         Greska
     }

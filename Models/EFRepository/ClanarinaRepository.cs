@@ -23,7 +23,15 @@ namespace BibliotekaPPP.Models.EFRepository
 
             foreach(Clanarina clanarina in clan.Clanarinas)
             {
-                ClanarinaBO clanarinaBO = new ClanarinaBO(clanarina);
+                List<int> procitanaGradja = await bibliotekaContext.Pozajmicas
+                                            .Where(p => p.ClanarinaClanFk == clanID &&
+                                                        p.ClanarinaFk == clanarina.Rbr &&
+                                                        p.DatumRazduzenja != null)
+                                            .Select(p => p.PrimerakGradjeGradjaFk)
+                                            .ToListAsync();
+                                               
+                ClanarinaBO clanarinaBO = new ClanarinaBO(clanarina, procitanaGradja);
+
                 listaClanarina.Add(clanarinaBO);
             }
 

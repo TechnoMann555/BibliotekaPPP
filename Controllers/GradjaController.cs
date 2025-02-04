@@ -4,12 +4,15 @@ using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.EFRepository;
 using Microsoft.Identity.Client;
 using BibliotekaPPP.Filters;
+using System.Text.Json;
 
 namespace BibliotekaPPP.Controllers
 {
     public class GradjaController : Controller
     {
         GradjaRepository gradjaRepository = new GradjaRepository();
+        ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
+        OcenaProcitaneGradjeRepository ocenaRepository = new OcenaProcitaneGradjeRepository();
 
         // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
         [HttpGet]
@@ -46,6 +49,24 @@ namespace BibliotekaPPP.Controllers
 
             if(trazenaGradja == null)
                 return RedirectToAction("Pretraga");
+
+            // [SK7] Ocenjivanje procitane gradje
+            if(Request.Cookies.TryGetValue("Korisnik", out _))
+            {
+                NalogBO nalogBO = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
+                
+                if(nalogBO.Uloga == "Korisnik_Clan")
+                {
+                    List<ClanarinaBO>? clanarine = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID((int)nalogBO.ClanId);
+                    ViewBag.GradjaProcitana = clanarine.Any(cl => cl.ListaIDProcitaneGradje.Contains(gradjaID));
+
+                    OcenaProcitaneGradjeBO? ocenaGradje = await ocenaRepository.TraziOcenu(
+                        gradjaID: gradjaID,
+                        korisnickiNalogID: nalogBO.NalogId
+                    );
+                    trazenaGradja.Ocena = ocenaGradje;
+                }
+            }
 
             return View(trazenaGradja);
         }
