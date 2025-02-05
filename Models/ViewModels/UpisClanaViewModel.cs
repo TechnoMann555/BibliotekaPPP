@@ -6,7 +6,6 @@ namespace BibliotekaPPP.Models.ViewModels
     {
         [Required(ErrorMessage = "Broj lične karte je obavezan.")]
         [RegularExpression("^[0-9]{9}$", ErrorMessage = "Broj lične karte je neispravnog formata.")]
-        [Length(9, 9, ErrorMessage = "Broj lične karte mora sadržati 9 cifara.")]
         public string BrLicneKarte { get; set; } = null!;
 
         [Required(ErrorMessage = "Ime i prezime je obavezno.")]
@@ -14,7 +13,7 @@ namespace BibliotekaPPP.Models.ViewModels
         public string ImePrezime { get; set; } = null!;
 
         [Required(ErrorMessage = "Datum rođenja je obavezno.")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date, ErrorMessage = "Datum rođenja je neispravnog formata.")]
         public DateOnly DatumRodjenja { get; set; }
 
         [Required(ErrorMessage = "Ime roditelja je obavezno.")]

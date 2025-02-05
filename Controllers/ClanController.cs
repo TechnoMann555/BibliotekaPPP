@@ -2,6 +2,7 @@
 using BibliotekaPPP.Models;
 using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.EFRepository;
+using BibliotekaPPP.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -58,6 +59,43 @@ namespace BibliotekaPPP.Controllers
                 return RedirectToAction("Pretraga");
 
             return View(trazenClan);
+        }
+
+        // [SK13] Upisivanje novog člana biblioteke
+        [HttpGet]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public IActionResult UpisNovogClana()
+        {
+            return View(null);
+        }
+
+        // [SK13] Upisivanje novog člana biblioteke
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> UpisNovogClana(UpisClanaViewModel podaci)
+        {
+            UpisivanjeClanaResult rezultatUpisa = await clanRepository.UpisiClana(podaci);
+
+            Poruka poruka = new Poruka();
+            switch(rezultatUpisa)
+            {
+                case UpisivanjeClanaResult.Uspeh:
+                poruka.Tekst = "Uspešno je upisan novi član biblioteke.";
+                break;
+                case UpisivanjeClanaResult.BrLicneKartePostoji:
+                poruka.Tekst = "Već postoji član biblioteke sa unetim brojem lične karte.";
+                break;
+                case UpisivanjeClanaResult.BrTelefonaPostoji:
+                poruka.Tekst = "Već postoji član biblioteke sa unetim kontakt brojem telefona.";
+                break;
+                case UpisivanjeClanaResult.KontaktMejlPostoji:
+                poruka.Tekst = "Već postoji član biblioteke sa unetom e-mail adresom.";
+                break;
+            }
+            poruka.Tip = (rezultatUpisa == UpisivanjeClanaResult.Uspeh) ? TipPoruke.Uspeh : TipPoruke.Greska;
+            ViewBag.PorukaKorisniku = poruka;
+
+            return View(podaci);
         }
     }
 }
