@@ -1,44 +1,54 @@
 ﻿@model List<BibliotekaPPP.Models.BusinessObjects.ClanarinaBO>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th scope="col">Datum početka</th>
-			<th scope="col">Datum završetka</th>
-			<th scope="col">Cena</th>
-		</tr>
-	</thead>
-	@if (Model.Count > 0)
-	{
-		ClanarinaBO poslednjaClanarina = Model[0];
-		int brojPreostalihDana = poslednjaClanarina.DatumZavrsetka.Day - DateOnly.FromDateTime(DateTime.Now).Day;
-		string stilPoslednjeClanarine = "";
-
-		if (brojPreostalihDana > 2)
-			stilPoslednjeClanarine = "table-primary";
-		else if (brojPreostalihDana >= 0 && brojPreostalihDana <= 2)
-			stilPoslednjeClanarine = "table-warning";
-		else
-			stilPoslednjeClanarine = "table-danger";
-
-		<tbody>
-			<tr class="@stilPoslednjeClanarine fw-bold">
-				<td>@poslednjaClanarina.DatumPocetka.ToString("dd/MMM/yyyy")</td>
-				<td>@poslednjaClanarina.DatumZavrsetka.ToString("dd/MMM/yyyy")</td>
-				<td>@poslednjaClanarina.Cena</td>
+@if(Model.Count == 0)
+{
+	Poruka poruka = new Poruka(
+		tekst: "Nema vezanih članarina.",
+		tip: TipPoruke.Upozorenje
+	);
+	await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Datum početka</th>
+				<th scope="col">Datum završetka</th>
+				<th scope="col">Cena</th>
 			</tr>
-			@if(Model.Count > 1)
-			{
-				for(int i = 1; i < Model.Count; i++)
+		</thead>
+		@{
+			ClanarinaBO poslednjaClanarina = Model[0];
+			int brojPreostalihDana = poslednjaClanarina.DatumZavrsetka.Day - DateOnly.FromDateTime(DateTime.Now).Day;
+			string stilPoslednjeClanarine = "";
+
+			if (brojPreostalihDana > 2)
+				stilPoslednjeClanarine = "table-primary";
+			else if (brojPreostalihDana >= 0 && brojPreostalihDana <= 2)
+				stilPoslednjeClanarine = "table-warning";
+			else
+				stilPoslednjeClanarine = "table-danger";
+
+			<tbody>
+				<tr class="@stilPoslednjeClanarine fw-bold">
+					<td>@poslednjaClanarina.DatumPocetka.ToString("dd/MMM/yyyy")</td>
+					<td>@poslednjaClanarina.DatumZavrsetka.ToString("dd/MMM/yyyy")</td>
+					<td>@poslednjaClanarina.Cena</td>
+				</tr>
+				@if(Model.Count > 1)
 				{
-					ClanarinaBO clanarinaBO = Model[i];
-					<tr>
-						<td>@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")</td>
-						<td>@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")</td>
-						<td>@clanarinaBO.Cena</td>
-					</tr>
+					for(int i = 1; i < Model.Count; i++)
+					{
+						ClanarinaBO clanarinaBO = Model[i];
+						<tr>
+							<td>@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")</td>
+							<td>@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")</td>
+							<td>@clanarinaBO.Cena</td>
+						</tr>
+					}
 				}
-			}
-		</tbody>
-	}
-</table>
+			</tbody>
+		}
+	</table>
+}
