@@ -65,6 +65,7 @@ namespace BibliotekaPPP.Controllers
         }
 
         // TODO: Refaktorisati login metode i poglede da budu cistiji
+        // TODO: Izvuci zajednicku metodu iz dve login akcije
         // [SK3] Logovanje na korisnički nalog
         [HttpGet]
         public IActionResult Login()
@@ -73,19 +74,73 @@ namespace BibliotekaPPP.Controllers
             return View();
         }
 
+        [NonAction]
+        private bool ProveriLoginPolja(string email, string lozinka, ref Poruka poruka)
+        {
+            if(string.IsNullOrEmpty(email) || string.IsNullOrEmpty(lozinka))
+            {
+                poruka.Tekst = "Email i lozinka su obavezni za unos.";
+                poruka.Tip = TipPoruke.Greska;
+                return false;
+            }
+
+            return true;
+        }
+
+        [NonAction]
+        private bool ProveriLoginRezultat(
+            NalogBO? nalog,
+            LoginResult rezultat,
+            ref Poruka poruka,
+            bool admin = false
+        )
+        {
+            if(nalog == null)
+            {
+                switch(rezultat)
+                {
+                    case LoginResult.NalogNePostoji:
+                    poruka.Tekst = $"Ne postoji {((admin) ? "administratorski" : "korisnički")} nalog vezan za unetu e-mail adresu.";
+                    poruka.Tip = TipPoruke.Greska;
+                    break;
+                    case LoginResult.PogresnaLozinka:
+                    poruka.Tekst = "Pogrešna lozinka.";
+                    poruka.Tip = TipPoruke.Greska;
+                    break;
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+        [NonAction]
+        private void KreirajCookie(NalogBO nalog)
+        {
+            Response.Cookies.Append(
+                "Korisnik",
+                JsonSerializer.Serialize(nalog),
+                new CookieOptions()
+                {
+                    Secure = true,
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SameSite = SameSiteMode.Strict
+                }
+            );
+        }
+
         // [SK3] Logovanje na korisnički nalog
         [HttpPost]
         public async Task<IActionResult> LoginClan(string emailClan, string lozinkaClan)
         {
             Poruka porukaKorisniku = new Poruka();
 
-            if(string.IsNullOrEmpty(emailClan) || string.IsNullOrEmpty(lozinkaClan))
+            if(!ProveriLoginPolja(emailClan, lozinkaClan, ref porukaKorisniku))
             {
-                porukaKorisniku.Tekst = "Email i lozinka su obavezni za unos.";
-                porukaKorisniku.Tip = TipPoruke.Greska;
                 ViewBag.Poruka = porukaKorisniku;
                 ViewBag.Tab = "KorisnikLogin";
-
                 return View("Login");
             }
 
@@ -94,57 +149,32 @@ namespace BibliotekaPPP.Controllers
                 lozinka: lozinkaClan
             );
 
-            if(loginRezultat.nalogBO == null)
+            if(!ProveriLoginRezultat(loginRezultat.nalogBO, loginRezultat.rezultat, ref porukaKorisniku))
             {
-                switch(loginRezultat.rezultat)
-                {
-                    case LoginResult.NalogNePostoji:
-                    porukaKorisniku.Tekst = "Ne postoji korisnički nalog vezan za unetu e-mail adresu.";
-                    porukaKorisniku.Tip = TipPoruke.Greska;
-                    break;
-                    case LoginResult.PogresnaLozinka:
-                    porukaKorisniku.Tekst = "Pogrešna lozinka.";
-                    porukaKorisniku.Tip = TipPoruke.Greska;
-                    break;
-                }
-
+                // Dupliranje bi moglo da se izbegne ako ovo stavim na kraj metode,
+                // kreiram labelu i iskoristim 'goto', ali bih da to izbegnem.
                 ViewBag.Poruka = porukaKorisniku;
                 ViewBag.Tab = "KorisnikLogin";
-
                 return View("Login");
             }
             else
             {
-                Response.Cookies.Append(
-                    "Korisnik",
-                    JsonSerializer.Serialize(loginRezultat.nalogBO),
-                    new CookieOptions()
-                    {
-                        Secure = true,
-                        HttpOnly = true,
-                        Expires = DateTime.UtcNow.AddDays(7),
-                        SameSite = SameSiteMode.Strict
-                    }
-                );
-
+                // Ne moze biti null jer smo ustanovili u prethodnom pozivu metode da nije null
+                KreirajCookie(loginRezultat.nalogBO);
                 return RedirectToAction("LicniPodaci", "Clan");
             }
         }
 
-        // TODO: Izvuci zajednicku metodu iz dve login akcije
         // [SK8] Logovanje na administratorski nalog
         [HttpPost]
         public async Task<IActionResult> LoginBibliotekar(string emailBibliotekar, string lozinkaBibliotekar)
         {
             Poruka porukaKorisniku = new Poruka();
 
-            if(string.IsNullOrEmpty(emailBibliotekar) || string.IsNullOrEmpty(lozinkaBibliotekar))
+            if(!ProveriLoginPolja(emailBibliotekar, lozinkaBibliotekar, ref porukaKorisniku))
             {
-                porukaKorisniku.Tekst = "Email i lozinka su obavezni za unos.";
-                porukaKorisniku.Tip = TipPoruke.Greska;
                 ViewBag.Poruka = porukaKorisniku;
                 ViewBag.Tab = "AdminLogin";
-
                 return View("Login");
             }
 
@@ -153,41 +183,19 @@ namespace BibliotekaPPP.Controllers
                 lozinka: lozinkaBibliotekar
             );
 
-            if(loginRezultat.nalogBO == null)
+            if(!ProveriLoginRezultat(loginRezultat.nalogBO, loginRezultat.rezultat, ref porukaKorisniku, true))
             {
-                switch(loginRezultat.rezultat)
-                {
-                    case LoginResult.NalogNePostoji:
-                    porukaKorisniku.Tekst = "Ne postoji administratorski nalog vezan za unetu e-mail adresu.";
-                    porukaKorisniku.Tip = TipPoruke.Greska;
-                    break;
-                    case LoginResult.PogresnaLozinka:
-                    porukaKorisniku.Tekst = "Pogrešna lozinka.";
-                    porukaKorisniku.Tip = TipPoruke.Greska;
-                    break;
-                }
-
+                // Dupliranje bi moglo da se izbegne ako ovo stavim na kraj metode,
+                // kreiram labelu i iskoristim 'goto', ali bih da to izbegnem.
                 ViewBag.Poruka = porukaKorisniku;
                 ViewBag.Tab = "AdminLogin";
-
                 return View("Login");
             }
             else
             {
-                Response.Cookies.Append(
-                    "Korisnik",
-                    JsonSerializer.Serialize(loginRezultat.nalogBO),
-                    new CookieOptions()
-                    {
-                        Secure = true,
-                        HttpOnly = true,
-                        Expires = DateTime.UtcNow.AddDays(7),
-                        SameSite = SameSiteMode.Strict
-                    }
-                );
-
-                // TODO: Promeniti da bude pretraga clanova po JCB
-                return RedirectToAction("Pretraga", "Gradja");
+                // Ne moze biti null jer smo ustanovili u prethodnom pozivu metode da nije null
+                KreirajCookie(loginRezultat.nalogBO);
+                return RedirectToAction("Pretraga", "Clan");
             }
         }
 
