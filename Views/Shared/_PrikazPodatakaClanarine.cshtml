@@ -20,7 +20,7 @@ else
 		</thead>
 		@{
 			ClanarinaBO poslednjaClanarina = Model[0];
-			int brojPreostalihDana = poslednjaClanarina.DatumZavrsetka.Day - DateOnly.FromDateTime(DateTime.Now).Day;
+			int brojPreostalihDana = poslednjaClanarina.DatumZavrsetka.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber;
 			string stilPoslednjeClanarine = "";
 
 			if (brojPreostalihDana > 2)

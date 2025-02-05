@@ -4,8 +4,46 @@
 	ViewData["Title"] = "Članarine";
 }
 
-<h1>Prikaz članarina</h1>
+<h1>Prikaz članarina člana</h1>
 <hr class="mb-5" />
 @{
 	await Html.RenderPartialAsync("~/Views/Shared/_PrikazPodatakaClanarine.cshtml", Model);
+}
+
+<div class="d-flex flex-row-reverse mt-5">
+	<button type="button" class="btn btn-primary" onclick="proveriUsloveOtvaranjaClanarine()">Otvori novu članarinu</button>
+</div>
+
+<div class="modal fade" id="modalOtvoriClanarinu" tabindex="-1" aria-labelledby="modalOtvoriClanarinuLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalOtvoriClanarinuLabel">Otvaranje nove članarine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modal-otvori-clanarinu-body" class="modal-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" asp-append-version="true">
+        async function proveriUsloveOtvaranjaClanarine()
+        {
+            let myModal = new bootstrap.Modal(document.getElementById('modalOtvoriClanarinu'));
+            
+            await $.ajax({
+                url: '@Url.Action("ProveriUsloveOtvaranjaClanarine", "Clanarina")',
+                data: { id: @ViewBag.ClanID },
+                method: 'POST',
+                success: function(result) {
+                    $('#modal-otvori-clanarinu-body').html(result);
+                }
+            });
+            
+            await myModal.show();
+        }
+    </script>
 }
