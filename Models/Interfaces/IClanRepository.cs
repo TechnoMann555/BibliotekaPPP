@@ -12,6 +12,6 @@ namespace BibliotekaPPP.Models.Interfaces
         public Task<ClanBO?> TraziClanaPoJCB(string JCB);
 
         // [SK13] Upisivanje novog člana biblioteke
-        public Task<UpisivanjeClanaResult> UpisiClana(UpisClanaViewModel podaci);
+        public Task<(UpisivanjeClanaResult, int?)> UpisiClana(UpisClanaViewModel podaci);
     }
 }

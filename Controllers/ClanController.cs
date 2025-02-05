@@ -74,14 +74,16 @@ namespace BibliotekaPPP.Controllers
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> UpisNovogClana(UpisClanaViewModel podaci)
         {
-            UpisivanjeClanaResult rezultatUpisa = await clanRepository.UpisiClana(podaci);
+            if(!ModelState.IsValid)
+            {
+                return View(podaci);
+            }    
+
+            (UpisivanjeClanaResult rezultat, int? clanID) rezultatUpisa = await clanRepository.UpisiClana(podaci);
 
             Poruka poruka = new Poruka();
-            switch(rezultatUpisa)
+            switch(rezultatUpisa.rezultat)
             {
-                case UpisivanjeClanaResult.Uspeh:
-                poruka.Tekst = "Uspešno je upisan novi član biblioteke.";
-                break;
                 case UpisivanjeClanaResult.BrLicneKartePostoji:
                 poruka.Tekst = "Već postoji član biblioteke sa unetim brojem lične karte.";
                 break;
@@ -92,10 +94,17 @@ namespace BibliotekaPPP.Controllers
                 poruka.Tekst = "Već postoji član biblioteke sa unetom e-mail adresom.";
                 break;
             }
-            poruka.Tip = (rezultatUpisa == UpisivanjeClanaResult.Uspeh) ? TipPoruke.Uspeh : TipPoruke.Greska;
-            ViewBag.PorukaKorisniku = poruka;
 
-            return View(podaci);
+            if(rezultatUpisa.rezultat != UpisivanjeClanaResult.Uspeh)
+            {
+                poruka.Tip = TipPoruke.Greska;
+                ViewBag.PorukaKorisniku = poruka;
+                return View(podaci);
+            }
+            else
+            {
+                return RedirectToAction("ClanarineClana", "Clanarina", new { id = rezultatUpisa.clanID });
+            }
         }
     }
 }

@@ -89,22 +89,22 @@ namespace BibliotekaPPP.Models.EFRepository
             return $"{noviRedniBroj}/{DateTime.Now.Year}";
         }
 
-        public async Task<UpisivanjeClanaResult> UpisiClana(UpisClanaViewModel podaci)
+        public async Task<(UpisivanjeClanaResult, int?)> UpisiClana(UpisClanaViewModel podaci)
         {
             // Da li postoji clan sa istim brojem licne karte?
             bool licnaKartaPostoji = await bibliotekaContext.Clans.AnyAsync(c => c.BrLicneKarte == podaci.BrLicneKarte);
             if(licnaKartaPostoji)
-                return UpisivanjeClanaResult.BrLicneKartePostoji;
+                return (UpisivanjeClanaResult.BrLicneKartePostoji, null);
 
             // Da li postoji clan sa istim brojem telefona?
             bool brojTelefonaPostoji = await bibliotekaContext.Clans.AnyAsync(c => c.KontaktTelefon == podaci.KontaktTelefon);
             if(brojTelefonaPostoji)
-                return UpisivanjeClanaResult.BrTelefonaPostoji;
+                return (UpisivanjeClanaResult.BrTelefonaPostoji, null);
 
             // Da li postoji clan sa istom e-mail adresom?
             bool emailPostoji = await bibliotekaContext.Clans.AnyAsync(c => c.KontaktMejl == podaci.KontaktMejl);
             if(emailPostoji)
-                return UpisivanjeClanaResult.KontaktMejlPostoji;
+                return (UpisivanjeClanaResult.KontaktMejlPostoji, null);
 
             // Kreiranje JCB za novog clana
             string noviJCB = await KreirajNovJCB();
@@ -126,7 +126,7 @@ namespace BibliotekaPPP.Models.EFRepository
             bibliotekaContext.Clans.Add(noviClan);
             await bibliotekaContext.SaveChangesAsync();
 
-            return UpisivanjeClanaResult.Uspeh;
+            return (UpisivanjeClanaResult.Uspeh, noviClan.ClanId);
         }
     }
 }
