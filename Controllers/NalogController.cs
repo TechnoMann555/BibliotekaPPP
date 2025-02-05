@@ -68,6 +68,8 @@ namespace BibliotekaPPP.Controllers
             return View();
         }
 
+        #region Neakcione metode za login
+
         [NonAction]
         private bool ProveriLoginPolja(string email, string lozinka, ref Poruka poruka)
         {
@@ -124,6 +126,8 @@ namespace BibliotekaPPP.Controllers
                 }
             );
         }
+
+        #endregion
 
         // [SK3] Logovanje na korisnički nalog
         [HttpPost]

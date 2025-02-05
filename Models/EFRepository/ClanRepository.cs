@@ -1,6 +1,7 @@
 ﻿using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.DatabaseObjects;
 using BibliotekaPPP.Models.Interfaces;
+using BibliotekaPPP.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BibliotekaPPP.Models.EFRepository
@@ -60,6 +61,20 @@ namespace BibliotekaPPP.Models.EFRepository
             ClanBO nadjenClan = await ConvertClanToClanBO(clan);
 
             return nadjenClan;
+        }
+
+        public async Task<UpisivanjeClanaResult> UpisiClana(UpisClanaViewModel podaci)
+        {
+            string? poslednjiJCB = await bibliotekaContext.Clans.MaxAsync(c => c.Jcb);
+
+
+            return UpisivanjeClanaResult.KontaktMejlPostoji;
+            //if()
+
+            //Clan noviClan = new Clan()
+            //{
+                
+            //};
         }
     }
 }
