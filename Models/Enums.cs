@@ -23,6 +23,14 @@
         Greska
     }
 
+    public enum UpisivanjeClanaResult
+    {
+        Uspeh,
+        BrLicneKartePostoji,
+        BrTelefonaPostoji,
+        KontaktMejlPostoji
+    }
+
     public enum TipPoruke
     {
         Uspeh = 0,

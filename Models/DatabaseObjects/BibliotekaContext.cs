@@ -47,11 +47,11 @@ public partial class BibliotekaContext : DbContext
     {
         modelBuilder.Entity<Autor>(entity =>
         {
-            entity.HasKey(e => e.AutorId).HasName("PK__Autor__F58AE909F4B51697");
+            entity.HasKey(e => e.AutorId).HasName("PK__Autor__F58AE909770E50D9");
 
             entity.ToTable("Autor");
 
-            entity.HasIndex(e => e.ImePrezime, "UQ__Autor__1613B026F60AED30").IsUnique();
+            entity.HasIndex(e => e.ImePrezime, "UQ__Autor__1613B026FF09610A").IsUnique();
 
             entity.Property(e => e.AutorId)
                 .ValueGeneratedNever()
@@ -61,7 +61,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Bibliotekar>(entity =>
         {
-            entity.HasKey(e => e.BibliotekarId).HasName("PK__Bibliote__ABB78DE6891D7B96");
+            entity.HasKey(e => e.BibliotekarId).HasName("PK__Bibliote__ABB78DE63F475155");
 
             entity.ToTable("Bibliotekar");
 
@@ -96,9 +96,13 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Clan>(entity =>
         {
-            entity.HasKey(e => e.ClanId).HasName("PK__Clan__EC03AA447943FFCC");
+            entity.HasKey(e => e.ClanId).HasName("PK__Clan__EC03AA443BAD0240");
 
             entity.ToTable("Clan");
+
+            entity.HasIndex(e => e.KorisnickiNalogFk, "idx_korisnickinalogfk_notnull")
+                .IsUnique()
+                .HasFilter("([KorisnickiNalogFK] IS NOT NULL)");
 
             entity.HasIndex(e => e.BrLicneKarte, "uq_BrLicneKarte_clan").IsUnique();
 
@@ -107,8 +111,6 @@ public partial class BibliotekaContext : DbContext
             entity.HasIndex(e => e.KontaktMejl, "uq_KontaktMejl_clan").IsUnique();
 
             entity.HasIndex(e => e.KontaktTelefon, "uq_KontaktTelefon_clan").IsUnique();
-
-            entity.HasIndex(e => e.KorisnickiNalogFk, "uq_KorisnickiNalog_clan").IsUnique();
 
             entity.Property(e => e.ClanId).HasColumnName("ClanID");
             entity.Property(e => e.AdresaStanovanja).HasMaxLength(80);
@@ -139,7 +141,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Clanarina>(entity =>
         {
-            entity.HasKey(e => new { e.ClanFk, e.Rbr }).HasName("PK__Clanarin__C0AC8B8FF9948170");
+            entity.HasKey(e => new { e.ClanFk, e.Rbr }).HasName("PK__Clanarin__C0AC8B8FBE644062");
 
             entity.ToTable("Clanarina");
 
@@ -157,7 +159,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Gradja>(entity =>
         {
-            entity.HasKey(e => e.GradjaId).HasName("PK__Gradja__8EF0C7DB30E3F2F9");
+            entity.HasKey(e => e.GradjaId).HasName("PK__Gradja__8EF0C7DB0F344844");
 
             entity.ToTable("Gradja");
 
@@ -197,7 +199,7 @@ public partial class BibliotekaContext : DbContext
                         .HasConstraintName("fk_gradjaautor_gradja"),
                     j =>
                     {
-                        j.HasKey("GradjaFk", "AutorFk").HasName("PK__GradjaAu__D1A8738B7EF3B26D");
+                        j.HasKey("GradjaFk", "AutorFk").HasName("PK__GradjaAu__D1A8738BB04C867B");
                         j.ToTable("GradjaAutor");
                         j.IndexerProperty<int>("GradjaFk").HasColumnName("GradjaFK");
                         j.IndexerProperty<int>("AutorFk").HasColumnName("AutorFK");
@@ -206,7 +208,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<IzdavanjeGradje>(entity =>
         {
-            entity.HasKey(e => e.IzdavanjeId).HasName("PK__Izdavanj__689FB244FAF22424");
+            entity.HasKey(e => e.IzdavanjeId).HasName("PK__Izdavanj__689FB2443D7954AD");
 
             entity.ToTable("IzdavanjeGradje");
 
@@ -222,7 +224,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Nalog>(entity =>
         {
-            entity.HasKey(e => e.NalogId).HasName("PK__Nalog__D8833317A0FCDC92");
+            entity.HasKey(e => e.NalogId).HasName("PK__Nalog__D88333174276D697");
 
             entity.ToTable("Nalog");
 
@@ -233,7 +235,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Naselje>(entity =>
         {
-            entity.HasKey(e => e.NaseljeId).HasName("PK__Naselje__1B116FA426A4DEA4");
+            entity.HasKey(e => e.NaseljeId).HasName("PK__Naselje__1B116FA4EC7FF939");
 
             entity.ToTable("Naselje");
 
@@ -247,7 +249,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<OcenaProcitaneGradje>(entity =>
         {
-            entity.HasKey(e => new { e.GradjaFk, e.ClanskiKorisnickiNalogFk }).HasName("PK__OcenaPro__B7C7FD00A7F576CD");
+            entity.HasKey(e => new { e.GradjaFk, e.ClanskiKorisnickiNalogFk }).HasName("PK__OcenaPro__B7C7FD0017039C9B");
 
             entity.ToTable("OcenaProcitaneGradje");
 
@@ -267,7 +269,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Ogranak>(entity =>
         {
-            entity.HasKey(e => e.OgranakId).HasName("PK__Ogranak__C1854282EB72CF01");
+            entity.HasKey(e => e.OgranakId).HasName("PK__Ogranak__C18542823AE98E56");
 
             entity.ToTable("Ogranak");
 
@@ -289,7 +291,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<Pozajmica>(entity =>
         {
-            entity.HasKey(e => new { e.ClanarinaClanFk, e.ClanarinaFk, e.Rbr }).HasName("PK__Pozajmic__DFC4A8CAAA837ADE");
+            entity.HasKey(e => new { e.ClanarinaClanFk, e.ClanarinaFk, e.Rbr }).HasName("PK__Pozajmic__DFC4A8CA941529AE");
 
             entity.ToTable("Pozajmica");
 
@@ -313,7 +315,7 @@ public partial class BibliotekaContext : DbContext
 
         modelBuilder.Entity<PrimerakGradje>(entity =>
         {
-            entity.HasKey(e => new { e.GradjaFk, e.OgranakFk, e.RbrUokviruOgranka }).HasName("PK__Primerak__CD9938539E03F92E");
+            entity.HasKey(e => new { e.GradjaFk, e.OgranakFk, e.RbrUokviruOgranka }).HasName("PK__Primerak__CD9938535323A776");
 
             entity.ToTable("PrimerakGradje");
 
