@@ -33,39 +33,33 @@ namespace BibliotekaPPP.Controllers
                 lozinka: regPodaci.Lozinka
             );
 
+            Poruka poruka = new Poruka();
+
             switch(rezultat)
             {
                 case KreiranjeNalogaResult.ClanNePostoji:
-                regPodaci.PorukaKorisniku = new Poruka(
-                    tekst: "Ne postoji član biblioteke sa unetim JČB.",
-                    tip: TipPoruke.Greska
-                );
+                    poruka.Tekst = "Ne postoji član biblioteke sa unetim JČB.";
                 break;
+
                 case KreiranjeNalogaResult.EmailNeOdgovara:
-                regPodaci.PorukaKorisniku = new Poruka(
-                    tekst: "Uneta e-mail adresa ne odgovara adresi vezana za člana biblioteke.",
-                    tip: TipPoruke.Greska
-                );
+                    poruka.Tekst = "Uneta e-mail adresa ne odgovara e-mail adresi vezana za člana biblioteke.";
                 break;
+                
                 case KreiranjeNalogaResult.NalogVecPostoji:
-                regPodaci.PorukaKorisniku = new Poruka(
-                    tekst: "Član biblioteke već ima otvoren članski korisnički nalog.",
-                    tip: TipPoruke.Greska
-                );
+                    poruka.Tekst = "Član biblioteke već ima otvoren članski korisnički nalog.";
                 break;
+                
                 case KreiranjeNalogaResult.Uspeh:
-                regPodaci.PorukaKorisniku = new Poruka(
-                    tekst: "Uspešno je kreiran člasnki korisnički nalog.",
-                    tip: TipPoruke.Uspeh
-                );
+                    poruka.Tekst = "Uspešno je kreiran člasnki korisnički nalog.";
                 break;
             }
+            poruka.Tip = (rezultat == KreiranjeNalogaResult.Uspeh) ? TipPoruke.Uspeh : TipPoruke.Greska;
+
+            regPodaci.PorukaKorisniku = poruka;
 
             return View(regPodaci);
         }
 
-        // TODO: Refaktorisati login metode i poglede da budu cistiji
-        // TODO: Izvuci zajednicku metodu iz dve login akcije
         // [SK3] Logovanje na korisnički nalog
         [HttpGet]
         public IActionResult Login()
