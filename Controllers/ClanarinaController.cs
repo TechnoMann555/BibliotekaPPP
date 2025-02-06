@@ -34,7 +34,17 @@ namespace BibliotekaPPP.Controllers
             if(clanarine == null)
                 return RedirectToAction("Pretraga", "Clan");
 
+            // Ako je pri otvaranju clanarine uneta pogresna vrednost za cenu,
+            // ispisace se error poruka na pogledu
+            if(TempData["PorukaGreskaUnosCene"] != null)
+            {
+                ViewBag.PorukaGreskaUnosCene = JsonSerializer.Deserialize<Poruka>(
+                    TempData["PorukaGreskaUnosCene"].ToString()
+                );
+            }
+
             ViewBag.ClanID = id;
+
             return View(clanarine.OrderByDescending(cl => cl.DatumPocetka).ToList());
         }
 
@@ -66,7 +76,16 @@ namespace BibliotekaPPP.Controllers
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> OtvoriClanarinu(int id, decimal cena)
         {
-            await clanarinaRepository.OtvoriClanarinu(id, cena);
+            if(cena < 1)
+            {
+                Poruka errorPoruka = new Poruka("Unešena je nepravilna vrednost za cenu.", TipPoruke.Greska);
+                TempData["PorukaGreskaUnosCene"] = JsonSerializer.Serialize<Poruka>(errorPoruka);
+            }
+            else
+            {
+                await clanarinaRepository.OtvoriClanarinu(id, cena);
+            }
+            
             return RedirectToAction("ClanarineClana", new { id });
         }
     }

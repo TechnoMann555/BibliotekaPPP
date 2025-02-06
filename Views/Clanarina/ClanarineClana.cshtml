@@ -1,13 +1,19 @@
 ﻿@model List<BibliotekaPPP.Models.BusinessObjects.ClanarinaBO>
 
 @{
-	ViewData["Title"] = "Članarine";
+    ViewData["Title"] = "Članarine";
 }
 
 <h1>Prikaz članarina člana</h1>
 <hr class="mb-5" />
 @{
-	await Html.RenderPartialAsync("~/Views/Shared/_PrikazPodatakaClanarine.cshtml", Model);
+    await Html.RenderPartialAsync("~/Views/Shared/_PrikazPodatakaClanarine.cshtml", Model);
+}
+
+@if (ViewBag.PorukaGreskaUnosCene != null)
+{
+    Poruka errorPoruka = ViewBag.PorukaGreskaUnosCene;
+    await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", errorPoruka);
 }
 
 <div class="d-flex flex-row-reverse mt-5">
