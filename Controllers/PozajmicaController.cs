@@ -10,8 +10,10 @@ namespace BibliotekaPPP.Controllers
 {
     public class PozajmicaController : Controller
     {
+        ClanRepository clanRepository = new ClanRepository();
         ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
         PozajmicaRepository pozajmicaRepository = new PozajmicaRepository();
+        OgranakRepository ogranakRepository = new OgranakRepository();
 
         [HttpGet]
         [Route("Pozajmice")]
@@ -96,6 +98,76 @@ namespace BibliotekaPPP.Controllers
             }
 
             return View(clanarina);
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> PrikaziFormuKreiranjaPozajmice(int id)
+        {
+            List<OgranakBO> ogranciSaGradjom = (List<OgranakBO>)await ogranakRepository.VratiOgrankeSaSlobodnimPrimercimaGradje(id);
+
+            if(ogranciSaGradjom.Count == 0)
+            {
+                Poruka poruka = new Poruka(
+                    tekst: "Ne postoji ni jedan slobodan primerak građe.",
+                    tip: TipPoruke.Upozorenje
+                );
+                return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
+            }
+            else
+            {
+                return PartialView("~/Views/Pozajmica/_FormaNovaPozajmica.cshtml", (ogranciSaGradjom, id));
+            }
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> KreirajPozajmicu(int ogranakID, int gradjaID, string clanJCB)
+        {
+            ClanBO? clan = await clanRepository.TraziClanaPoJCB(clanJCB);
+            Poruka? porukaGreska = null;
+
+            if(clan == null)
+            {
+                porukaGreska = new Poruka("Ne postoji član sa unetim JČB.", TipPoruke.Greska);
+            }
+            else
+            {
+                KreiranjePozajmiceResult rezultat = await pozajmicaRepository.KreirajPozajmicu(
+                    ogranakID: ogranakID,
+                    gradjaID: gradjaID,
+                    clanID: clan.ClanId
+                );
+
+                if(rezultat == KreiranjePozajmiceResult.Uspeh)
+                    return RedirectToAction("PozajmiceClana", new { id = gradjaID });
+
+                porukaGreska = new Poruka();
+                switch(rezultat)
+                {
+                    case KreiranjePozajmiceResult.NemaTekucuClanarinu:
+                    porukaGreska.Tekst = "Član sa unetim JČB nema tekuću članarinu.";
+                    break;
+                    case KreiranjePozajmiceResult.ImaMaksTekucihPozajmica:
+                    porukaGreska.Tekst = "Član sa unetim JČB ima maksimalni broj tekućih pozajmica.";
+                    break;
+                    case KreiranjePozajmiceResult.ImaZakasneleTekucePozajmice:
+                    porukaGreska.Tekst = "Član sa unetim JČB ima tekuće pozajmice sa prekoračenim rokom razduženja.";
+                    break;
+                    case KreiranjePozajmiceResult.ImaTekucuPozajmicuZaGradju:
+                    porukaGreska.Tekst = "Član sa unetim JČB već ima tekuću pozajmicu za željenu građu.";
+                    break;
+                }
+                porukaGreska.Tip = TipPoruke.Greska;
+            }
+
+            if(porukaGreska != null)
+            {
+                TempData["PorukaGreska"] = JsonSerializer.Serialize<Poruka>(porukaGreska);
+                return RedirectToAction("Prikaz", "Gradja", new { id = gradjaID });
+            }
+
+            return RedirectToAction("Prikaz", "Gradja", new { id = gradjaID });
         }
     }
 }

@@ -18,7 +18,7 @@ namespace BibliotekaPPP.Models.EFRepository
             );
 
             return procitao;
-        }
+        }        
 
         public async Task<IEnumerable<PozajmicaBO>> TraziPozajmicePoClanarini(int clanFK, int rbrClanarine)
         {
@@ -41,6 +41,85 @@ namespace BibliotekaPPP.Models.EFRepository
             }
 
             return listaPozajmica;
+        }
+
+        public async Task<KreiranjePozajmiceResult> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID)
+        {
+            Clanarina? poslednjaClanarina = await bibliotekaContext.Clanarinas
+                                                  .Include(cl => cl.Pozajmicas)
+                                                  .Where(cl => cl.ClanFk == clanID)
+                                                  .OrderByDescending(cl => cl.DatumPocetka)
+                                                  .FirstOrDefaultAsync();
+            DateOnly trenutniDatum = DateOnly.FromDateTime(DateTime.Now);
+
+            // Provera da li clan nema tekucu clanarinu
+            if(
+                poslednjaClanarina == null ||
+                poslednjaClanarina.DatumZavrsetka < trenutniDatum
+            )
+            {
+                return KreiranjePozajmiceResult.NemaTekucuClanarinu;
+            }
+
+            // Provera da li clan ima maks. broj tekucih pozajmica (deset)
+            if(poslednjaClanarina.Pozajmicas
+                .Where(poz => poz.DatumRazduzenja == null)
+                .Count() >= 10
+            )
+            {
+                return KreiranjePozajmiceResult.ImaMaksTekucihPozajmica;
+            }
+
+            // Provera da li clan ima bar jednu tekucu pozajmicu za koju je prekoracen rok razduzenja
+            if(poslednjaClanarina.Pozajmicas.Any(poz => 
+                poz.RokRazduzenja < trenutniDatum &&
+                poz.DatumRazduzenja == null
+            ))
+            {
+                return KreiranjePozajmiceResult.ImaZakasneleTekucePozajmice;
+            }
+
+            // Provera da li clan vec ima tekucu pozajmicu za izabranu gradju
+            if(poslednjaClanarina.Pozajmicas.Any(poz =>
+                poz.PrimerakGradjeGradjaFk == gradjaID &&
+                poz.DatumRazduzenja == null
+            ))
+            {
+                return KreiranjePozajmiceResult.ImaTekucuPozajmicuZaGradju;
+            }
+
+            // Izbor primerka gradje koji ima najmanji broj pozajmica
+
+            // Ne moze biti null, jer smo metodom PretraziOgrankePoGradjiID()
+            // utvrdili ogranke u kojima postoji bar jedan slobodan primerak gradje
+            PrimerakGradje primerak = await bibliotekaContext.PrimerakGradjes
+                                            .Where(pg =>
+                                                pg.GradjaFk == gradjaID &&
+                                                pg.OgranakFk == ogranakID &&
+                                                pg.Status == "slobodan"
+                                            )
+                                            .OrderBy(pg => pg.Pozajmicas.Count)
+                                            .ThenBy(pg => pg.InventarniBroj)
+                                            .FirstOrDefaultAsync();
+
+            Pozajmica novaPozajmica = new Pozajmica()
+            {
+                ClanarinaClanFk = clanID,
+                ClanarinaFk = poslednjaClanarina.Rbr,
+                PrimerakGradjeGradjaFk = primerak.GradjaFk,
+                PrimerakGradjeOgranakFk = primerak.OgranakFk,
+                PrimerakGradjeFk = primerak.RbrUokviruOgranka,
+                DatumPocetka = trenutniDatum,
+                RokRazduzenja = trenutniDatum.AddDays(20),
+                DatumRazduzenja = null
+            };
+
+            bibliotekaContext.Pozajmicas.Add(novaPozajmica);
+            primerak.Status = "zauzet";
+
+            await bibliotekaContext.SaveChangesAsync();
+
+            return KreiranjePozajmiceResult.Uspeh;
         }
     }
 }

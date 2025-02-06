@@ -45,4 +45,13 @@
         PostojiTekucaClanarina,
         PostojeNerazduzenePozajmice
     }
+
+    public enum KreiranjePozajmiceResult
+    {
+        Uspeh,
+        NemaTekucuClanarinu,
+        ImaMaksTekucihPozajmica,
+        ImaZakasneleTekucePozajmice,
+        ImaTekucuPozajmicuZaGradju
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace BibliotekaPPP.Models.BusinessObjects
+﻿using BibliotekaPPP.Models.DatabaseObjects;
+
+namespace BibliotekaPPP.Models.BusinessObjects
 {
     public class OgranakBO
     {
@@ -8,9 +10,16 @@
 
         public string Adresa { get; set; } = null!;
 
-        public int NaseljeFk { get; set; }
+        public string NaseljeNaziv { get; set; } = null!;
 
-        public int RbrUokviruNaselja { get; set; }
+        public OgranakBO() { }
 
+        public OgranakBO(Ogranak ogranak)
+        {
+            this.OgranakId = ogranak.OgranakId;
+            this.Naziv = ogranak.Naziv;
+            this.Adresa = ogranak.Adresa;
+            this.NaseljeNaziv = ogranak.NaseljeFkNavigation.Naziv;
+        }
     }
 }
