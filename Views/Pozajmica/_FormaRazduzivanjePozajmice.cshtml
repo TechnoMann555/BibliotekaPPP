@@ -1,0 +1,60 @@
+﻿@model PozajmicaBO
+
+@{
+	DateOnly trenutniDatum = DateOnly.FromDateTime(DateTime.Now);
+}
+
+<form asp-controller="Pozajmica" asp-action="RazduziPozajmicu" method="post">
+	<div class="mb-3">
+		<p>
+			<span class="fw-bold">Naslov građe: </span>
+			@Model.NaslovGradje
+		</p>
+	</div>
+	<div class="mb-3">
+		<p>
+			<span class="fw-bold">Inventarni broj primerka: </span>
+			@Model.InventarniBrojPrimerka
+		</p>
+	</div>
+	<hr />
+	<div class="mb-3">
+		<p>
+			<span class="fw-bold">Datum početka: </span>
+			@Model.DatumPocetka
+		</p>
+	</div>
+	<div class="mb-3">
+		<p>
+			<span class="fw-bold">Rok razduženja: </span>
+			@Model.RokRazduzenja
+		</p>
+	</div>
+	<div class="mb-3">
+		<p class="fw-bold">
+			Datum razduženja: <span class="text-primary">@trenutniDatum</span>
+		</p>
+	</div>
+	<div class="mb-3">
+		<p class="fw-bold">
+			<span>Prekoračenje roka: </span>
+			@if(Model.RokRazduzenja >= trenutniDatum)
+			{
+				<span class="text-success">Nema prekoračenja</span>
+			}
+			else
+			{
+				<span class="text-danger">
+					@(trenutniDatum.DayNumber - Model.RokRazduzenja.DayNumber) dana
+				</span>
+			}
+		</p>
+	</div>
+	<hr />
+	<div class="d-flex flex-row-reverse">
+		<input type="hidden" name="clanID" value="@Model.ClanFk" />
+		<input type="hidden" name="clanarinaID" value="@Model.ClanarinaFk" />
+		<input type="hidden" name="pozajmicaRbr" value="@Model.Rbr" />
+		<input type="submit" value="Razduži pozajmicu" class="btn btn-primary" />
+	</div>
+</form>

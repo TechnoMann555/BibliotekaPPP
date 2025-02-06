@@ -169,5 +169,28 @@ namespace BibliotekaPPP.Controllers
 
             return RedirectToAction("Prikaz", "Gradja", new { id = gradjaID });
         }
+
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> PrikaziFormuRazduzivanjaPozajmice(int clanID, int clanarinaID, int pozajmicaRbr)
+        {
+            PozajmicaBO pozajmicaBO = await pozajmicaRepository.TraziPozajmicuPoPK(clanID, clanarinaID, pozajmicaRbr);
+
+            //if(pozajmicaBO == null)
+            //{
+            //    Poruka errorPoruka = new Poruka("Nije pronađena tražena pozajmica.", TipPoruke.Greska);
+            //    return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", errorPoruka);
+            //}
+
+            return PartialView("~/Views/Pozajmica/_FormaRazduzivanjePozajmice.cshtml", pozajmicaBO);
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr)
+        {
+            await pozajmicaRepository.RazduziPozajmicu(clanID, clanarinaID, pozajmicaRbr);
+            return RedirectToAction("PozajmiceClana", new { id = clanID });
+        }
     }
 }

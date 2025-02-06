@@ -9,5 +9,9 @@ namespace BibliotekaPPP.Models.Interfaces
         public Task<IEnumerable<PozajmicaBO>> TraziPozajmicePoClanarini(int clanFK, int rbrClanarine);
 
         public Task<KreiranjePozajmiceResult> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID);
+
+        public Task<PozajmicaBO?> TraziPozajmicuPoPK(int clanID, int clanarinaID, int pozajmicaRbr);
+
+        public Task RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr);
     }
 }
