@@ -20,6 +20,8 @@ namespace BibliotekaPPP.Models.BusinessObjects
 
         public string InventarniBrojPrimerka { get; set; } = null!;
 
+        public int OgranakID { get; set; }
+
         public string NazivOgrankaPrimerka { get; set; } = null!;
 
         public PozajmicaBO() { }
@@ -34,6 +36,7 @@ namespace BibliotekaPPP.Models.BusinessObjects
             this.DatumRazduzenja = pozajmica.DatumRazduzenja;
             this.NaslovGradje = pozajmica.PrimerakGradje.GradjaFkNavigation.Naslov;
             this.InventarniBrojPrimerka = pozajmica.PrimerakGradje.InventarniBroj;
+            this.OgranakID = pozajmica.PrimerakGradje.OgranakFkNavigation.OgranakId;
             this.NazivOgrankaPrimerka = pozajmica.PrimerakGradje.OgranakFkNavigation.Naziv;
         }
     }

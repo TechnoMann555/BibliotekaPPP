@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Pozajmice";
 }
 
-<h1>Prikaz pozajmica</h1>
+<h1>Prikaz pozajmica člana</h1>
 <hr class="mb-5" />
 
 <div class="mb-3">
@@ -13,11 +13,11 @@
 			<option value="" selected disabled>-- Izaberite clanarinu --</option>
 			@foreach (ClanarinaBO clanarinaBO in ViewBag.Clanarine)
 			{
-				<option value="@clanarinaBO.Rbr">
+				<!option value="@clanarinaBO.Rbr">
 					@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")
 					-
 					@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")
-				</option>
+				</!option>
 			}
 		</select>
 	</form>
@@ -39,6 +39,7 @@
 					<th scope="col">Datum početka</th>
 					<th scope="col">Rok razduženja</th>
 					<th scope="col">Datum razduženja</th>
+					<th scope="col">Razduživanje</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -48,7 +49,7 @@
 
 					if (pozajmicaBO.DatumRazduzenja == null)
 					{
-						int brojPreostalihDana = pozajmicaBO.RokRazduzenja.Day - DateOnly.FromDateTime(DateTime.Now).Day;
+						int brojPreostalihDana = pozajmicaBO.RokRazduzenja.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber;
 
 						if (brojPreostalihDana > 2)
 							pozajmicaStil = "table-primary";
@@ -64,8 +65,17 @@
 						<td>@pozajmicaBO.NazivOgrankaPrimerka</td>
 						<td>@pozajmicaBO.DatumPocetka.ToString("dd/MMM/yyyy")</td>
 						<td>@pozajmicaBO.RokRazduzenja.ToString("dd/MMM/yyyy")</td>
-						<td>
-							@pozajmicaBO.DatumRazduzenja?.ToString("dd/MMM/yyyy")
+						<td>@pozajmicaBO.DatumRazduzenja?.ToString("dd/MMM/yyyy")</td>
+						<td class="text-center align-middle p-0">
+							@if(
+								pozajmicaBO.OgranakID == ((NalogBO)ViewBag.Korisnik).BibliotekarOgranakID &&
+								pozajmicaBO.DatumRazduzenja == null
+							)
+							{
+								<button type="button" class="btn p-1 btn-primary">
+									Razduži
+								</button>
+							}
 						</td>
 					</tr>
 				}
