@@ -29,5 +29,41 @@ namespace BibliotekaPPP.Models.EFRepository
 
             return listaClanarina;
         }
+
+        // [SK14] Otvaranje nove članarine za određenog člana
+        public async Task<PrUslovaOtvClanarineResult> ProveriUsloveOtvaranjaClanarine(int clanID)
+        {
+            bool imaTekucuClanarinu = await bibliotekaContext.Clanarinas.AnyAsync(cl =>
+                cl.ClanFk == clanID &&
+                cl.DatumZavrsetka >= DateOnly.FromDateTime(DateTime.Now)
+            );
+
+            if(imaTekucuClanarinu)
+                return PrUslovaOtvClanarineResult.PostojiTekucaClanarina;
+
+            bool imaNerazduzenihPozajmica = await bibliotekaContext.Pozajmicas.AnyAsync(poz =>
+                poz.ClanarinaClanFk == clanID &&
+                poz.DatumRazduzenja == null
+            );
+
+            if(imaNerazduzenihPozajmica)
+                return PrUslovaOtvClanarineResult.PostojeNerazduzenePozajmice;
+
+            return PrUslovaOtvClanarineResult.IspunjeniUslovi;
+        }
+
+        public async Task OtvoriClanarinu(int clanID, decimal cena)
+        {
+            Clanarina novaClanarina = new Clanarina()
+            {
+                ClanFk = clanID,
+                DatumPocetka = DateOnly.FromDateTime(DateTime.Now),
+                DatumZavrsetka = DateOnly.FromDateTime(DateTime.Now.AddYears(1)),
+                Cena = cena
+            };
+
+            bibliotekaContext.Clanarinas.Add(novaClanarina);
+            await bibliotekaContext.SaveChangesAsync();
+        }
     }
 }

@@ -1,5 +1,13 @@
 ﻿namespace BibliotekaPPP.Models
 {
+    public enum TipPoruke
+    {
+        Uspeh = 0,
+        Obavestenje,
+        Upozorenje,
+        Greska
+    }
+
     public enum KreiranjeNalogaResult
     {
         Uspeh = 0,
@@ -31,11 +39,10 @@
         KontaktMejlPostoji
     }
 
-    public enum TipPoruke
+    public enum PrUslovaOtvClanarineResult
     {
-        Uspeh = 0,
-        Obavestenje,
-        Upozorenje,
-        Greska
+        IspunjeniUslovi,
+        PostojiTekucaClanarina,
+        PostojeNerazduzenePozajmice
     }
 }

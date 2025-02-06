@@ -6,5 +6,11 @@ namespace BibliotekaPPP.Models.Interfaces
     {
         // [SK5] Prikaz informacija o članarinama
         public Task<IEnumerable<ClanarinaBO>?> TraziClanarinePoClanID(int clanID);
+
+        // [SK14] Otvaranje nove članarine za određenog člana
+        public Task<PrUslovaOtvClanarineResult> ProveriUsloveOtvaranjaClanarine(int clanID);
+
+        // [SK14] Otvaranje nove članarine za određenog člana
+        public Task OtvoriClanarinu(int clanID, decimal cena);
     }
 }
