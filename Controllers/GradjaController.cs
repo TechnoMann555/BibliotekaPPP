@@ -5,6 +5,7 @@ using BibliotekaPPP.Models.EFRepository;
 using Microsoft.Identity.Client;
 using BibliotekaPPP.Filters;
 using System.Text.Json;
+using BibliotekaPPP.Models;
 
 namespace BibliotekaPPP.Controllers
 {
@@ -67,6 +68,14 @@ namespace BibliotekaPPP.Controllers
                         korisnickiNalogID: nalogBO.NalogId
                     );
                     trazenaGradja.Ocena = ocenaGradje;
+                }
+                else if(nalogBO.Uloga == "Admin_Bibliotekar")
+                {
+                    if(TempData["PorukaGreska"] != null)
+                    {
+                        Poruka porukaGreska = JsonSerializer.Deserialize<Poruka>(TempData["PorukaGreska"].ToString());
+                        ViewBag.AdminPorukaGreska = porukaGreska;
+                    }
                 }
             }
 
