@@ -1,4 +1,5 @@
-﻿using BibliotekaPPP.Models;
+﻿using BibliotekaPPP.Filters;
+using BibliotekaPPP.Models;
 using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.EFRepository;
 using BibliotekaPPP.Models.ViewModels;
@@ -195,6 +196,30 @@ namespace BibliotekaPPP.Controllers
                 KreirajCookie(loginRezultat.nalogBO);
                 return RedirectToAction("Pretraga", "Clan");
             }
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
+        public async Task<IActionResult> BrisiKorisnickiNalog(int id)
+        {
+            BrisanjeKorisnickogNalogaResult rezultatBrisanja = await nalogRepository.BrisiKorisnickiNalog(id);
+
+            Poruka poruka = new Poruka();
+            
+            switch(rezultatBrisanja)
+            {
+                case BrisanjeKorisnickogNalogaResult.Uspeh:
+                poruka.Tekst = "Uspešno je izbrisan članski korisnički nalog.";
+                break;
+                case BrisanjeKorisnickogNalogaResult.NemaKorisnickiNalog:
+                poruka.Tekst = "Član biblioteke nema članski korisnički nalog.";
+                break;
+            }
+
+            poruka.Tip = (rezultatBrisanja == BrisanjeKorisnickogNalogaResult.Uspeh) ? TipPoruke.Uspeh : TipPoruke.Greska;
+            TempData["PorukaKorisniku"] = JsonSerializer.Serialize(poruka);
+
+            return RedirectToAction("PrikazLicnihPodataka", "Clan", new { id });
         }
 
         // TODO: Dokumentovati Logout funkcionalnost u Larmanu
