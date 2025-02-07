@@ -1,4 +1,5 @@
-﻿using BibliotekaPPP.Models.BusinessObjects;
+﻿using AspNetCoreGeneratedDocument;
+using BibliotekaPPP.Models.BusinessObjects;
 using BibliotekaPPP.Models.DatabaseObjects;
 using BibliotekaPPP.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -120,6 +121,42 @@ namespace BibliotekaPPP.Models.EFRepository
             await bibliotekaContext.SaveChangesAsync();
 
             return KreiranjePozajmiceResult.Uspeh;
+        }
+
+        public async Task<PozajmicaBO?> TraziPozajmicuPoPK(int clanID, int clanarinaID, int pozajmicaRbr)
+        {
+            Pozajmica? pozajmica = await bibliotekaContext.Pozajmicas
+                                         .Include(p => p.PrimerakGradje)
+                                             .ThenInclude(pg => pg.GradjaFkNavigation)
+                                         .Where(poz =>
+                                            poz.ClanarinaClanFk == clanID &&
+                                            poz.ClanarinaFk == clanarinaID &&
+                                            poz.Rbr == pozajmicaRbr
+                                         )
+                                         .FirstOrDefaultAsync();
+
+            if(pozajmica == null)
+                return null;
+
+            PozajmicaBO trazenaPozajmica = new PozajmicaBO(pozajmica);
+            return trazenaPozajmica;
+        }
+
+        public async Task RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr)
+        {
+            Pozajmica pozajmica = await bibliotekaContext.Pozajmicas
+                                        .Include(poz => poz.PrimerakGradje)
+                                        .Where(poz =>
+                                            poz.ClanarinaClanFk == clanID &&
+                                            poz.ClanarinaFk == clanarinaID &&
+                                            poz.Rbr == pozajmicaRbr
+                                        )
+                                        .FirstOrDefaultAsync();
+
+            pozajmica.DatumRazduzenja = DateOnly.FromDateTime(DateTime.Now);
+            pozajmica.PrimerakGradje.Status = "slobodan";
+
+            await bibliotekaContext.SaveChangesAsync();
         }
     }
 }

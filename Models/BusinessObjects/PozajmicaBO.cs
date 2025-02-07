@@ -16,11 +16,13 @@ namespace BibliotekaPPP.Models.BusinessObjects
 
         public DateOnly? DatumRazduzenja { get; set; }
 
-        public string NaslovGradje { get; set; } = null!;
+        public string? NaslovGradje { get; set; } = null;
 
-        public string InventarniBrojPrimerka { get; set; } = null!;
+        public string? InventarniBrojPrimerka { get; set; } = null;
 
-        public string NazivOgrankaPrimerka { get; set; } = null!;
+        public int? OgranakID { get; set; } = null;
+
+        public string? NazivOgrankaPrimerka { get; set; } = null;
 
         public PozajmicaBO() { }
 
@@ -32,9 +34,22 @@ namespace BibliotekaPPP.Models.BusinessObjects
             this.DatumPocetka = pozajmica.DatumPocetka;
             this.RokRazduzenja = pozajmica.RokRazduzenja;
             this.DatumRazduzenja = pozajmica.DatumRazduzenja;
-            this.NaslovGradje = pozajmica.PrimerakGradje.GradjaFkNavigation.Naslov;
-            this.InventarniBrojPrimerka = pozajmica.PrimerakGradje.InventarniBroj;
-            this.NazivOgrankaPrimerka = pozajmica.PrimerakGradje.OgranakFkNavigation.Naziv;
+            
+            if(pozajmica.PrimerakGradje != null)
+            {
+                this.InventarniBrojPrimerka = pozajmica.PrimerakGradje.InventarniBroj;
+
+                if(pozajmica.PrimerakGradje.GradjaFkNavigation != null)
+                {
+                    this.NaslovGradje = pozajmica.PrimerakGradje.GradjaFkNavigation.Naslov;
+                }
+
+                if(pozajmica.PrimerakGradje.OgranakFkNavigation != null)
+                {
+                    this.OgranakID = pozajmica.PrimerakGradje.OgranakFkNavigation.OgranakId;
+                    this.NazivOgrankaPrimerka = pozajmica.PrimerakGradje.OgranakFkNavigation.Naziv;
+                }
+            }
         }
     }
 }

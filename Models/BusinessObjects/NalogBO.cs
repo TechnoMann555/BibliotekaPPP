@@ -12,6 +12,8 @@ namespace BibliotekaPPP.Models.BusinessObjects
 
         public int? BibliotekarId { get; set; } = null;
 
+        public int? BibliotekarOgranakID { get; set; } = null;
+
         public NalogBO() { }
 
         public NalogBO(Nalog nalog)
@@ -20,9 +22,14 @@ namespace BibliotekaPPP.Models.BusinessObjects
             this.Uloga = nalog.Uloga;
 
             if(nalog.Clan != null)
+            {
                 this.ClanId = nalog.Clan.ClanId;
+            }
             else if(nalog.Bibliotekar != null)
+            {
                 this.BibliotekarId = nalog.Bibliotekar.BibliotekarId;
+                this.BibliotekarOgranakID = nalog.Bibliotekar.OgranakFk;
+            }
         }
     }
 }
