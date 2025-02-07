@@ -157,7 +157,7 @@ namespace BibliotekaPPP.Controllers
             {
                 // Ne moze biti null jer smo ustanovili u pozivu metode 'ProveriLoginRezultat' da nije null
                 KreirajCookie(loginRezultat.nalogBO);
-                return RedirectToAction("LicniPodaci", "Clan");
+                return RedirectToAction("LicniClanskiPodaci", "Clan");
             }
         }
 

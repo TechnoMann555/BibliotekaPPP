@@ -14,12 +14,12 @@ namespace BibliotekaPPP.Controllers
 
         // [SK4] Prikaz ličnih i članskih podataka
         [HttpGet]
-        [Route("LicniPodaci")]
+        [Route("LicniClanskiPodaci")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
-        public async Task<IActionResult> LicniPodaci()
+        public async Task<IActionResult> LicniClanskiPodaci()
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
-            ClanBO clanBO = await clanRepository.TraziClanaPoClanID((int)korisnickiNalog.ClanId);
+            ClanBO? clanBO = await clanRepository.TraziClanaPoClanID((int)korisnickiNalog.ClanId);
 
             return View(clanBO);
         }
