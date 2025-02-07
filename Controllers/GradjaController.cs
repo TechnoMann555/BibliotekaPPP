@@ -34,7 +34,7 @@ namespace BibliotekaPPP.Controllers
                 nazivIzdavaca: gradja.NazivIzdavaca,
                 godinaIzdavanja: gradja.GodinaIzdavanja,
                 udk: gradja.Udk,
-                ogranak: gradja.Ogranak,
+                nazivOgranka: gradja.Ogranak,
                 statusDostupnosti: gradja.StatusDostupnosti
             );
 

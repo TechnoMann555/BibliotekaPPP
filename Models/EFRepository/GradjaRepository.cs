@@ -11,12 +11,23 @@ namespace BibliotekaPPP.Models.EFRepository
 
         #region Metode za prevodjenje tipova
 
-        private async Task<GradjaBO> ConvertGradjaToGradjaBO(Gradja gradja)
+        private async Task<GradjaBO> ConvertGradjaToGradjaBO(Gradja gradja, string? nazivOgranka = null)
         {
-            // Ako postoji bar jedan slobodan primerak gradje, azuriraj status dostupnosti da je true
             bool statusDostupnosti = false;
-            if(gradja.PrimerakGradjes.Any(p => p.Status == "slobodan"))
-                statusDostupnosti = true;
+
+            if(nazivOgranka == null)
+            {
+                if(gradja.PrimerakGradjes.Any(p => p.Status == "slobodan"))
+                    statusDostupnosti = true;
+            }
+            else
+            {
+                if(gradja.PrimerakGradjes.Any(p =>
+                    p.Status == "slobodan" &&
+                    p.OgranakFkNavigation.Naziv.Contains(nazivOgranka))
+                )
+                    statusDostupnosti = true;
+            }
 
             GradjaBO gradjaBO = new GradjaBO()
             {
@@ -30,7 +41,7 @@ namespace BibliotekaPPP.Models.EFRepository
             };
 
             IzdavanjeGradje? izdavanje = await bibliotekaEntities.IzdavanjeGradjes
-                                         .FirstOrDefaultAsync(iz => iz.IzdavanjeId == gradja.IzdavanjeFk);
+                                               .FirstOrDefaultAsync(iz => iz.IzdavanjeId == gradja.IzdavanjeFk);
 
             if(izdavanje == null)
                 gradjaBO.Izdavanje = null;
@@ -56,7 +67,7 @@ namespace BibliotekaPPP.Models.EFRepository
             string? nazivIzdavaca = null,
             decimal? godinaIzdavanja = null,
             string? udk = null,
-            string? ogranak = null,
+            string? nazivOgranka = null,
             bool statusDostupnosti = false
         )
         {
@@ -93,24 +104,53 @@ namespace BibliotekaPPP.Models.EFRepository
             if(udk != null)
                 gradjaQuery = gradjaQuery.Where(g => g.Udk.StartsWith(udk));
 
-            // TODO: Ne radi sa određenim slovima ćirilice (bar sa 'ć')
-            // Ako postoji bar jedan primerak gradje koji se nalazi u ogranku sa nazivom koji sadrzi unet string, ukljuci gradju
-            if(ogranak != null)
-                gradjaQuery = gradjaQuery.Where(
-                    g => g.PrimerakGradjes.Any(
-                        p => p.OgranakFkNavigation.Naziv.Contains(ogranak)
-                    )
-                );
-
-            // Ako postoji bar jedan primerak gradje koji je slobodan za pozajmljivanje, ukljuci gradju
-            if(statusDostupnosti == true)
-                gradjaQuery = gradjaQuery.Where(g => g.PrimerakGradjes.Any(p => p.Status == "slobodan"));
+            // Filtriranje gradje po ogranku i statusu dostupnosti primeraka gradje
+            if(nazivOgranka != null || statusDostupnosti == true)
+            {
+                // Ako postoji bar jedan primerak gradje koji je slobodan za pozajmljivanje
+                // i nalazi se u ogranku ciji naziv pocinje sa unetim stringom, ukljuci gradju
+                if(nazivOgranka != null && statusDostupnosti == true)
+                {
+                    gradjaQuery = gradjaQuery.Where(g =>
+                                      g.PrimerakGradjes.Any(pg =>
+                                          pg.OgranakFkNavigation.Naziv.Contains(nazivOgranka) &&
+                                          pg.Status == "slobodan"
+                                      )
+                                  );
+                }
+                // Ako postoji bar jedan primerak gradje koji se nalazi u ogranku ciji naziv
+                // pocinje sa unetim stringom, ukljuci gradju
+                else if(nazivOgranka != null)
+                {
+                    gradjaQuery = gradjaQuery.Where(g => g.PrimerakGradjes.Any(p =>
+                            p.OgranakFkNavigation.Naziv.Contains(nazivOgranka)
+                        )
+                    );
+                }
+                // Ako postoji bar jedan primerak gradje koji je slobodan za pozajmljivanje,
+                // ukljuci gradju
+                else
+                {
+                    gradjaQuery = gradjaQuery.Where(g => g.PrimerakGradjes.Any(p => p.Status == "slobodan"));
+                }
+            }
 
             // Ukljucivanje podataka o autoru
             gradjaQuery = gradjaQuery.Include(g => g.AutorFks);
 
-            // Ukljucivanje podataka o primercima gradje i statusima primeraka gradje
-            gradjaQuery = gradjaQuery.Include(g => g.PrimerakGradjes);
+            // Ako je vrsena pretraga po nazivu ogranka gde se nalaze primerci gradje,
+            // ukljuci podatke o primeracima gradje uz podatke o njihovim ograncima
+            if(nazivOgranka != null)
+            {
+                gradjaQuery = gradjaQuery
+                              .Include(g => g.PrimerakGradjes)
+                              .ThenInclude(pg => pg.OgranakFkNavigation);
+            }
+            // Ako nije vrsena pretraga po nazivu ogranka, ukljuci samo podatke o primercima gradje
+            else
+            {
+                gradjaQuery = gradjaQuery.Include(g => g.PrimerakGradjes);
+            }
 
             // Izvrsavanje upita
             List<Gradja> gradjaList = await gradjaQuery.ToListAsync();
@@ -119,7 +159,7 @@ namespace BibliotekaPPP.Models.EFRepository
             List<GradjaBO> gradjaBOList = new List<GradjaBO>();
             foreach(Gradja gradja in gradjaList)
             {
-                GradjaBO gradjaBO = await ConvertGradjaToGradjaBO(gradja);
+                GradjaBO gradjaBO = await ConvertGradjaToGradjaBO(gradja, (nazivOgranka != null) ? nazivOgranka : null);
                 gradjaBOList.Add(gradjaBO);
             }
 
