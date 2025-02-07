@@ -92,24 +92,21 @@ namespace BibliotekaPPP.Controllers
             bool admin = false
         )
         {
-            if(nalog == null)
+            if(nalog != null)
+                return true;
+
+            switch(rezultat)
             {
-                switch(rezultat)
-                {
-                    case LoginResult.NalogNePostoji:
-                    poruka.Tekst = $"Ne postoji {((admin) ? "administratorski" : "korisnički")} nalog vezan za unetu e-mail adresu.";
-                    poruka.Tip = TipPoruke.Greska;
-                    break;
-                    case LoginResult.PogresnaLozinka:
-                    poruka.Tekst = "Pogrešna lozinka.";
-                    poruka.Tip = TipPoruke.Greska;
-                    break;
-                }
-
-                return false;
+                case LoginResult.NalogNePostoji:
+                poruka.Tekst = $"Ne postoji {((admin) ? "administratorski" : "korisnički")} nalog vezan za unetu e-mail adresu.";
+                break;
+                case LoginResult.PogresnaLozinka:
+                poruka.Tekst = "Pogrešna lozinka.";
+                break;
             }
+            poruka.Tip = TipPoruke.Greska;
 
-            return true;
+            return false;
         }
 
         [NonAction]
@@ -158,7 +155,7 @@ namespace BibliotekaPPP.Controllers
             }
             else
             {
-                // Ne moze biti null jer smo ustanovili u prethodnom pozivu metode da nije null
+                // Ne moze biti null jer smo ustanovili u pozivu metode 'ProveriLoginRezultat' da nije null
                 KreirajCookie(loginRezultat.nalogBO);
                 return RedirectToAction("LicniPodaci", "Clan");
             }
