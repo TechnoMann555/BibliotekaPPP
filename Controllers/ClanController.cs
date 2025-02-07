@@ -58,6 +58,12 @@ namespace BibliotekaPPP.Controllers
             if(trazenClan == null)
                 return RedirectToAction("Pretraga");
 
+            if(TempData["PorukaKorisniku"] != null)
+            {
+                Poruka porukaKorisniku = JsonSerializer.Deserialize<Poruka>(TempData["PorukaKorisniku"].ToString());
+                ViewBag.PorukaKorisniku = porukaKorisniku;
+            }
+
             return View(trazenClan);
         }
 

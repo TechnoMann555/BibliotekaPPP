@@ -54,4 +54,11 @@
         ImaZakasneleTekucePozajmice,
         ImaTekucuPozajmicuZaGradju
     }
+
+    public enum BrisanjeKorisnickogNalogaResult
+    {
+        Uspeh,
+        NePostojiClan,
+        NemaKorisnickiNalog
+    }
 }

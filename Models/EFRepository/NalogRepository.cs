@@ -10,11 +10,7 @@ namespace BibliotekaPPP.Models.EFRepository
         private BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
         // [SK2] Registracija clana na platformu biblioteke 
-        public async Task<KreiranjeNalogaResult> KreirajKorisnickiNalog(
-            string JCB,
-            string email,
-            string lozinka
-        )
+        public async Task<KreiranjeNalogaResult> KreirajKorisnickiNalog(string JCB, string email, string lozinka)
         {
             Clan? trazenClan = await bibliotekaContext.Clans.FirstOrDefaultAsync(clan => clan.Jcb == JCB);
 
@@ -91,6 +87,29 @@ namespace BibliotekaPPP.Models.EFRepository
             return (ulogovanNalog, LoginResult.Uspeh);
         }
 
+        public async Task<BrisanjeKorisnickogNalogaResult> BrisiKorisnickiNalog(int clanID)
+        {
+            Clan? clan = await bibliotekaContext.Clans
+                               .Include(c => c.KorisnickiNalogFkNavigation)
+                                   .ThenInclude(n => n.OcenaProcitaneGradjes)
+                               .Where(c => c.ClanId == clanID)
+                               .FirstOrDefaultAsync();
+
+            if(clan == null)
+                return BrisanjeKorisnickogNalogaResult.NePostojiClan;
+
+            if(clan.KorisnickiNalogFkNavigation == null)
+                return BrisanjeKorisnickogNalogaResult.NemaKorisnickiNalog;
+
+            clan.KorisnickiNalogFkNavigation.OcenaProcitaneGradjes.Clear();
+            bibliotekaContext.Nalogs.Remove(clan.KorisnickiNalogFkNavigation);
+            
+            await bibliotekaContext.SaveChangesAsync();
+
+            return BrisanjeKorisnickogNalogaResult.Uspeh;
+        }
+
+        /*
         public NalogBO? TraziNalogPoID(int nalogID)
         {
             Nalog? trazenNalog = bibliotekaContext.Nalogs
@@ -105,10 +124,6 @@ namespace BibliotekaPPP.Models.EFRepository
 
             return pronadjenNalog;
         }
-
-        //public async Task<ClanBO> TraziClanaPoJCB(string JCB)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        */
     }
 }
