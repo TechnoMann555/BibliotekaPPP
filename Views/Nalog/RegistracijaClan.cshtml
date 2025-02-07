@@ -9,9 +9,10 @@
         <div class="card-body">
             <h2>Registracija na web platformu biblioteke</h2>
             <hr />
-            @if(Model != null && Model.PorukaKorisniku != null)
+            @if(Model != null && ViewBag.PorukaKorisniku != null)
             {
-                await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", Model.PorukaKorisniku);
+                Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+                await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
             }
             <form asp-controller="Nalog" asp-action="RegistracijaClan" method="post">
                 <div class="mb-3">

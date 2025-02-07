@@ -32,7 +32,7 @@ namespace BibliotekaPPP.Models.EFRepository
                 Lozinka = lozinka,
                 Uloga = "Korisnik_Clan"
             };
-            bibliotekaContext.Add(novNalog);
+            await bibliotekaContext.AddAsync(novNalog);
             await bibliotekaContext.SaveChangesAsync();
 
             // Vezivanje novog korisnickog naloga za clana biblioteke

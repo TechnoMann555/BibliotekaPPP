@@ -39,24 +39,24 @@ namespace BibliotekaPPP.Controllers
             switch(rezultat)
             {
                 case KreiranjeNalogaResult.ClanNePostoji:
-                    poruka.Tekst = "Ne postoji član biblioteke sa unetim JČB.";
+                poruka.Tekst = "Ne postoji član biblioteke sa unetim JČB.";
                 break;
-
+                
                 case KreiranjeNalogaResult.EmailNeOdgovara:
-                    poruka.Tekst = "Uneta e-mail adresa ne odgovara e-mail adresi vezana za člana biblioteke.";
+                poruka.Tekst = "Uneta e-mail adresa ne odgovara e-mail adresi vezana za člana biblioteke.";
                 break;
                 
                 case KreiranjeNalogaResult.NalogVecPostoji:
-                    poruka.Tekst = "Član biblioteke već ima otvoren članski korisnički nalog.";
+                poruka.Tekst = "Član biblioteke već ima otvoren članski korisnički nalog.";
                 break;
                 
                 case KreiranjeNalogaResult.Uspeh:
-                    poruka.Tekst = "Uspešno je kreiran člasnki korisnički nalog.";
+                poruka.Tekst = "Uspešno je kreiran člasnki korisnički nalog.";
                 break;
             }
             poruka.Tip = (rezultat == KreiranjeNalogaResult.Uspeh) ? TipPoruke.Uspeh : TipPoruke.Greska;
 
-            regPodaci.PorukaKorisniku = poruka;
+            ViewBag.PorukaKorisniku = poruka;
 
             return View(regPodaci);
         }

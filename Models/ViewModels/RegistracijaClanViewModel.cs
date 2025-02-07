@@ -16,7 +16,5 @@ namespace BibliotekaPPP.Models.ViewModels
         [DataType(DataType.Password)]
         [MaxLength(255)]
         public string Lozinka { get; set; } = null!;
-
-        public Poruka? PorukaKorisniku { get; set; } = null;
     }
 }
