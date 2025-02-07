@@ -19,9 +19,9 @@ namespace BibliotekaPPP.Controllers
         public async Task<IActionResult> Clanarine()
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
-            List<ClanarinaBO> clanarineBO = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoClanID((int)korisnickiNalog.ClanId);
+            List<ClanarinaBO>? clanarineBO = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID((int)korisnickiNalog.ClanId);
 
-            return View(clanarineBO.OrderByDescending(cl => cl.DatumPocetka).ToList());
+            return View(clanarineBO?.OrderByDescending(cl => cl.DatumPocetka).ToList());
         }
 
         // [SK11] Prikaz podataka o članarinama člana
