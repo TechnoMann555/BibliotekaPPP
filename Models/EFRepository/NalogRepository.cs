@@ -91,6 +91,7 @@ namespace BibliotekaPPP.Models.EFRepository
         {
             Clan? clan = await bibliotekaContext.Clans
                                .Include(c => c.KorisnickiNalogFkNavigation)
+                                   .ThenInclude(n => n.OcenaProcitaneGradjes)
                                .Where(c => c.ClanId == clanID)
                                .FirstOrDefaultAsync();
 
@@ -100,7 +101,9 @@ namespace BibliotekaPPP.Models.EFRepository
             if(clan.KorisnickiNalogFkNavigation == null)
                 return BrisanjeKorisnickogNalogaResult.NemaKorisnickiNalog;
 
+            clan.KorisnickiNalogFkNavigation.OcenaProcitaneGradjes.Clear();
             bibliotekaContext.Nalogs.Remove(clan.KorisnickiNalogFkNavigation);
+            
             await bibliotekaContext.SaveChangesAsync();
 
             return BrisanjeKorisnickogNalogaResult.Uspeh;
