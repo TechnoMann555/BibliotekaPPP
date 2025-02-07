@@ -86,11 +86,18 @@ namespace BibliotekaPPP.Controllers
                 clanFK: id,
                 rbrClanarine: clanarina.ClanarinaRbr
             );
-            if(listaPozajmica.Count > 0)
-                ViewBag.Pozajmice = listaPozajmica.OrderByDescending(poz => poz.DatumPocetka).ToList();
-            else
+
+            ViewBag.Pozajmice = listaPozajmica
+                                .Where(poz => poz.DatumRazduzenja == null)
+                                .OrderBy(poz => poz.RokRazduzenja)
+                                .Concat(
+                                    listaPozajmica
+                                    .Where(poz => poz.DatumRazduzenja != null)
+                                    .OrderByDescending(poz => poz.RokRazduzenja)
+                                ).ToList();
+            
+            if(listaPozajmica.Count == 0)
             {
-                ViewBag.Pozajmice = listaPozajmica;
                 clanarina.PorukaKorisniku = new Poruka(
                     tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
                     tip: TipPoruke.Upozorenje
@@ -174,13 +181,13 @@ namespace BibliotekaPPP.Controllers
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PrikaziFormuRazduzivanjaPozajmice(int clanID, int clanarinaID, int pozajmicaRbr)
         {
-            PozajmicaBO pozajmicaBO = await pozajmicaRepository.TraziPozajmicuPoPK(clanID, clanarinaID, pozajmicaRbr);
+            PozajmicaBO? pozajmicaBO = await pozajmicaRepository.TraziPozajmicuPoPK(clanID, clanarinaID, pozajmicaRbr);
 
-            //if(pozajmicaBO == null)
-            //{
-            //    Poruka errorPoruka = new Poruka("Nije pronađena tražena pozajmica.", TipPoruke.Greska);
-            //    return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", errorPoruka);
-            //}
+            if(pozajmicaBO == null)
+            {
+                Poruka errorPoruka = new Poruka("Nije pronađena tražena pozajmica.", TipPoruke.Greska);
+                return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", errorPoruka);
+            }
 
             return PartialView("~/Views/Pozajmica/_FormaRazduzivanjePozajmice.cshtml", pozajmicaBO);
         }

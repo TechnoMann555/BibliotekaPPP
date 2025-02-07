@@ -125,15 +125,18 @@ namespace BibliotekaPPP.Models.EFRepository
 
         public async Task<PozajmicaBO?> TraziPozajmicuPoPK(int clanID, int clanarinaID, int pozajmicaRbr)
         {
-            Pozajmica pozajmica = await bibliotekaContext.Pozajmicas
-                                        .Include(p => p.PrimerakGradje)
-                                            .ThenInclude(pg => pg.GradjaFkNavigation)
-                                        .Where(poz =>
-                                           poz.ClanarinaClanFk == clanID &&
-                                           poz.ClanarinaFk == clanarinaID &&
-                                           poz.Rbr == pozajmicaRbr
-                                        )
-                                        .FirstOrDefaultAsync();
+            Pozajmica? pozajmica = await bibliotekaContext.Pozajmicas
+                                         .Include(p => p.PrimerakGradje)
+                                             .ThenInclude(pg => pg.GradjaFkNavigation)
+                                         .Where(poz =>
+                                            poz.ClanarinaClanFk == clanID &&
+                                            poz.ClanarinaFk == clanarinaID &&
+                                            poz.Rbr == pozajmicaRbr
+                                         )
+                                         .FirstOrDefaultAsync();
+
+            if(pozajmica == null)
+                return null;
 
             PozajmicaBO trazenaPozajmica = new PozajmicaBO(pozajmica);
             return trazenaPozajmica;

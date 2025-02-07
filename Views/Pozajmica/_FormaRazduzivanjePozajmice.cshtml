@@ -37,15 +37,17 @@
 	</div>
 	<div class="mb-3">
 		<p class="fw-bold">
-			<span>Prekoračenje roka: </span>
+			Prekoračenje roka:
 			@if(Model.RokRazduzenja >= trenutniDatum)
 			{
 				<span class="text-success">Nema prekoračenja</span>
 			}
 			else
 			{
+				int brojDana = trenutniDatum.DayNumber - Model.RokRazduzenja.DayNumber;
+
 				<span class="text-danger">
-					@(trenutniDatum.DayNumber - Model.RokRazduzenja.DayNumber) dana
+					@(brojDana) @((brojDana == 1) ? "dan" : "dana")
 				</span>
 			}
 		</p>
