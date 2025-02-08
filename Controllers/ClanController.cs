@@ -38,14 +38,22 @@ namespace BibliotekaPPP.Controllers
         public async Task<IActionResult> Pretraga(string jcb)
         {
             ClanBO? clanBO = await clanRepository.TraziClanaPoJCB(jcb);
+            ViewBag.IzvrsenaPretraga = true;
 
             if(clanBO == null)
-                return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", new Poruka(
+            {
+                ViewBag.PorukaKorisniku = new Poruka(
                     tekst: "Nije pronađen član biblioteke sa unetim Jedinstvenim Članskim Brojem.",
                     tip: TipPoruke.Upozorenje
-                ));
+                );
+            }
+            else
+            {
+                ViewBag.PretrazenClan = clanBO;
+            }
 
-            return PartialView("~/Views/Clan/_AdminClanPanel.cshtml", clanBO);
+            ViewBag.JCB = jcb;
+            return View();
         }
 
         // [SK10] Prikaz ličnih podataka o članu
