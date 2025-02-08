@@ -216,7 +216,7 @@ namespace BibliotekaPPP.Controllers
             poruka.Tip = (rezultatBrisanja == BrisanjeKorisnickogNalogaResult.Uspeh) ? TipPoruke.Uspeh : TipPoruke.Greska;
             TempData["PorukaKorisniku"] = JsonSerializer.Serialize(poruka);
 
-            return RedirectToAction("PrikazLicnihPodataka", "Clan", new { id });
+            return RedirectToAction("LicniClanskiPodaciClana", "Clan", new { id });
         }
 
         // TODO: Dokumentovati Logout funkcionalnost u Larmanu

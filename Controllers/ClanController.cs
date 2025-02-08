@@ -21,6 +21,9 @@ namespace BibliotekaPPP.Controllers
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
             ClanBO? clanBO = await clanRepository.TraziClanaPoClanID((int)korisnickiNalog.ClanId);
 
+            if(clanBO == null)
+                return NotFound();
+
             return View(clanBO);
         }
 
@@ -59,13 +62,14 @@ namespace BibliotekaPPP.Controllers
         // [SK10] Prikaz ličnih podataka o članu
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
-        public async Task<IActionResult> PrikazLicnihPodataka(int id)
+        public async Task<IActionResult> LicniClanskiPodaciClana(int id)
         {
             ClanBO? trazenClan = await clanRepository.TraziClanaPoClanID(id);
 
             if(trazenClan == null)
-                return RedirectToAction("Pretraga");
+                return NotFound();
 
+            // Poruka bibliotekaru vezana za brisanje clanskog korisnickog naloga
             if(TempData["PorukaKorisniku"] != null)
             {
                 Poruka porukaKorisniku = JsonSerializer.Deserialize<Poruka>(TempData["PorukaKorisniku"].ToString());

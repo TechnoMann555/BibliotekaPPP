@@ -8,12 +8,13 @@
     <link href="~/css/tablestylesheet.css" rel="stylesheet" asp-append-version="true" />
 }
 
-<h1>Prikaz ličnih i članskih podataka</h1>
+<h1>Prikaz ličnih i članskih podataka člana</h1>
 <hr class="mb-5" />
 @{
     await Html.RenderPartialAsync("~/Views/Shared/_PrikazPodatakaClan.cshtml", Model);
 }
 
+@* Prikaz funkcionalnosti brisanja clanskog korisnickog naloga ukoliko clan ima korisnicki nalog *@
 @if(Model.KorisnickiNalog != null)
 {
     <hr />
@@ -45,6 +46,7 @@
         </div>
     </div>
 
+    @* Skripta koja enable-uje ili disable-uje submit dugme za brisanje naloga u zavisnosti od checkbox vrednosti *@
     @section Scripts {
         <script type="text/javascript" asp-append-version="true">
             const potvrdaBrisanja = document.getElementById('potvrdaBrisanja');
