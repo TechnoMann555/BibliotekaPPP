@@ -32,7 +32,7 @@ namespace BibliotekaPPP.Controllers
             List<ClanarinaBO>? clanarine = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID(id);
 
             if(clanarine == null)
-                return RedirectToAction("Pretraga", "Clan");
+                return NotFound();
 
             // Ako je pri otvaranju clanarine uneta pogresna vrednost za cenu,
             // ispisace se error poruka na pogledu
