@@ -65,7 +65,15 @@ namespace BibliotekaPPP.Models.EFRepository
 
         private async Task<string> KreirajNovJCB()
         {
-            string? poslednjiJCB = await bibliotekaContext.Clans.MaxAsync(c => c.Jcb);
+            string? poslednjiJCB = await bibliotekaContext.Clans
+                                         .OrderByDescending(c => c.DatumUclanjenja)
+                                         // Posto je JCB tipa string, moramo sortirati po duzini JCB
+                                         // da bismo pravilno sortirali prema rednom broju
+                                         .ThenByDescending(c => c.Jcb.Length)
+                                         .ThenByDescending(c => c.Jcb)
+                                         .Select(c => c.Jcb)
+                                         .FirstOrDefaultAsync();
+
             int noviRedniBroj;
 
             if(poslednjiJCB == null)
@@ -123,7 +131,7 @@ namespace BibliotekaPPP.Models.EFRepository
                 KontaktMejl = podaci.KontaktMejl,
                 KorisnickiNalogFk = null
             };
-            bibliotekaContext.Clans.Add(noviClan);
+            await bibliotekaContext.Clans.AddAsync(noviClan);
             await bibliotekaContext.SaveChangesAsync();
 
             return (UpisivanjeClanaResult.Uspeh, noviClan.ClanId);

@@ -13,7 +13,7 @@ namespace BibliotekaPPP.Models.ViewModels
         public string ImePrezime { get; set; } = null!;
 
         [Required(ErrorMessage = "Datum rođenja je obavezno.")]
-        [DataType(DataType.Date, ErrorMessage = "Datum rođenja je neispravnog formata.")]
+        [DataType(DataType.Date)]
         public DateOnly DatumRodjenja { get; set; }
 
         [Required(ErrorMessage = "Ime roditelja je obavezno.")]
@@ -33,7 +33,8 @@ namespace BibliotekaPPP.Models.ViewModels
         public string KontaktTelefon { get; set; } = null!;
 
         [Required(ErrorMessage = "Kontakt mejl je obavezan.")]
-        [DataType(DataType.EmailAddress, ErrorMessage = "Kontakt mejl je neispravnog formata.")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Kontakt mejl je neispravnog formata.")]
         public string KontaktMejl { get; set; } = null!;
 
     }
