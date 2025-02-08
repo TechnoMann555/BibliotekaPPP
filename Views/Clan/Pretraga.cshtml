@@ -5,29 +5,23 @@
 <h1 class="text-center">Pretraga člana po Jedinstvenom Članskom Broju (JČB)</h1>
 <hr class="mb-5"/>
 
-<div class="input-group mb-3">
-	<input type="text" id="jcb-input" class="form-control form-control-lg" placeholder="Jedinstveni Članski Broj" />
-	<button class="btn btn-lg btn-primary" type="button" onclick="pretragaClana()">Pretraži</button>
-</div>
+<form asp-controller="Clan" asp-action="Pretraga" method="post">
+	<div class="input-group mb-3">
+		<input type="text" name="jcb" id="jcb" value="@(ViewBag.JCB ?? "")" placeholder="Jedinstveni Članski Broj" class="form-control form-control-lg" />
+		<input type="submit" value="Pretraži" class="btn btn-lg btn-primary" />
+	</div>
+</form>
 
-<div id="rezultat-pretrage">
-
-</div>
-
-@section Scripts {
-	<script type="text/javascript" asp-append-version="true">
-		function pretragaClana()
-		{
-			const jcb_value = document.getElementById('jcb-input').value;
-
-			$.ajax({
-				url: '@Url.Action("Pretraga", "Clan")',
-				data: { jcb: jcb_value },
-				method: 'POST',
-				success: function(result) {
-					$('#rezultat-pretrage').html(result);
-				}
-			});
-		}
-	</script>
+@if(ViewBag.IzvrsenaPretraga == true)
+{
+	@if(ViewBag.PretrazenClan == null)
+	{
+		Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
+	}
+	else
+	{
+		ClanBO clan = ViewBag.PretrazenClan;
+		await Html.RenderPartialAsync("~/Views/Clan/_AdminClanPanel.cshtml", clan);
+	}
 }
