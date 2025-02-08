@@ -7,7 +7,7 @@
 <h1>Prikaz članarina člana</h1>
 <hr class="mb-5" />
 @{
-    await Html.RenderPartialAsync("~/Views/Shared/_PrikazPodatakaClanarine.cshtml", Model);
+    await Html.RenderPartialAsync("_PrikazPodatakaClanarine.cshtml", Model);
 }
 
 @if (ViewBag.PorukaGreskaUnosCene != null)

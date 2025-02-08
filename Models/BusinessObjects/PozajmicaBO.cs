@@ -20,6 +20,8 @@ namespace BibliotekaPPP.Models.BusinessObjects
 
         public string? InventarniBrojPrimerka { get; set; } = null;
 
+        public string SignaturaPrimerka { get; set; } = null!;
+
         public int? OgranakID { get; set; } = null;
 
         public string? NazivOgrankaPrimerka { get; set; } = null;
@@ -38,6 +40,7 @@ namespace BibliotekaPPP.Models.BusinessObjects
             if(pozajmica.PrimerakGradje != null)
             {
                 this.InventarniBrojPrimerka = pozajmica.PrimerakGradje.InventarniBroj;
+                this.SignaturaPrimerka = pozajmica.PrimerakGradje.Signatura;
 
                 if(pozajmica.PrimerakGradje.GradjaFkNavigation != null)
                 {

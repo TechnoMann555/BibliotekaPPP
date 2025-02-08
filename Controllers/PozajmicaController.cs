@@ -15,38 +15,70 @@ namespace BibliotekaPPP.Controllers
         PozajmicaRepository pozajmicaRepository = new PozajmicaRepository();
         OgranakRepository ogranakRepository = new OgranakRepository();
 
+        [NonAction]
+        private async Task<IActionResult?> PripremiClanarineClana(int clanID, bool adminView = false)
+        {
+            List<ClanarinaBO>? listaClanarina = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID(clanID);
+
+            if(listaClanarina == null)
+                return NotFound();
+
+            if(listaClanarina.Count > 0)
+                ViewBag.Clanarine = listaClanarina.OrderByDescending(cl => cl.DatumPocetka).ToList();
+            else
+            {
+                ViewBag.Clanarine = listaClanarina;
+                ViewBag.PorukaKorisniku = new Poruka(
+                    tekst: "Ne postoje članarine za koje mogu biti vezane pozajmice.",
+                    tip: TipPoruke.Upozorenje
+                );
+
+                return View((adminView) ? "PozajmiceClana" : "Pozajmice");
+            }
+
+            return null;
+        }
+
+        // [SK6] Prikaz podataka o pozajmicama
         [HttpGet]
         [Route("Pozajmice")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> Pozajmice()
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
-            List<ClanarinaBO> clanarineBO = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoClanID((int)korisnickiNalog.ClanId);
+            await PripremiClanarineClana((int)korisnickiNalog.ClanId);
 
-            ViewBag.Clanarine = clanarineBO.OrderByDescending(cl => cl.DatumPocetka).ToList();
             return View();
         }
 
+        // [SK6] Prikaz podataka o pozajmicama
         [HttpPost]
         [Route("Pozajmice")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> Pozajmice(PozajmiceViewModel clanarina)
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
-
-            List<ClanarinaBO> listaClanarina = (List<ClanarinaBO>)await clanarinaRepository.TraziClanarinePoClanID((int)korisnickiNalog.ClanId);
-            ViewBag.Clanarine = listaClanarina.OrderByDescending(cl => cl.DatumPocetka).ToList();
+            IActionResult? pogled = await PripremiClanarineClana((int)korisnickiNalog.ClanId);
+            
+            if(pogled != null)
+                return pogled;
 
             List<PozajmicaBO> listaPozajmica = (List<PozajmicaBO>)await pozajmicaRepository.TraziPozajmicePoClanarini(
                 clanFK: (int)korisnickiNalog.ClanId,
                 rbrClanarine: clanarina.ClanarinaRbr
             );
             if(listaPozajmica.Count > 0)
-                ViewBag.Pozajmice = listaPozajmica.OrderByDescending(poz => poz.DatumPocetka).ToList();
+                ViewBag.Pozajmice = listaPozajmica.Where(poz => poz.DatumRazduzenja == null)
+                                    .OrderBy(poz => poz.RokRazduzenja)
+                                    .Concat(
+                                        listaPozajmica
+                                        .Where(poz => poz.DatumRazduzenja != null)
+                                        .OrderByDescending(poz => poz.RokRazduzenja)
+                                    ).ToList();
             else
             {
                 ViewBag.Pozajmice = listaPozajmica;
-                clanarina.PorukaKorisniku = new Poruka(
+                ViewBag.PorukaKorisniku = new Poruka(
                     tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
                     tip: TipPoruke.Upozorenje
                 );
@@ -98,7 +130,7 @@ namespace BibliotekaPPP.Controllers
             
             if(listaPozajmica.Count == 0)
             {
-                clanarina.PorukaKorisniku = new Poruka(
+                ViewBag.PorukaKorisniku = new Poruka(
                     tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
                     tip: TipPoruke.Upozorenje
                 );

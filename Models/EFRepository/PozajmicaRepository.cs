@@ -19,19 +19,20 @@ namespace BibliotekaPPP.Models.EFRepository
             );
 
             return procitao;
-        }        
+        }
 
+        // [SK6] Prikaz podataka o pozajmicama
         public async Task<IEnumerable<PozajmicaBO>> TraziPozajmicePoClanarini(int clanFK, int rbrClanarine)
         {
             List<Pozajmica> pozajmice = await bibliotekaContext.Pozajmicas
-                .Include(p => p.PrimerakGradje)
-                    .ThenInclude(pg => pg.OgranakFkNavigation)
-                .Include(p => p.PrimerakGradje)
-                    .ThenInclude(pg => pg.GradjaFkNavigation)
-                .Where(p => 
-                p.ClanarinaFk == rbrClanarine && 
-                p.ClanarinaClanFk == clanFK
-            ).ToListAsync();
+                                              .Include(p => p.PrimerakGradje)
+                                                  .ThenInclude(pg => pg.OgranakFkNavigation)
+                                              .Include(p => p.PrimerakGradje)
+                                                  .ThenInclude(pg => pg.GradjaFkNavigation)
+                                              .Where(p => 
+                                                  p.ClanarinaFk == rbrClanarine &&
+                                                  p.ClanarinaClanFk == clanFK
+                                              ).ToListAsync();
 
             List<PozajmicaBO> listaPozajmica = new List<PozajmicaBO>();
 
