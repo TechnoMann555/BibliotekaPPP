@@ -9,11 +9,14 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
+        // [SK7] Ocenjivanje procitane gradje
         public async Task<OcenaProcitaneGradjeBO?> TraziOcenu(int gradjaID, int korisnickiNalogID)
         {
             OcenaProcitaneGradje? ocena = await bibliotekaContext.OcenaProcitaneGradjes
-                                                .Where(o => o.GradjaFk == gradjaID &&
-                                                            o.ClanskiKorisnickiNalogFk == korisnickiNalogID)
+                                                .Where(o =>
+                                                    o.GradjaFk == gradjaID &&
+                                                    o.ClanskiKorisnickiNalogFk == korisnickiNalogID
+                                                )
                                                 .FirstOrDefaultAsync();
 
             if(ocena == null)
@@ -23,12 +26,16 @@ namespace BibliotekaPPP.Models.EFRepository
 
             return ocenaBO;
         }
+
+        // [SK7] Ocenjivanje procitane gradje
         public async Task<OcenjivanjeGradjeResult> OceniGradju(OcenaProcitaneGradjeBO ocena)
         {
             // Provera da li već postoji ocena
             OcenaProcitaneGradje? postojecaOcena = await bibliotekaContext.OcenaProcitaneGradjes
-                                                   .Where(o => o.GradjaFk == ocena.GradjaFk &&
-                                                          o.ClanskiKorisnickiNalogFk == ocena.ClanskiKorisnickiNalogFk)
+                                                   .Where(o => 
+                                                       o.GradjaFk == ocena.GradjaFk &&
+                                                       o.ClanskiKorisnickiNalogFk == ocena.ClanskiKorisnickiNalogFk
+                                                   )
                                                    .FirstOrDefaultAsync();
 
             // Ocena ne postoji - kreira se nova ocena
@@ -41,7 +48,7 @@ namespace BibliotekaPPP.Models.EFRepository
                     Ocena = ocena.Ocena
                 };
 
-                bibliotekaContext.OcenaProcitaneGradjes.Add(novaOcena);
+                await bibliotekaContext.OcenaProcitaneGradjes.AddAsync(novaOcena);
                 await bibliotekaContext.SaveChangesAsync();
 
                 return OcenjivanjeGradjeResult.OcenaKreirana;

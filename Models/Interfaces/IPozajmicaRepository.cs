@@ -4,6 +4,7 @@ namespace BibliotekaPPP.Models.Interfaces
 {
     public interface IPozajmicaRepository
     {
+        // [SK7] Ocenjivanje procitane gradje
         public Task<bool> ClanProcitaoGradju(int gradjaID, int clanID);
 
         // [SK6] Prikaz podataka o pozajmicama

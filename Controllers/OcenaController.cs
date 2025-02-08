@@ -11,6 +11,7 @@ namespace BibliotekaPPP.Controllers
     {
         OcenaProcitaneGradjeRepository ocenaRepository = new OcenaProcitaneGradjeRepository();
 
+        // [SK7] Ocenjivanje procitane gradje
         [HttpPost]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> OceniGradju(int gradjaID, int ocenaGradje)

@@ -51,11 +51,11 @@ namespace BibliotekaPPP.Controllers
             if(trazenaGradja == null)
                 return RedirectToAction("Pretraga");
 
-            // [SK7] Ocenjivanje procitane gradje
             if(Request.Cookies.TryGetValue("Korisnik", out _))
             {
                 NalogBO nalogBO = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
                 
+                // [SK7] Ocenjivanje procitane gradje
                 if(nalogBO.Uloga == "Korisnik_Clan")
                 {
                     ViewBag.GradjaProcitana = await pozajmicaRepository.ClanProcitaoGradju(

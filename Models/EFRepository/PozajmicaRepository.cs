@@ -10,6 +10,7 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
+        // [SK7] Ocenjivanje procitane gradje
         public async Task<bool> ClanProcitaoGradju(int gradjaID, int clanID)
         {
             bool procitao = await bibliotekaContext.Pozajmicas.AnyAsync(
