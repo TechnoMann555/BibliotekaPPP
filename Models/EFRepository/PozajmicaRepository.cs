@@ -23,6 +23,7 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [SK6] Prikaz podataka o pozajmicama
+        // [SK12] Prikaz podataka o pozajmicama člana
         public async Task<IEnumerable<PozajmicaBO>> TraziPozajmicePoClanarini(int clanFK, int rbrClanarine)
         {
             List<Pozajmica> pozajmice = await bibliotekaContext.Pozajmicas

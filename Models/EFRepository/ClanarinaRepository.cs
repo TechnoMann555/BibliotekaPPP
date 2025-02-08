@@ -12,6 +12,7 @@ namespace BibliotekaPPP.Models.EFRepository
         // [SK5] Prikaz informacija o članarinama
         // [SK6] Prikaz podataka o pozajmicama
         // [SK11] Prikaz podataka o članarinama člana
+        // [SK12] Prikaz podataka o pozajmicama člana
         public async Task<IEnumerable<ClanarinaBO>?> TraziClanarinePoClanID(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans
