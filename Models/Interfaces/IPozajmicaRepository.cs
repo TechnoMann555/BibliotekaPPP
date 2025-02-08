@@ -8,6 +8,7 @@ namespace BibliotekaPPP.Models.Interfaces
         public Task<bool> ClanProcitaoGradju(int gradjaID, int clanID);
 
         // [SK6] Prikaz podataka o pozajmicama
+        // [SK12] Prikaz podataka o pozajmicama člana
         public Task<IEnumerable<PozajmicaBO>> TraziPozajmicePoClanarini(int clanFK, int rbrClanarine);
 
         public Task<KreiranjePozajmiceResult> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID);

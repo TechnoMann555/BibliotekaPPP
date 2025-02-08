@@ -8,19 +8,27 @@
 <hr class="mb-5" />
 
 <div class="mb-3">
-	<form asp-controller="Pozajmica" asp-action="PozajmiceClana" asp-route-id="@ViewBag.ClanID" method="post">
-		<select asp-for="ClanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
-			<option value="" selected disabled>-- Izaberite clanarinu --</option>
-			@foreach (ClanarinaBO clanarinaBO in ViewBag.Clanarine)
-			{
-				<!option value="@clanarinaBO.Rbr">
-					@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")
-					-
-					@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")
-				</!option>
-			}
-		</select>
-	</form>
+	@if (ViewBag.Clanarine.Count == 0)
+	{
+		Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
+	}
+	else
+	{
+		<form asp-controller="Pozajmica" asp-action="PozajmiceClana" asp-route-id="@ViewBag.ClanID" method="post">
+			<select asp-for="ClanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
+				<option value="" selected disabled>-- Izaberite clanarinu --</option>
+				@foreach (ClanarinaBO clanarinaBO in ViewBag.Clanarine)
+				{
+					<!option value="@clanarinaBO.Rbr">
+						@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")
+						-
+						@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")
+					</!option>
+				}
+			</select>
+		</form>
+	}
 </div>
 @if (ViewBag.Pozajmice != null)
 {

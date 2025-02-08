@@ -1,6 +1,7 @@
 ﻿using BibliotekaPPP.Filters;
 using BibliotekaPPP.Models;
 using BibliotekaPPP.Models.BusinessObjects;
+using BibliotekaPPP.Models.DatabaseObjects;
 using BibliotekaPPP.Models.EFRepository;
 using BibliotekaPPP.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,8 @@ namespace BibliotekaPPP.Controllers
 {
     public class PozajmicaController : Controller
     {
-        ClanRepository clanRepository = new ClanRepository();
         ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
         PozajmicaRepository pozajmicaRepository = new PozajmicaRepository();
-        OgranakRepository ogranakRepository = new OgranakRepository();
 
         [NonAction]
         private async Task<IActionResult?> PripremiClanarineClana(int clanID, bool adminView = false)
@@ -39,6 +38,31 @@ namespace BibliotekaPPP.Controllers
             return null;
         }
 
+        [NonAction]
+        private async Task PripremiPozajmice(int clanFK, int rbrClanarine)
+        {
+            List<PozajmicaBO> listaPozajmica = (List<PozajmicaBO>)await pozajmicaRepository.TraziPozajmicePoClanarini(
+                clanFK: clanFK,
+                rbrClanarine: rbrClanarine
+            );
+            if(listaPozajmica.Count > 0)
+                ViewBag.Pozajmice = listaPozajmica.Where(poz => poz.DatumRazduzenja == null)
+                                    .OrderBy(poz => poz.RokRazduzenja)
+                                    .Concat(
+                                        listaPozajmica
+                                        .Where(poz => poz.DatumRazduzenja != null)
+                                        .OrderByDescending(poz => poz.RokRazduzenja)
+                                    ).ToList();
+            else
+            {
+                ViewBag.Pozajmice = listaPozajmica;
+                ViewBag.PorukaKorisniku = new Poruka(
+                    tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
+                    tip: TipPoruke.Upozorenje
+                );
+            }
+        }
+
         // [SK6] Prikaz podataka o pozajmicama
         [HttpGet]
         [Route("Pozajmice")]
@@ -60,81 +84,43 @@ namespace BibliotekaPPP.Controllers
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
             IActionResult? pogled = await PripremiClanarineClana((int)korisnickiNalog.ClanId);
             
+            // Ako nije null, znaci da pripremanje clanarina nije proslo
             if(pogled != null)
                 return pogled;
 
-            List<PozajmicaBO> listaPozajmica = (List<PozajmicaBO>)await pozajmicaRepository.TraziPozajmicePoClanarini(
-                clanFK: (int)korisnickiNalog.ClanId,
-                rbrClanarine: clanarina.ClanarinaRbr
-            );
-            if(listaPozajmica.Count > 0)
-                ViewBag.Pozajmice = listaPozajmica.Where(poz => poz.DatumRazduzenja == null)
-                                    .OrderBy(poz => poz.RokRazduzenja)
-                                    .Concat(
-                                        listaPozajmica
-                                        .Where(poz => poz.DatumRazduzenja != null)
-                                        .OrderByDescending(poz => poz.RokRazduzenja)
-                                    ).ToList();
-            else
-            {
-                ViewBag.Pozajmice = listaPozajmica;
-                ViewBag.PorukaKorisniku = new Poruka(
-                    tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
-                    tip: TipPoruke.Upozorenje
-                );
-            }
+            await PripremiPozajmice((int)korisnickiNalog.ClanId, clanarina.ClanarinaRbr);
 
             return View(clanarina);
         }
 
+        // [SK12] Prikaz podataka o pozajmicama člana
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PozajmiceClana(int id)
         {
-            List<ClanarinaBO>? clanarineBO = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID(id);
+            IActionResult? pogled = await PripremiClanarineClana(id, true);
 
-            if(clanarineBO == null)
-                return RedirectToAction("Pretraga", "Clan");
+            if(pogled != null && pogled.GetType() == typeof(NotFoundResult))
+                return NotFound();
 
-            ViewBag.Clanarine = clanarineBO.OrderByDescending(cl => cl.DatumPocetka).ToList();
             ViewBag.ClanID = id;
 
             return View();
         }
 
+        // [SK12] Prikaz podataka o pozajmicama člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PozajmiceClana(int id, PozajmiceViewModel clanarina)
         {
-            List<ClanarinaBO>? listaClanarina = (List<ClanarinaBO>?)await clanarinaRepository.TraziClanarinePoClanID(id);
+            IActionResult? pogled = await PripremiClanarineClana(id, true);
 
-            if(listaClanarina == null)
-                return RedirectToAction("Pretraga", "Clan");
+            if(pogled != null)
+                return pogled;
 
-            ViewBag.Clanarine = listaClanarina.OrderByDescending(cl => cl.DatumPocetka).ToList();
-            ViewBag.ClanID = id;
-
-            List<PozajmicaBO> listaPozajmica = (List<PozajmicaBO>)await pozajmicaRepository.TraziPozajmicePoClanarini(
-                clanFK: id,
-                rbrClanarine: clanarina.ClanarinaRbr
-            );
-
-            ViewBag.Pozajmice = listaPozajmica
-                                .Where(poz => poz.DatumRazduzenja == null)
-                                .OrderBy(poz => poz.RokRazduzenja)
-                                .Concat(
-                                    listaPozajmica
-                                    .Where(poz => poz.DatumRazduzenja != null)
-                                    .OrderByDescending(poz => poz.RokRazduzenja)
-                                ).ToList();
+            await PripremiPozajmice(id, clanarina.ClanarinaRbr);
             
-            if(listaPozajmica.Count == 0)
-            {
-                ViewBag.PorukaKorisniku = new Poruka(
-                    tekst: "Ne postoje pozajmice vezane za izabranu članarinu.",
-                    tip: TipPoruke.Upozorenje
-                );
-            }
+            ViewBag.ClanID = id;
 
             return View(clanarina);
         }
@@ -143,6 +129,8 @@ namespace BibliotekaPPP.Controllers
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PrikaziFormuKreiranjaPozajmice(int id)
         {
+            OgranakRepository ogranakRepository = new OgranakRepository();
+
             List<OgranakBO> ogranciSaGradjom = (List<OgranakBO>)await ogranakRepository.VratiOgrankeSaSlobodnimPrimercimaGradje(id);
 
             if(ogranciSaGradjom.Count == 0)
@@ -163,6 +151,8 @@ namespace BibliotekaPPP.Controllers
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> KreirajPozajmicu(int ogranakID, int gradjaID, string clanJCB)
         {
+            ClanRepository clanRepository = new ClanRepository();
+
             ClanBO? clan = await clanRepository.TraziClanaPoJCB(clanJCB);
             Poruka? porukaGreska = null;
 
