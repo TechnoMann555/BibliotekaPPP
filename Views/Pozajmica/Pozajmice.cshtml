@@ -1,6 +1,4 @@
-﻿@model BibliotekaPPP.Models.ViewModels.PozajmiceViewModel
-
-@{
+﻿@{
 	ViewData["Title"] = "Pozajmice";
 }
 
@@ -16,17 +14,11 @@
 	else
 	{
 		<form asp-controller="Pozajmica" asp-action="Pozajmice" method="post">
-			<select asp-for="ClanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
-				<option value="" selected disabled>-- Izaberite clanarinu --</option>
-				@foreach(ClanarinaBO clanarinaBO in ViewBag.Clanarine)
-				{
-					<option value="@clanarinaBO.Rbr">
-						@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")
-						- 
-						@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")
-					</option>
-				}
-			</select>
+			@{
+				List<ClanarinaBO> clanarine = ViewBag.Clanarine;
+				int? clanarinaRbr = ViewBag.ClanarinaRbr;
+				await Html.RenderPartialAsync("_IzborClanarinePozajmica.cshtml", (clanarine, clanarinaRbr));
+			}
 		</form>
 	}
 </div>

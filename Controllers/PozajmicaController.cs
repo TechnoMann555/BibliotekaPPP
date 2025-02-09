@@ -89,18 +89,19 @@ namespace BibliotekaPPP.Controllers
         [HttpPost]
         [Route("Pozajmice")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
-        public async Task<IActionResult> Pozajmice(PozajmiceViewModel clanarina)
+        public async Task<IActionResult> Pozajmice(int clanarinaRbr)
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
             IActionResult? pogled = await PripremiClanarineClana((int)korisnickiNalog.ClanId);
-            
+
             // Ako nije null, znaci da pripremanje clanarina nije proslo
             if(pogled != null)
                 return pogled;
+            ViewBag.ClanarinaRbr = clanarinaRbr;
 
-            await PripremiPozajmice((int)korisnickiNalog.ClanId, clanarina.ClanarinaRbr);
+            await PripremiPozajmice((int)korisnickiNalog.ClanId, clanarinaRbr);
 
-            return View(clanarina);
+            return View();
         }
 
         #endregion

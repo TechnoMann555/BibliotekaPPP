@@ -1,0 +1,13 @@
+﻿@model (List<ClanarinaBO> clanarine, int? izabranaClanarinaRbr)
+
+<select name="clanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
+	<!option value="" @((Model.izabranaClanarinaRbr == null) ? "selected" : "") disabled>-- Izaberite clanarinu --</!option>
+	@foreach (ClanarinaBO clanarinaBO in Model.clanarine)
+	{
+		<!option value="@clanarinaBO.Rbr" @((Model.izabranaClanarinaRbr == clanarinaBO.Rbr) ? "selected" : "")>
+			@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")
+		-
+			@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")
+		</!option>
+	}
+</select>
