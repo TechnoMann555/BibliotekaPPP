@@ -61,4 +61,10 @@
         NePostojiClan,
         NemaKorisnickiNalog
     }
+
+    public enum RazduzivanjePozajmiceResult
+    {
+        Uspeh,
+        DatumRazduzenjaJeDatumPocetka
+    }
 }

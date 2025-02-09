@@ -128,6 +128,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return KreiranjePozajmiceResult.Uspeh;
         }
 
+        // [SK16] Razduživanje pozajmice za određenog člana
         public async Task<PozajmicaBO?> TraziPozajmicuPoPK(int clanID, int clanarinaID, int pozajmicaRbr)
         {
             Pozajmica? pozajmica = await bibliotekaContext.Pozajmicas
@@ -147,7 +148,8 @@ namespace BibliotekaPPP.Models.EFRepository
             return trazenaPozajmica;
         }
 
-        public async Task RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr)
+        // [SK16] Razduživanje pozajmice za određenog člana
+        public async Task<RazduzivanjePozajmiceResult> RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr)
         {
             Pozajmica pozajmica = await bibliotekaContext.Pozajmicas
                                         .Include(poz => poz.PrimerakGradje)
@@ -157,11 +159,17 @@ namespace BibliotekaPPP.Models.EFRepository
                                             poz.Rbr == pozajmicaRbr
                                         )
                                         .FirstOrDefaultAsync();
+            DateOnly trenutniDatum = DateOnly.FromDateTime(DateTime.Now);
 
-            pozajmica.DatumRazduzenja = DateOnly.FromDateTime(DateTime.Now);
+            if(pozajmica.DatumPocetka == trenutniDatum)
+                return RazduzivanjePozajmiceResult.DatumRazduzenjaJeDatumPocetka;
+
+            pozajmica.DatumRazduzenja = trenutniDatum;
             pozajmica.PrimerakGradje.Status = "slobodan";
 
             await bibliotekaContext.SaveChangesAsync();
+
+            return RazduzivanjePozajmiceResult.Uspeh;
         }
     }
 }

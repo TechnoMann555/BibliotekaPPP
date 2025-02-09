@@ -14,6 +14,8 @@ namespace BibliotekaPPP.Controllers
         ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
         PozajmicaRepository pozajmicaRepository = new PozajmicaRepository();
 
+        #region Pomocne neakcione metode
+
         // [SK6] Prikaz podataka o pozajmicama
         // [SK12] Prikaz podataka o pozajmicama člana
         [NonAction]
@@ -67,6 +69,10 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
+        #endregion
+
+        #region Korisnicke akcije
+
         // [SK6] Prikaz podataka o pozajmicama
         [HttpGet]
         [Route("Pozajmice")]
@@ -97,6 +103,12 @@ namespace BibliotekaPPP.Controllers
             return View(clanarina);
         }
 
+        #endregion
+
+        #region Administratorske akcije
+
+        #region [SK12] Prikaz podataka o pozajmicama člana
+
         // [SK12] Prikaz podataka o pozajmicama člana
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
@@ -108,6 +120,12 @@ namespace BibliotekaPPP.Controllers
                 return NotFound();
 
             ViewBag.ClanID = id;
+            if(TempData["PorukaGreskaRazduzivanje"] != null)
+            {
+                ViewBag.PorukaGreskaRazduzivanje = JsonSerializer.Deserialize<Poruka>(
+                    TempData["PorukaGreskaRazduzivanje"].ToString()
+                );
+            }
 
             return View();
         }
@@ -115,19 +133,24 @@ namespace BibliotekaPPP.Controllers
         // [SK12] Prikaz podataka o pozajmicama člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
-        public async Task<IActionResult> PozajmiceClana(int id, PozajmiceViewModel clanarina)
+        public async Task<IActionResult> PozajmiceClana(int id, int clanarinaRbr)
         {
             IActionResult? pogled = await PripremiClanarineClana(id, true);
 
             if(pogled != null)
                 return pogled;
 
-            await PripremiPozajmice(id, clanarina.ClanarinaRbr);
+            await PripremiPozajmice(id, clanarinaRbr);
             
             ViewBag.ClanID = id;
+            ViewBag.ClanarinaRbr = clanarinaRbr;
 
-            return View(clanarina);
+            return View();
         }
+
+        #endregion
+
+        #region [SK15] Kreiranje pozajmice za određenog člana
 
         // [SK15] Kreiranje pozajmice za određenog člana
         [HttpPost]
@@ -204,6 +227,11 @@ namespace BibliotekaPPP.Controllers
             return RedirectToAction("Prikaz", "Gradja", new { id = gradjaID });
         }
 
+        #endregion
+
+        #region [SK16] Razduživanje pozajmice za određenog člana
+
+        // [SK16] Razduživanje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PrikaziFormuRazduzivanjaPozajmice(int clanID, int clanarinaID, int pozajmicaRbr)
@@ -219,12 +247,31 @@ namespace BibliotekaPPP.Controllers
             return PartialView("~/Views/Pozajmica/_FormaRazduzivanjePozajmice.cshtml", pozajmicaBO);
         }
 
+        // [SK16] Razduživanje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr)
         {
-            await pozajmicaRepository.RazduziPozajmicu(clanID, clanarinaID, pozajmicaRbr);
+            RazduzivanjePozajmiceResult rezultatRazduzivanja = await pozajmicaRepository.RazduziPozajmicu(
+                clanID: clanID,
+                clanarinaID: clanarinaID,
+                pozajmicaRbr: pozajmicaRbr
+            );
+
+            if(rezultatRazduzivanja == RazduzivanjePozajmiceResult.DatumRazduzenjaJeDatumPocetka)
+            {
+                Poruka porukaGreske = new Poruka(
+                    tekst: "Pozajmica se ne može razdužiti istog datuma kada je kreirana!",
+                    tip: TipPoruke.Greska
+                );
+                TempData["PorukaGreskaRazduzivanje"] = JsonSerializer.Serialize(porukaGreske);
+            }
+
             return RedirectToAction("PozajmiceClana", new { id = clanID });
         }
+
+        #endregion
+
+        #endregion
     }
 }
