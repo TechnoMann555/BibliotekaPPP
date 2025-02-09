@@ -18,17 +18,13 @@
 		<select name="ogranakID" id="ogranak" required class="form-select">
 			@foreach(OgranakBO ogranakBO in Model.ogranci)
 			{
-				<!option value="@ogranakBO.OgranakId">
-					"@ogranakBO.Naziv" - 
-					@ogranakBO.NaseljeNaziv - 
-					@ogranakBO.Adresa
-				</!option>
+				<option value="@ogranakBO.OgranakId">"@ogranakBO.Naziv" - @ogranakBO.NaseljeNaziv - @ogranakBO.Adresa</option>
 			}
 		</select>
 	</div>
 	<div class="mb-3">
 		<label for="clan-jcb" class="form-label">Jedinstveni Članski Broj člana</label>
-		<input type="text" name="clanJCB" id="clan-jcb" placeholder="JČB" value="" class="form-control"/>
+		<input type="text" name="clanJCB" id="clan-jcb" placeholder="JČB" value="" class="form-control" autocomplete="off" required/>
 	</div>
 	<hr />
 	<div class="d-flex flex-row-reverse">

@@ -14,6 +14,8 @@ namespace BibliotekaPPP.Controllers
         ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
         PozajmicaRepository pozajmicaRepository = new PozajmicaRepository();
 
+        // [SK6] Prikaz podataka o pozajmicama
+        // [SK12] Prikaz podataka o pozajmicama člana
         [NonAction]
         private async Task<IActionResult?> PripremiClanarineClana(int clanID, bool adminView = false)
         {
@@ -38,6 +40,8 @@ namespace BibliotekaPPP.Controllers
             return null;
         }
 
+        // [SK6] Prikaz podataka o pozajmicama
+        // [SK12] Prikaz podataka o pozajmicama člana
         [NonAction]
         private async Task PripremiPozajmice(int clanFK, int rbrClanarine)
         {
@@ -125,6 +129,7 @@ namespace BibliotekaPPP.Controllers
             return View(clanarina);
         }
 
+        // [SK15] Kreiranje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PrikaziFormuKreiranjaPozajmice(int id)
@@ -147,6 +152,7 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
+        // [SK15] Kreiranje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> KreirajPozajmicu(int ogranakID, int gradjaID, string clanJCB)
@@ -169,7 +175,7 @@ namespace BibliotekaPPP.Controllers
                 );
 
                 if(rezultat == KreiranjePozajmiceResult.Uspeh)
-                    return RedirectToAction("PozajmiceClana", new { id = gradjaID });
+                    return RedirectToAction("PozajmiceClana", new { id = clan.ClanId });
 
                 porukaGreska = new Poruka();
                 switch(rezultat)
@@ -193,7 +199,6 @@ namespace BibliotekaPPP.Controllers
             if(porukaGreska != null)
             {
                 TempData["PorukaGreska"] = JsonSerializer.Serialize<Poruka>(porukaGreska);
-                return RedirectToAction("Prikaz", "Gradja", new { id = gradjaID });
             }
 
             return RedirectToAction("Prikaz", "Gradja", new { id = gradjaID });
