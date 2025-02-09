@@ -13,8 +13,10 @@ namespace BibliotekaPPP.Models.Interfaces
 
         public Task<KreiranjePozajmiceResult> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID);
 
+        // [SK16] Razduživanje pozajmice za određenog člana
         public Task<PozajmicaBO?> TraziPozajmicuPoPK(int clanID, int clanarinaID, int pozajmicaRbr);
 
-        public Task RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr);
+        // [SK16] Razduživanje pozajmice za određenog člana
+        public Task<RazduzivanjePozajmiceResult> RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr);
     }
 }

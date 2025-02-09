@@ -1,6 +1,4 @@
-﻿@model BibliotekaPPP.Models.ViewModels.PozajmiceViewModel
-
-@{
+﻿@{
 	ViewData["Title"] = "Pozajmice člana";
 }
 
@@ -16,15 +14,15 @@
 	else
 	{
 		<form asp-controller="Pozajmica" asp-action="PozajmiceClana" asp-route-id="@ViewBag.ClanID" method="post">
-			<select asp-for="ClanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
-				<option value="" selected disabled>-- Izaberite clanarinu --</option>
+			<select name="clanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
+				<!option value="" @((ViewBag.ClanarinaRbr == null) ? "selected" : "") disabled>-- Izaberite clanarinu --</!option>
 				@foreach (ClanarinaBO clanarinaBO in ViewBag.Clanarine)
 				{
-					<option value="@clanarinaBO.Rbr">
+					<!option value="@clanarinaBO.Rbr" @((ViewBag.ClanarinaRbr == clanarinaBO.Rbr) ? "selected" : "")>
 						@clanarinaBO.DatumPocetka.ToString("dd/MMM/yyyy")
 						-
 						@clanarinaBO.DatumZavrsetka.ToString("dd/MMM/yyyy")
-					</option>
+					</!option>
 				}
 			</select>
 		</form>
@@ -42,6 +40,11 @@
 		List<PozajmicaBO> pozajmice = ViewBag.Pozajmice;
 		await Html.RenderPartialAsync("_PrikazPodatakaPozajmice.cshtml", pozajmice);
 	}
+}
+@if (ViewBag.PorukaGreskaRazduzivanje != null)
+{
+	Poruka poruka = ViewBag.PorukaGreskaRazduzivanje;
+	await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
 }
 
 @section Scripts {
