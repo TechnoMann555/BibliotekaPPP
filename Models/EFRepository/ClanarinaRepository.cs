@@ -55,6 +55,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return PrUslovaOtvClanarineResult.IspunjeniUslovi;
         }
 
+        // [SK14] Otvaranje nove članarine za određenog člana
         public async Task OtvoriClanarinu(int clanID, decimal cena)
         {
             Clanarina novaClanarina = new Clanarina()
@@ -65,7 +66,7 @@ namespace BibliotekaPPP.Models.EFRepository
                 Cena = cena
             };
 
-            bibliotekaContext.Clanarinas.Add(novaClanarina);
+            await bibliotekaContext.Clanarinas.AddAsync(novaClanarina);
             await bibliotekaContext.SaveChangesAsync();
         }
     }
