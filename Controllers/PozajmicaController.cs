@@ -73,6 +73,8 @@ namespace BibliotekaPPP.Controllers
 
         #region Korisnicke akcije
 
+        #region [SK6] Prikaz podataka o pozajmicama
+
         // [SK6] Prikaz podataka o pozajmicama
         [HttpGet]
         [Route("Pozajmice")]
@@ -103,6 +105,8 @@ namespace BibliotekaPPP.Controllers
 
             return View();
         }
+
+        #endregion
 
         #endregion
 

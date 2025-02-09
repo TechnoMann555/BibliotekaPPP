@@ -13,8 +13,7 @@ namespace BibliotekaPPP.Models.Interfaces
         // [SK8] Logovanje na administratorski nalog
         public Task<(NalogBO?, LoginResult)> LoginAdminBibliotekar(string email, string lozinka);
 
+        // [SK17] Brisanje korisničkog naloga određenog člana
         public Task<BrisanjeKorisnickogNalogaResult> BrisiKorisnickiNalog(int clanID);
-
-        // public NalogBO? TraziNalogPoID(int nalogID);
     }
 }

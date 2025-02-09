@@ -12,6 +12,10 @@ namespace BibliotekaPPP.Controllers
     {
         private ClanRepository clanRepository = new ClanRepository();
 
+        #region Korisnicke akcije
+
+        #region [SK4] Prikaz ličnih i članskih podataka
+
         // [SK4] Prikaz ličnih i članskih podataka
         [HttpGet]
         [Route("LicniClanskiPodaci")]
@@ -26,6 +30,14 @@ namespace BibliotekaPPP.Controllers
 
             return View(clanBO);
         }
+
+        #endregion
+
+        #endregion
+
+        #region Administratorske akcije
+
+        #region [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
 
         // [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
         [HttpGet]
@@ -59,6 +71,10 @@ namespace BibliotekaPPP.Controllers
             return View();
         }
 
+        #endregion
+
+        #region [SK10] Prikaz ličnih podataka o članu
+
         // [SK10] Prikaz ličnih podataka o članu
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
@@ -78,6 +94,10 @@ namespace BibliotekaPPP.Controllers
 
             return View(trazenClan);
         }
+
+        #endregion
+
+        #region [SK13] Upisivanje novog člana biblioteke
 
         // [SK13] Upisivanje novog člana biblioteke
         [HttpGet]
@@ -124,5 +144,9 @@ namespace BibliotekaPPP.Controllers
                 return RedirectToAction("ClanarineClana", "Clanarina", new { id = rezultatUpisa.clanID });
             }
         }
+
+        #endregion
+
+        #endregion
     }
 }

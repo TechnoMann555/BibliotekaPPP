@@ -11,6 +11,10 @@ namespace BibliotekaPPP.Controllers
     {
         OcenaProcitaneGradjeRepository ocenaRepository = new OcenaProcitaneGradjeRepository();
 
+        #region Korisnicke akcije
+
+        #region [SK7] Ocenjivanje procitane gradje
+
         // [SK7] Ocenjivanje procitane gradje
         [HttpPost]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
@@ -46,5 +50,9 @@ namespace BibliotekaPPP.Controllers
 
             return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
         }
+
+        #endregion
+
+        #endregion
     }
 }

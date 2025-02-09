@@ -12,6 +12,10 @@ namespace BibliotekaPPP.Controllers
     {
         private ClanarinaRepository clanarinaRepository = new ClanarinaRepository();
 
+        #region Korisnicke akcije
+
+        #region [SK5] Prikaz informacija o članarinama
+
         // [SK5] Prikaz informacija o članarinama
         [HttpGet]
         [Route("Clanarine")]
@@ -23,6 +27,14 @@ namespace BibliotekaPPP.Controllers
 
             return View(clanarineBO?.OrderByDescending(cl => cl.DatumPocetka).ToList());
         }
+
+        #endregion
+
+        #endregion
+
+        #region Administratorske akcije
+
+        #region [SK11] Prikaz podataka o članarinama člana
 
         // [SK11] Prikaz podataka o članarinama člana
         [HttpGet]
@@ -47,6 +59,10 @@ namespace BibliotekaPPP.Controllers
 
             return View(clanarine.OrderByDescending(cl => cl.DatumPocetka).ToList());
         }
+
+        #endregion
+
+        #region [SK14] Otvaranje nove članarine za određenog člana
 
         // [SK14] Otvaranje nove članarine za određenog člana
         [HttpPost]
@@ -88,5 +104,9 @@ namespace BibliotekaPPP.Controllers
             
             return RedirectToAction("ClanarineClana", new { id });
         }
+
+        #endregion
+
+        #endregion
     }
 }

@@ -47,6 +47,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return listaPozajmica;
         }
 
+        // [SK15] Kreiranje pozajmice za određenog člana
         public async Task<KreiranjePozajmiceResult> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID)
         {
             Clanarina? poslednjaClanarina = await bibliotekaContext.Clanarinas

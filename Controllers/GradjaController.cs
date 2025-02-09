@@ -15,6 +15,10 @@ namespace BibliotekaPPP.Controllers
         PozajmicaRepository pozajmicaRepository = new PozajmicaRepository();
         OcenaProcitaneGradjeRepository ocenaRepository = new OcenaProcitaneGradjeRepository();
 
+        #region Akcije za sve korisnike
+
+        #region [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
+
         // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
         [HttpGet]
         public IActionResult Pretraga()
@@ -81,5 +85,9 @@ namespace BibliotekaPPP.Controllers
 
             return View(trazenaGradja);
         }
+
+        #endregion
+
+        #endregion
     }
 }

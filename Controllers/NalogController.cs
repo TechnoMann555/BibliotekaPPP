@@ -12,14 +12,18 @@ namespace BibliotekaPPP.Controllers
     {
         NalogRepository nalogRepository = new NalogRepository();
 
-        // [SK2] Registracija clana na platformu biblioteke 
+        #region Akcije za sve korisnike
+
+        #region [SK2] Registracija clana na platformu biblioteke
+
+        // [SK2] Registracija clana na platformu biblioteke
         [HttpGet]
         public IActionResult RegistracijaClan()
         {
             return View();
         }
 
-        // [SK2] Registracija clana na platformu biblioteke 
+        // [SK2] Registracija clana na platformu biblioteke
         [HttpPost]
         public async Task<IActionResult> RegistracijaClan(RegistracijaClanViewModel regPodaci)
         {
@@ -60,6 +64,10 @@ namespace BibliotekaPPP.Controllers
 
             return View(regPodaci);
         }
+
+        #endregion
+
+        #region [SK3] Logovanje na korisnički nalog
 
         // [SK3] Logovanje na korisnički nalog
         [HttpGet]
@@ -161,6 +169,10 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
+        #endregion
+
+        #region [SK8] Logovanje na administratorski nalog
+
         // [SK8] Logovanje na administratorski nalog
         [HttpPost]
         public async Task<IActionResult> LoginBibliotekar(string emailBibliotekar, string lozinkaBibliotekar)
@@ -195,6 +207,23 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
+        #endregion
+
+        // TODO: Dokumentovati Logout funkcionalnost u Larmanu
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("Korisnik");
+            return RedirectToAction("Pretraga", "Gradja");
+        }
+
+        #endregion
+
+        #region Administratorske akcije
+
+        #region [SK17] Brisanje korisničkog naloga određenog člana
+
+        // [SK17] Brisanje korisničkog naloga određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> BrisiKorisnickiNalog(int id)
@@ -219,12 +248,8 @@ namespace BibliotekaPPP.Controllers
             return RedirectToAction("LicniClanskiPodaciClana", "Clan", new { id });
         }
 
-        // TODO: Dokumentovati Logout funkcionalnost u Larmanu
-        [HttpGet]
-        public IActionResult Logout()
-        {
-            Response.Cookies.Delete("Korisnik");
-            return RedirectToAction("Pretraga", "Gradja");
-        }
+        #endregion
+
+        #endregion   
     }
 }

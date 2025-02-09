@@ -63,6 +63,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return nadjenClan;
         }
 
+        // [SK13] Upisivanje novog člana biblioteke
         private async Task<string> KreirajNovJCB()
         {
             string? poslednjiJCB = await bibliotekaContext.Clans
@@ -97,6 +98,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return $"{noviRedniBroj}/{DateTime.Now.Year}";
         }
 
+        // [SK13] Upisivanje novog člana biblioteke
         public async Task<(UpisivanjeClanaResult, int?)> UpisiClana(UpisClanaViewModel podaci)
         {
             // Da li postoji clan sa istim brojem licne karte?
