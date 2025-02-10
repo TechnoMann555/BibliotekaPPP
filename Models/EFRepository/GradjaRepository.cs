@@ -166,7 +166,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return gradjaBOList;
         }
 
-        // [SK1] Prikaz podataka o specifičnoj građi
+        // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
         public async Task<GradjaBO?> TraziGradjuPoID(int gradjaID)
         {
             Gradja? trazenaGradja = await bibliotekaEntities.Gradjas

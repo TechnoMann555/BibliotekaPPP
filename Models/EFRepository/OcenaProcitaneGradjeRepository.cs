@@ -9,7 +9,7 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
-        // [SK7] Ocenjivanje procitane gradje
+        // [SK8] Ocenjivanje pročitane građe
         public async Task<OcenaProcitaneGradjeBO?> TraziOcenu(int gradjaID, int korisnickiNalogID)
         {
             OcenaProcitaneGradje? ocena = await bibliotekaContext.OcenaProcitaneGradjes
@@ -27,7 +27,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return ocenaBO;
         }
 
-        // [SK7] Ocenjivanje procitane gradje
+        // [SK8] Ocenjivanje pročitane građe
         public async Task<OcenjivanjeGradjeResult> OceniGradju(OcenaProcitaneGradjeBO ocena)
         {
             // Provera da li već postoji ocena

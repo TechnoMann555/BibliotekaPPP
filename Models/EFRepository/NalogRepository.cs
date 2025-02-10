@@ -9,7 +9,7 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         private BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
-        // [SK2] Registracija clana na platformu biblioteke 
+        // [SK2] Registracija člana na platformu biblioteke 
         public async Task<KreiranjeNalogaResult> KreirajKorisnickiNalog(string JCB, string email, string lozinka)
         {
             Clan? trazenClan = await bibliotekaContext.Clans.FirstOrDefaultAsync(clan => clan.Jcb == JCB);
@@ -64,7 +64,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return (ulogovanNalog, LoginResult.Uspeh);
         }
 
-        // [SK8] Logovanje na administratorski nalog
+        // [SK9] Logovanje na administratorski nalog
         public async Task<(NalogBO?, LoginResult)> LoginAdminBibliotekar(string email, string lozinka)
         {
             Bibliotekar? trazenBibliotekar = await bibliotekaContext.Bibliotekars
@@ -87,7 +87,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return (ulogovanNalog, LoginResult.Uspeh);
         }
 
-        // [SK17] Brisanje korisničkog naloga određenog člana
+        // [SK19] Brisanje korisničkog naloga određenog člana
         public async Task<BrisanjeKorisnickogNalogaResult> BrisiKorisnickiNalog(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans

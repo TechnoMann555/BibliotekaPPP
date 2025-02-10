@@ -171,9 +171,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK8] Logovanje na administratorski nalog
+        #region [SK9] Logovanje na administratorski nalog
 
-        // [SK8] Logovanje na administratorski nalog
+        // [SK9] Logovanje na administratorski nalog
         [HttpPost]
         public async Task<IActionResult> LoginBibliotekar(string emailBibliotekar, string lozinkaBibliotekar)
         {
@@ -209,7 +209,8 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        // TODO: Dokumentovati Logout funkcionalnost u Larmanu
+        // [SK4] Odjavljivanje iz korisničkog naloga
+        // [SK10] Odjavljivanje iz administratorskog naloga
         [HttpGet]
         public IActionResult Logout()
         {
@@ -221,9 +222,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Administratorske akcije
 
-        #region [SK17] Brisanje korisničkog naloga određenog člana
+        #region [SK19] Brisanje korisničkog naloga određenog člana
 
-        // [SK17] Brisanje korisničkog naloga određenog člana
+        // [SK19] Brisanje korisničkog naloga određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> BrisiKorisnickiNalog(int id)

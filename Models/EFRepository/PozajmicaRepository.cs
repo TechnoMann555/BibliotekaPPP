@@ -10,7 +10,7 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
-        // [SK7] Ocenjivanje procitane gradje
+        // [SK8] Ocenjivanje pročitane građe
         public async Task<bool> ClanProcitaoGradju(int gradjaID, int clanID)
         {
             bool procitao = await bibliotekaContext.Pozajmicas.AnyAsync(
@@ -22,8 +22,8 @@ namespace BibliotekaPPP.Models.EFRepository
             return procitao;
         }
 
-        // [SK6] Prikaz podataka o pozajmicama
-        // [SK12] Prikaz podataka o pozajmicama člana
+        // [SK7] Prikaz podataka o pozajmicama
+        // [SK14] Prikaz podataka o pozajmicama člana
         public async Task<IEnumerable<PozajmicaBO>> TraziPozajmicePoClanarini(int clanFK, int rbrClanarine)
         {
             List<Pozajmica> pozajmice = await bibliotekaContext.Pozajmicas
@@ -47,7 +47,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return listaPozajmica;
         }
 
-        // [SK15] Kreiranje pozajmice za određenog člana
+        // [SK17] Kreiranje pozajmice za određenog člana
         public async Task<KreiranjePozajmiceResult> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID)
         {
             Clanarina? poslednjaClanarina = await bibliotekaContext.Clanarinas
@@ -129,7 +129,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return KreiranjePozajmiceResult.Uspeh;
         }
 
-        // [SK16] Razduživanje pozajmice za određenog člana
+        // [SK18] Razduživanje pozajmice za određenog člana
         public async Task<PozajmicaBO?> TraziPozajmicuPoPK(int clanID, int clanarinaID, int pozajmicaRbr)
         {
             Pozajmica? pozajmica = await bibliotekaContext.Pozajmicas
@@ -149,7 +149,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return trazenaPozajmica;
         }
 
-        // [SK16] Razduživanje pozajmice za određenog člana
+        // [SK18] Razduživanje pozajmice za određenog člana
         public async Task<RazduzivanjePozajmiceResult> RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr)
         {
             Pozajmica pozajmica = await bibliotekaContext.Pozajmicas

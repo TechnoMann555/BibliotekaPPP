@@ -14,9 +14,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Korisnicke akcije
 
-        #region [SK4] Prikaz ličnih i članskih podataka
+        #region [SK5] Prikaz ličnih i članskih podataka
 
-        // [SK4] Prikaz ličnih i članskih podataka
+        // [SK5] Prikaz ličnih i članskih podataka
         [HttpGet]
         [Route("LicniClanskiPodaci")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
@@ -37,9 +37,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Administratorske akcije
 
-        #region [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        #region [SK11] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
 
-        // [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        // [SK11] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public IActionResult Pretraga()
@@ -47,7 +47,7 @@ namespace BibliotekaPPP.Controllers
             return View();
         }
 
-        // [SK9] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        // [SK11] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> Pretraga(string jcb)
@@ -73,9 +73,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK10] Prikaz ličnih podataka o članu
+        #region [SK12] Prikaz ličnih podataka o članu
 
-        // [SK10] Prikaz ličnih podataka o članu
+        // [SK12] Prikaz ličnih podataka o članu
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> LicniClanskiPodaciClana(int id)
@@ -97,9 +97,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK13] Upisivanje novog člana biblioteke
+        #region [SK15] Upisivanje novog člana biblioteke
 
-        // [SK13] Upisivanje novog člana biblioteke
+        // [SK15] Upisivanje novog člana biblioteke
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public IActionResult UpisNovogClana()
@@ -107,7 +107,7 @@ namespace BibliotekaPPP.Controllers
             return View(null);
         }
 
-        // [SK13] Upisivanje novog člana biblioteke
+        // [SK15] Upisivanje novog člana biblioteke
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> UpisNovogClana(UpisClanaViewModel podaci)

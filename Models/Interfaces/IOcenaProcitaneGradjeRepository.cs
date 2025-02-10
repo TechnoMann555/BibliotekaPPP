@@ -2,7 +2,7 @@
 
 namespace BibliotekaPPP.Models.Interfaces
 {
-    // [SK7] Ocenjivanje procitane gradje
+    // [SK8] Ocenjivanje pročitane građe
     public interface IOcenaProcitaneGradjeRepository
     {
         public Task<OcenaProcitaneGradjeBO?> TraziOcenu(int gradjaID, int korisnickiNalogID);

@@ -16,8 +16,8 @@ namespace BibliotekaPPP.Controllers
 
         #region Pomocne neakcione metode
 
-        // [SK6] Prikaz podataka o pozajmicama
-        // [SK12] Prikaz podataka o pozajmicama člana
+        // [SK7] Prikaz podataka o pozajmicama
+        // [SK14] Prikaz podataka o pozajmicama člana
         [NonAction]
         private async Task<IActionResult?> PripremiClanarineClana(int clanID, bool adminView = false)
         {
@@ -42,8 +42,8 @@ namespace BibliotekaPPP.Controllers
             return null;
         }
 
-        // [SK6] Prikaz podataka o pozajmicama
-        // [SK12] Prikaz podataka o pozajmicama člana
+        // [SK7] Prikaz podataka o pozajmicama
+        // [SK14] Prikaz podataka o pozajmicama člana
         [NonAction]
         private async Task PripremiPozajmice(int clanFK, int rbrClanarine)
         {
@@ -73,9 +73,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Korisnicke akcije
 
-        #region [SK6] Prikaz podataka o pozajmicama
+        #region [SK7] Prikaz podataka o pozajmicama
 
-        // [SK6] Prikaz podataka o pozajmicama
+        // [SK7] Prikaz podataka o pozajmicama
         [HttpGet]
         [Route("Pozajmice")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
@@ -87,7 +87,7 @@ namespace BibliotekaPPP.Controllers
             return View();
         }
 
-        // [SK6] Prikaz podataka o pozajmicama
+        // [SK7] Prikaz podataka o pozajmicama
         [HttpPost]
         [Route("Pozajmice")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
@@ -112,9 +112,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Administratorske akcije
 
-        #region [SK12] Prikaz podataka o pozajmicama člana
+        #region [SK14] Prikaz podataka o pozajmicama člana
 
-        // [SK12] Prikaz podataka o pozajmicama člana
+        // [SK14] Prikaz podataka o pozajmicama člana
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PozajmiceClana(int id)
@@ -135,7 +135,7 @@ namespace BibliotekaPPP.Controllers
             return View();
         }
 
-        // [SK12] Prikaz podataka o pozajmicama člana
+        // [SK14] Prikaz podataka o pozajmicama člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PozajmiceClana(int id, int clanarinaRbr)
@@ -155,9 +155,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK15] Kreiranje pozajmice za određenog člana
+        #region [SK17] Kreiranje pozajmice za određenog člana
 
-        // [SK15] Kreiranje pozajmice za određenog člana
+        // [SK17] Kreiranje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PrikaziFormuKreiranjaPozajmice(int id)
@@ -180,7 +180,7 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
-        // [SK15] Kreiranje pozajmice za određenog člana
+        // [SK17] Kreiranje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> KreirajPozajmicu(int ogranakID, int gradjaID, string clanJCB)
@@ -234,9 +234,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK16] Razduživanje pozajmice za određenog člana
+        #region [SK18] Razduživanje pozajmice za određenog člana
 
-        // [SK16] Razduživanje pozajmice za određenog člana
+        // [SK18] Razduživanje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> PrikaziFormuRazduzivanjaPozajmice(int clanID, int clanarinaID, int pozajmicaRbr)
@@ -252,7 +252,7 @@ namespace BibliotekaPPP.Controllers
             return PartialView("~/Views/Pozajmica/_FormaRazduzivanjePozajmice.cshtml", pozajmicaBO);
         }
 
-        // [SK16] Razduživanje pozajmice za određenog člana
+        // [SK18] Razduživanje pozajmice za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> RazduziPozajmicu(int clanID, int clanarinaID, int pozajmicaRbr)
