@@ -136,9 +136,9 @@ namespace BibliotekaPPP.Controllers
         }
 
         // [SK14] Prikaz podataka o pozajmicama člana
-        [HttpPost]
+        [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
-        public async Task<IActionResult> PozajmiceClana(int id, int clanarinaRbr)
+        public async Task<IActionResult> PozajmiceClanaPrikaz(int id, int clanarinaRbr)
         {
             IActionResult? pogled = await PripremiClanarineClana(id, true);
 
@@ -150,7 +150,7 @@ namespace BibliotekaPPP.Controllers
             ViewBag.ClanID = id;
             ViewBag.ClanarinaRbr = clanarinaRbr;
 
-            return View();
+            return View("PozajmiceClana");
         }
 
         #endregion
@@ -196,17 +196,17 @@ namespace BibliotekaPPP.Controllers
             }
             else
             {
-                KreiranjePozajmiceResult rezultat = await pozajmicaRepository.KreirajPozajmicu(
+                (KreiranjePozajmiceResult rezultat, int? clanarinaRbr) rezultatKreiranja = await pozajmicaRepository.KreirajPozajmicu(
                     ogranakID: ogranakID,
                     gradjaID: gradjaID,
                     clanID: clan.ClanId
                 );
 
-                if(rezultat == KreiranjePozajmiceResult.Uspeh)
-                    return RedirectToAction("PozajmiceClana", new { id = clan.ClanId });
+                if(rezultatKreiranja.rezultat == KreiranjePozajmiceResult.Uspeh)
+                    return RedirectToAction("PozajmiceClanaPrikaz", new { id = clan.ClanId, clanarinaRbr = rezultatKreiranja.clanarinaRbr });
 
                 porukaGreska = new Poruka();
-                switch(rezultat)
+                switch(rezultatKreiranja.rezultat)
                 {
                     case KreiranjePozajmiceResult.NemaTekucuClanarinu:
                     porukaGreska.Tekst = "Član sa unetim JČB nema tekuću članarinu.";

@@ -48,7 +48,7 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [SK17] Kreiranje pozajmice za određenog člana
-        public async Task<KreiranjePozajmiceResult> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID)
+        public async Task<(KreiranjePozajmiceResult, int?)> KreirajPozajmicu(int ogranakID, int gradjaID, int clanID)
         {
             Clanarina? poslednjaClanarina = await bibliotekaContext.Clanarinas
                                                   .Include(cl => cl.Pozajmicas)
@@ -63,7 +63,7 @@ namespace BibliotekaPPP.Models.EFRepository
                 poslednjaClanarina.DatumZavrsetka < trenutniDatum
             )
             {
-                return KreiranjePozajmiceResult.NemaTekucuClanarinu;
+                return (KreiranjePozajmiceResult.NemaTekucuClanarinu, null);
             }
 
             // Provera da li clan ima maks. broj tekucih pozajmica (deset)
@@ -73,7 +73,7 @@ namespace BibliotekaPPP.Models.EFRepository
                 .Count() >= 10
             )
             {
-                return KreiranjePozajmiceResult.ImaMaksTekucihPozajmica;
+                return (KreiranjePozajmiceResult.ImaMaksTekucihPozajmica, null);
             }
 
             // Provera da li clan ima bar jednu tekucu pozajmicu za koju je prekoracen rok razduzenja
@@ -83,7 +83,7 @@ namespace BibliotekaPPP.Models.EFRepository
                 poz.DatumRazduzenja == null
             ))
             {
-                return KreiranjePozajmiceResult.ImaZakasneleTekucePozajmice;
+                return (KreiranjePozajmiceResult.ImaZakasneleTekucePozajmice, null);
             }
 
             // Provera da li clan vec ima tekucu pozajmicu za izabranu gradju
@@ -92,7 +92,7 @@ namespace BibliotekaPPP.Models.EFRepository
                 poz.DatumRazduzenja == null
             ))
             {
-                return KreiranjePozajmiceResult.ImaTekucuPozajmicuZaGradju;
+                return (KreiranjePozajmiceResult.ImaTekucuPozajmicuZaGradju, null);
             }
 
             // Izbor primerka gradje koji ima najmanji broj pozajmica
@@ -126,7 +126,7 @@ namespace BibliotekaPPP.Models.EFRepository
             primerak.Status = "zauzet";
             await bibliotekaContext.SaveChangesAsync();
 
-            return KreiranjePozajmiceResult.Uspeh;
+            return (KreiranjePozajmiceResult.Uspeh, poslednjaClanarina.Rbr);
         }
 
         // [SK18] Razduživanje pozajmice za određenog člana
