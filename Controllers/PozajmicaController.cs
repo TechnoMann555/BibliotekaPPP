@@ -244,10 +244,7 @@ namespace BibliotekaPPP.Controllers
             PozajmicaBO? pozajmicaBO = await pozajmicaRepository.TraziPozajmicuPoPK(clanID, clanarinaID, pozajmicaRbr);
 
             if(pozajmicaBO == null)
-            {
-                Poruka errorPoruka = new Poruka("Nije pronađena tražena pozajmica.", TipPoruke.Greska);
-                return PartialView("~/Views/Shared/_PorukaKorisniku.cshtml", errorPoruka);
-            }
+                return NotFound();
 
             return PartialView("~/Views/Pozajmica/_FormaRazduzivanjePozajmice.cshtml", pozajmicaBO);
         }
