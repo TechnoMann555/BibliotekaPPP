@@ -1,6 +1,7 @@
 ﻿using BibliotekaPPP.Filters;
 using BibliotekaPPP.Models;
 using BibliotekaPPP.Models.BusinessObjects;
+using BibliotekaPPP.Models.DatabaseObjects;
 using BibliotekaPPP.Models.EFRepository;
 using BibliotekaPPP.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -229,22 +230,18 @@ namespace BibliotekaPPP.Controllers
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> BrisiKorisnickiNalog(int id)
         {
-            BrisanjeKorisnickogNalogaResult rezultatBrisanja = await nalogRepository.BrisiKorisnickiNalog(id);
+            bool uspeloBrisanje = await nalogRepository.BrisiKorisnickiNalog(id);
 
-            Poruka poruka = new Poruka();
-            
-            switch(rezultatBrisanja)
+            if(!uspeloBrisanje)
+                return NotFound();
+            else
             {
-                case BrisanjeKorisnickogNalogaResult.Uspeh:
-                poruka.Tekst = "Uspešno je izbrisan članski korisnički nalog.";
-                break;
-                case BrisanjeKorisnickogNalogaResult.NemaKorisnickiNalog:
-                poruka.Tekst = "Član biblioteke nema članski korisnički nalog.";
-                break;
+                Poruka poruka = new Poruka(
+                    tekst: "Uspešno je izbrisan članski korisnički nalog.",
+                    tip: TipPoruke.Uspeh
+                );
+                TempData["PorukaKorisniku"] = JsonSerializer.Serialize(poruka);
             }
-
-            poruka.Tip = (rezultatBrisanja == BrisanjeKorisnickogNalogaResult.Uspeh) ? TipPoruke.Uspeh : TipPoruke.Greska;
-            TempData["PorukaKorisniku"] = JsonSerializer.Serialize(poruka);
 
             return RedirectToAction("LicniClanskiPodaciClana", "Clan", new { id });
         }

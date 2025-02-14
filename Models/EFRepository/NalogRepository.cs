@@ -88,7 +88,7 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [SK19] Brisanje korisničkog naloga određenog člana
-        public async Task<BrisanjeKorisnickogNalogaResult> BrisiKorisnickiNalog(int clanID)
+        public async Task<bool> BrisiKorisnickiNalog(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans
                                .Include(c => c.KorisnickiNalogFkNavigation)
@@ -96,20 +96,17 @@ namespace BibliotekaPPP.Models.EFRepository
                                .Where(c => c.ClanId == clanID)
                                .FirstOrDefaultAsync();
 
-            // ----------------------------------------------------------
             if(clan == null)
-                return BrisanjeKorisnickogNalogaResult.NePostojiClan;
-
+                return false;
             if(clan.KorisnickiNalogFkNavigation == null)
-                return BrisanjeKorisnickogNalogaResult.NemaKorisnickiNalog;
-            // ----------------------------------------------------------
+                return false;
 
             clan.KorisnickiNalogFkNavigation.OcenaProcitaneGradjes.Clear();
             bibliotekaContext.Nalogs.Remove(clan.KorisnickiNalogFkNavigation);
             
             await bibliotekaContext.SaveChangesAsync();
 
-            return BrisanjeKorisnickogNalogaResult.Uspeh;
+            return true;
         }
     }
 }

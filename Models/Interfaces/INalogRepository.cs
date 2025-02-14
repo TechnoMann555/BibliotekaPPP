@@ -14,6 +14,6 @@ namespace BibliotekaPPP.Models.Interfaces
         public Task<(NalogBO?, LoginResult)> LoginAdminBibliotekar(string email, string lozinka);
 
         // [SK19] Brisanje korisničkog naloga određenog člana
-        public Task<BrisanjeKorisnickogNalogaResult> BrisiKorisnickiNalog(int clanID);
+        public Task<bool> BrisiKorisnickiNalog(int clanID);
     }
 }

@@ -55,13 +55,6 @@
         ImaTekucuPozajmicuZaGradju
     }
 
-    public enum BrisanjeKorisnickogNalogaResult
-    {
-        Uspeh,
-        NePostojiClan,
-        NemaKorisnickiNalog
-    }
-
     public enum RazduzivanjePozajmiceResult
     {
         Uspeh,
