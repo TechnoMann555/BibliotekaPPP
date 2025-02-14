@@ -28,13 +28,13 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [SK8] Ocenjivanje pročitane građe
-        public async Task<OcenjivanjeGradjeResult> OceniGradju(OcenaProcitaneGradjeBO ocena)
+        public async Task<OcenjivanjeGradjeResult> OceniGradju(int gradjaID, int clanskiKorisnickiNalogID, int ocena)
         {
             // Provera da li već postoji ocena
             OcenaProcitaneGradje? postojecaOcena = await bibliotekaContext.OcenaProcitaneGradjes
                                                    .Where(o => 
-                                                       o.GradjaFk == ocena.GradjaFk &&
-                                                       o.ClanskiKorisnickiNalogFk == ocena.ClanskiKorisnickiNalogFk
+                                                       o.GradjaFk == gradjaID &&
+                                                       o.ClanskiKorisnickiNalogFk == clanskiKorisnickiNalogID
                                                    )
                                                    .FirstOrDefaultAsync();
 
@@ -43,9 +43,9 @@ namespace BibliotekaPPP.Models.EFRepository
             {
                 OcenaProcitaneGradje novaOcena = new OcenaProcitaneGradje()
                 {
-                    GradjaFk = ocena.GradjaFk,
-                    ClanskiKorisnickiNalogFk = ocena.ClanskiKorisnickiNalogFk,
-                    Ocena = ocena.Ocena
+                    GradjaFk = gradjaID,
+                    ClanskiKorisnickiNalogFk = clanskiKorisnickiNalogID,
+                    Ocena = ocena
                 };
 
                 await bibliotekaContext.OcenaProcitaneGradjes.AddAsync(novaOcena);
@@ -57,9 +57,9 @@ namespace BibliotekaPPP.Models.EFRepository
             else
             {
                 // Ako je ocena u opsegu 1 - 10, azurira se ocena
-                if(ocena.Ocena >= 1 && ocena.Ocena <= 10)
+                if(ocena >= 1 && ocena <= 10)
                 {
-                    postojecaOcena.Ocena = ocena.Ocena;
+                    postojecaOcena.Ocena = ocena;
                     await bibliotekaContext.SaveChangesAsync();
 
                     return OcenjivanjeGradjeResult.OcenaAzurirana;

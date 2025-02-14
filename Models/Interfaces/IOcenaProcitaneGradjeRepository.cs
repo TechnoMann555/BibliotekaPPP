@@ -7,6 +7,6 @@ namespace BibliotekaPPP.Models.Interfaces
     {
         public Task<OcenaProcitaneGradjeBO?> TraziOcenu(int gradjaID, int korisnickiNalogID);
 
-        public Task<OcenjivanjeGradjeResult> OceniGradju(OcenaProcitaneGradjeBO ocena);
+        public Task<OcenjivanjeGradjeResult> OceniGradju(int gradjaID, int clanskiKorisnickiNalogID, int ocena);
     }
 }

@@ -22,14 +22,11 @@ namespace BibliotekaPPP.Controllers
         {
             NalogBO nalogBO = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
 
-            OcenaProcitaneGradjeBO ocena = new OcenaProcitaneGradjeBO()
-            {
-                GradjaFk = gradjaID,
-                ClanskiKorisnickiNalogFk = nalogBO.NalogId,
-                Ocena = ocenaGradje
-            };
-
-            OcenjivanjeGradjeResult rezultatOcenjivanja = await ocenaRepository.OceniGradju(ocena);
+            OcenjivanjeGradjeResult rezultatOcenjivanja = await ocenaRepository.OceniGradju(
+                gradjaID: gradjaID,
+                clanskiKorisnickiNalogID: nalogBO.NalogId,
+                ocena: ocenaGradje
+            );
             Poruka porukaKorisniku = new Poruka();
 
             switch(rezultatOcenjivanja)
