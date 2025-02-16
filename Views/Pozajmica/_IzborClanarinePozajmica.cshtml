@@ -1,7 +1,7 @@
 ﻿@model (List<ClanarinaBO> clanarine, int? izabranaClanarinaRbr)
 
 <select name="clanarinaRbr" class="form-select w-auto" onchange="this.form.submit()">
-	<!option value="" @((Model.izabranaClanarinaRbr == null) ? "selected" : "") disabled>-- Izaberite clanarinu --</!option>
+	<!option value="" @((Model.izabranaClanarinaRbr == null) ? "selected" : "") disabled>-- Izaberite članarinu --</!option>
 	@foreach (ClanarinaBO clanarinaBO in Model.clanarine)
 	{
 		<!option value="@clanarinaBO.Rbr" @((Model.izabranaClanarinaRbr == clanarinaBO.Rbr) ? "selected" : "")>

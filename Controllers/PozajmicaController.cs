@@ -125,12 +125,6 @@ namespace BibliotekaPPP.Controllers
                 return NotFound();
 
             ViewBag.ClanID = id;
-            if(TempData["PorukaGreskaRazduzivanje"] != null)
-            {
-                ViewBag.PorukaGreskaRazduzivanje = JsonSerializer.Deserialize<Poruka>(
-                    TempData["PorukaGreskaRazduzivanje"].ToString()
-                );
-            }
 
             return View();
         }
@@ -149,6 +143,12 @@ namespace BibliotekaPPP.Controllers
             
             ViewBag.ClanID = id;
             ViewBag.ClanarinaRbr = clanarinaRbr;
+            if(TempData["PorukaGreskaRazduzivanje"] != null)
+            {
+                ViewBag.PorukaGreskaRazduzivanje = JsonSerializer.Deserialize<Poruka>(
+                    TempData["PorukaGreskaRazduzivanje"].ToString()
+                );
+            }
 
             return View("PozajmiceClana");
         }
@@ -269,7 +269,7 @@ namespace BibliotekaPPP.Controllers
                 TempData["PorukaGreskaRazduzivanje"] = JsonSerializer.Serialize(porukaGreske);
             }
 
-            return RedirectToAction("PozajmiceClana", new { id = clanID });
+            return RedirectToAction("PozajmiceClanaPrikaz", new { id = clanID, clanarinaRbr = clanarinaID });
         }
 
         #endregion
