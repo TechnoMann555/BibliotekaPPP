@@ -28,8 +28,8 @@ namespace BibliotekaPPP.Controllers
         }
 
         // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
-        [HttpPost]
-        public async Task<IActionResult> Pretraga(GradjaPretragaViewModel gradja)
+        [HttpGet]
+        public async Task<IActionResult> PretragaRezultat(GradjaPretragaViewModel gradja)
         {
             List<GradjaBO> pretrazenaGradja = (List<GradjaBO>) await gradjaRepository.TraziGradju(
                 naslov: gradja.Naslov,
