@@ -84,14 +84,14 @@ namespace BibliotekaPPP.Controllers
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
             await PripremiClanarineClana((int)korisnickiNalog.ClanId);
 
-            return View();
+            return View("Pozajmice");
         }
 
         // [SK7] Prikaz podataka o pozajmicama
-        [HttpPost]
-        [Route("Pozajmice")]
+        [HttpGet]
+        [Route("PozajmicePrikaz")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
-        public async Task<IActionResult> Pozajmice(int clanarinaRbr)
+        public async Task<IActionResult> PozajmicePrikaz(int clanarinaRbr)
         {
             NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
             IActionResult? pogled = await PripremiClanarineClana((int)korisnickiNalog.ClanId);
@@ -103,7 +103,7 @@ namespace BibliotekaPPP.Controllers
 
             await PripremiPozajmice((int)korisnickiNalog.ClanId, clanarinaRbr);
 
-            return View();
+            return View("Pozajmice");
         }
 
         #endregion

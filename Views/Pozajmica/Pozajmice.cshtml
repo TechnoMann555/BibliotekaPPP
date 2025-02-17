@@ -13,7 +13,7 @@
 	}
 	else
 	{
-		<form asp-controller="Pozajmica" asp-action="Pozajmice" method="post">
+		<form asp-controller="Pozajmica" asp-action="PozajmicePrikaz" method="get">
 			@{
 				List<ClanarinaBO> clanarine = ViewBag.Clanarine;
 				int? clanarinaRbr = ViewBag.ClanarinaRbr;
