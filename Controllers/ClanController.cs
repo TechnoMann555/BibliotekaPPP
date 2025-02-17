@@ -44,13 +44,13 @@ namespace BibliotekaPPP.Controllers
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public IActionResult Pretraga()
         {
-            return View();
+            return View("Pretraga");
         }
 
         // [SK11] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
-        [HttpPost]
+        [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
-        public async Task<IActionResult> Pretraga(string jcb)
+        public async Task<IActionResult> PretragaRezultat(string jcb)
         {
             ClanBO? clanBO = await clanRepository.TraziClanaPoJCB(jcb);
             ViewBag.IzvrsenaPretraga = true;
@@ -68,7 +68,7 @@ namespace BibliotekaPPP.Controllers
             }
 
             ViewBag.JCB = jcb;
-            return View();
+            return View("Pretraga");
         }
 
         #endregion
