@@ -141,7 +141,7 @@ namespace BibliotekaPPP.Controllers
             }
             else
             {
-                return RedirectToAction("ClanarineClana", "Clanarina", new { id = rezultatUpisa.clanID });
+                return RedirectToAction("LicniClanskiPodaciClana", new { id = rezultatUpisa.clanID });
             }
         }
 
