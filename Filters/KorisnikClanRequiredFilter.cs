@@ -19,7 +19,6 @@ namespace BibliotekaPPP.Filters
             }
             else
             {
-                NalogRepository nalogRepository = new NalogRepository();
                 NalogBO korisnickiNalog = JsonSerializer.Deserialize<NalogBO>(korisnik);
 
                 if(korisnickiNalog.Uloga != "Korisnik_Clan")
