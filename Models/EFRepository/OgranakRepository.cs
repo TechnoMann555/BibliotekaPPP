@@ -9,7 +9,7 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
-        // [SK17] Kreiranje pozajmice za određenog člana
+        // [SK18] Kreiranje pozajmice za određenog člana
         public async Task<IEnumerable<OgranakBO>> VratiOgrankeSaSlobodnimPrimercimaGradje(int gradjaID)
         {
             // Vrati sve ogranke uz naselja tako da u njima postoji bar jedan primerak gradje

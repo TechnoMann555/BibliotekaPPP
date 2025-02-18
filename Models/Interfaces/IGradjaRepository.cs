@@ -16,7 +16,7 @@ namespace BibliotekaPPP.Models.Interfaces
             bool statusDostupnosti = false
         );
 
-        // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
+        // [SK2] Prikaz podataka o specifičnoj građi
         public Task<GradjaBO?> TraziGradjuPoID(int gradjaID);
     }
 }

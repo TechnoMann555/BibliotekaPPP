@@ -9,10 +9,10 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         private BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
-        // [SK6] Prikaz informacija o članarinama
-        // [SK7] Prikaz podataka o pozajmicama
-        // [SK13] Prikaz podataka o članarinama člana
-        // [SK14] Prikaz podataka o pozajmicama člana
+        // [SK7] Prikaz informacija o članarinama
+        // [SK8] Prikaz podataka o pozajmicama
+        // [SK14] Prikaz podataka o članarinama člana
+        // [SK15] Prikaz podataka o pozajmicama člana
         public async Task<IEnumerable<ClanarinaBO>?> TraziClanarinePoClanID(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans
@@ -33,7 +33,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return listaClanarina;
         }
 
-        // [SK16] Otvaranje nove članarine za određenog člana
+        // [SK17] Otvaranje nove članarine za određenog člana
         public async Task<PrUslovaOtvClanarineResult> ProveriUsloveOtvaranjaClanarine(int clanID)
         {
             bool imaTekucuClanarinu = await bibliotekaContext.Clanarinas.AnyAsync(cl =>
@@ -55,7 +55,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return PrUslovaOtvClanarineResult.IspunjeniUslovi;
         }
 
-        // [SK16] Otvaranje nove članarine za određenog člana
+        // [SK17] Otvaranje nove članarine za određenog člana
         public async Task OtvoriClanarinu(int clanID, decimal cena)
         {
             Clanarina novaClanarina = new Clanarina()

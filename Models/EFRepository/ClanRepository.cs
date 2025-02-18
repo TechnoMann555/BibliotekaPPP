@@ -37,8 +37,8 @@ namespace BibliotekaPPP.Models.EFRepository
 
         #endregion
 
-        // [SK5] Prikaz ličnih i članskih podataka
-        // [SK12] Prikaz ličnih podataka o članu
+        // [SK6] Prikaz ličnih i članskih podataka
+        // [SK13] Prikaz ličnih podataka o članu
         public async Task<ClanBO?> TraziClanaPoClanID(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans.FirstOrDefaultAsync(c => c.ClanId == clanID);
@@ -51,7 +51,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return nadjenClan;
         }
 
-        // [SK11] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        // [SK12] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
         public async Task<ClanBO?> TraziClanaPoJCB(string JCB)
         {
             Clan? clan = await bibliotekaContext.Clans.FirstOrDefaultAsync(c => c.Jcb == JCB);
@@ -64,7 +64,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return nadjenClan;
         }
 
-        // [SK15] Upisivanje novog člana biblioteke
+        // [SK16] Upisivanje novog člana biblioteke
         private async Task<string> KreirajNovJCB()
         {
             string? poslednjiJCB = await bibliotekaContext.Clans
@@ -99,7 +99,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return $"{noviRedniBroj}/{DateTime.Now.Year}";
         }
 
-        // [SK15] Upisivanje novog člana biblioteke
+        // [SK16] Upisivanje novog člana biblioteke
         public async Task<(UpisivanjeClanaResult, int?)> UpisiClana(UpisClanaViewModel podaci)
         {
             // Da li postoji clan sa istim brojem licne karte?

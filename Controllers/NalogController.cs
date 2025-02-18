@@ -15,16 +15,16 @@ namespace BibliotekaPPP.Controllers
 
         #region Akcije za sve korisnike
 
-        #region [SK2] Registracija clana na platformu biblioteke
+        #region [SK3] Registracija clana na platformu biblioteke
 
-        // [SK2] Registracija clana na platformu biblioteke
+        // [SK3] Registracija clana na platformu biblioteke
         [HttpGet]
         public IActionResult RegistracijaClan()
         {
             return View();
         }
 
-        // [SK2] Registracija clana na platformu biblioteke
+        // [SK3] Registracija clana na platformu biblioteke
         [HttpPost]
         public async Task<IActionResult> RegistracijaClan(RegistracijaClanViewModel regPodaci)
         {
@@ -68,9 +68,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK3] Logovanje na korisnički nalog
+        #region [SK4] Logovanje na korisnički nalog
 
-        // [SK3] Logovanje na korisnički nalog
+        // [SK4] Logovanje na korisnički nalog
         [HttpGet]
         public IActionResult Login()
         {
@@ -136,7 +136,7 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        // [SK3] Logovanje na korisnički nalog
+        // [SK4] Logovanje na korisnički nalog
         [HttpPost]
         public async Task<IActionResult> LoginClan(string emailClan, string lozinkaClan)
         {
@@ -172,9 +172,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK9] Logovanje na administratorski nalog
+        #region [SK10] Logovanje na administratorski nalog
 
-        // [SK9] Logovanje na administratorski nalog
+        // [SK10] Logovanje na administratorski nalog
         [HttpPost]
         public async Task<IActionResult> LoginBibliotekar(string emailBibliotekar, string lozinkaBibliotekar)
         {
@@ -210,8 +210,8 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        // [SK4] Odjavljivanje iz korisničkog naloga
-        // [SK10] Odjavljivanje iz administratorskog naloga
+        // [SK5] Odjavljivanje iz korisničkog naloga
+        // [SK11] Odjavljivanje iz administratorskog naloga
         [HttpGet]
         public IActionResult Logout()
         {
@@ -223,9 +223,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Administratorske akcije
 
-        #region [SK19] Brisanje korisničkog naloga određenog člana
+        #region [SK20] Brisanje korisničkog naloga određenog člana
 
-        // [SK19] Brisanje korisničkog naloga određenog člana
+        // [SK20] Brisanje korisničkog naloga određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> BrisiKorisnickiNalog(int id)

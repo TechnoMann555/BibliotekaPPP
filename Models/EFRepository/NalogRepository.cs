@@ -42,7 +42,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return KreiranjeNalogaResult.Uspeh;
         }
 
-        // [SK3] Logovanje na korisnički nalog
+        // [SK4] Logovanje na korisnički nalog
         public async Task<(NalogBO?, LoginResult)> LoginKorisnikClan(string email, string lozinka)
         {
             Clan? trazenClan = await bibliotekaContext.Clans.FirstOrDefaultAsync(cl => cl.KontaktMejl == email);
@@ -64,7 +64,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return (ulogovanNalog, LoginResult.Uspeh);
         }
 
-        // [SK9] Logovanje na administratorski nalog
+        // [SK10] Logovanje na administratorski nalog
         public async Task<(NalogBO?, LoginResult)> LoginAdminBibliotekar(string email, string lozinka)
         {
             Bibliotekar? trazenBibliotekar = await bibliotekaContext.Bibliotekars
@@ -87,7 +87,7 @@ namespace BibliotekaPPP.Models.EFRepository
             return (ulogovanNalog, LoginResult.Uspeh);
         }
 
-        // [SK19] Brisanje korisničkog naloga određenog člana
+        // [SK20] Brisanje korisničkog naloga određenog člana
         public async Task<bool> BrisiKorisnickiNalog(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans

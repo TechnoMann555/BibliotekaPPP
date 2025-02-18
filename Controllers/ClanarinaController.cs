@@ -14,9 +14,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Korisnicke akcije
 
-        #region [SK6] Prikaz informacija o članarinama
+        #region [SK7] Prikaz informacija o članarinama
 
-        // [SK6] Prikaz informacija o članarinama
+        // [SK7] Prikaz informacija o članarinama
         [HttpGet]
         [Route("Clanarine")]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
@@ -34,9 +34,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Administratorske akcije
 
-        #region [SK13] Prikaz podataka o članarinama člana
+        #region [SK14] Prikaz podataka o članarinama člana
 
-        // [SK13] Prikaz podataka o članarinama člana
+        // [SK14] Prikaz podataka o članarinama člana
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> ClanarineClana(int id)
@@ -62,9 +62,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK16] Otvaranje nove članarine za određenog člana
+        #region [SK17] Otvaranje nove članarine za određenog člana
 
-        // [SK16] Otvaranje nove članarine za određenog člana
+        // [SK17] Otvaranje nove članarine za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> ProveriUsloveOtvaranjaClanarine(int id)
@@ -87,7 +87,7 @@ namespace BibliotekaPPP.Controllers
             }
         }
 
-        // [SK16] Otvaranje nove članarine za određenog člana
+        // [SK17] Otvaranje nove članarine za određenog člana
         [HttpPost]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> OtvoriClanarinu(int id, decimal cena)

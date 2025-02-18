@@ -46,7 +46,11 @@ namespace BibliotekaPPP.Controllers
             return View("Pretraga", gradja);
         }
 
-        // [SK1] Pretraga kataloga građe uz filtriranje po dostupnosti za pozajmljivanje
+        #endregion
+
+        #region [SK2] Prikaz podataka o specifičnoj građi
+
+        // [SK2] Prikaz podataka o specifičnoj građi
         [HttpGet]
         public async Task<IActionResult> Prikaz(int id)
         {
@@ -59,7 +63,7 @@ namespace BibliotekaPPP.Controllers
             {
                 NalogBO nalogBO = JsonSerializer.Deserialize<NalogBO>(Request.Cookies["Korisnik"]);
                 
-                // [SK8] Ocenjivanje pročitane građe
+                // [SK9] Ocenjivanje pročitane građe
                 if(nalogBO.Uloga == "Korisnik_Clan")
                 {
                     ViewBag.GradjaProcitana = await pozajmicaRepository.ClanProcitaoGradju(

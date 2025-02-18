@@ -13,9 +13,9 @@ namespace BibliotekaPPP.Controllers
 
         #region Korisnicke akcije
 
-        #region [SK8] Ocenjivanje pročitane građe
+        #region [SK9] Ocenjivanje pročitane građe
 
-        // [SK8] Ocenjivanje pročitane građe
+        // [SK9] Ocenjivanje pročitane građe
         [HttpPost]
         [ServiceFilter(typeof(KorisnikClanRequiredFilter))]
         public async Task<IActionResult> OceniGradju(int gradjaID, int ocenaGradje)
