@@ -38,7 +38,7 @@ namespace BibliotekaPPP.Models.EFRepository
         #endregion
 
         // [SK6] Prikaz ličnih i članskih podataka
-        // [SK13] Prikaz ličnih podataka o članu
+        // [SK13] Prikaz ličnih i članskih podataka o članu
         public async Task<ClanBO?> TraziClanaPoClanID(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans.FirstOrDefaultAsync(c => c.ClanId == clanID);

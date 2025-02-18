@@ -6,7 +6,7 @@ namespace BibliotekaPPP.Models.Interfaces
     public interface IClanRepository
     {
         // [SK6] Prikaz ličnih i članskih podataka
-        // [SK13] Prikaz ličnih podataka o članu
+        // [SK13] Prikaz ličnih i članskih podataka o članu
         public Task<ClanBO?> TraziClanaPoClanID(int clanID);
 
         // [SK12] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)

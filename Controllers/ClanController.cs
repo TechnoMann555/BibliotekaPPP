@@ -73,9 +73,9 @@ namespace BibliotekaPPP.Controllers
 
         #endregion
 
-        #region [SK13] Prikaz ličnih podataka o članu
+        #region [SK13] Prikaz ličnih i članskih podataka o članu
 
-        // [SK13] Prikaz ličnih podataka o članu
+        // [SK13] Prikaz ličnih i članskih podataka o članu
         [HttpGet]
         [ServiceFilter(typeof(AdminBibliotekarRequiredFilter))]
         public async Task<IActionResult> LicniClanskiPodaciClana(int id)
