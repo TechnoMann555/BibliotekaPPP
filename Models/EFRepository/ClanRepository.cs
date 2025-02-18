@@ -39,6 +39,7 @@ namespace BibliotekaPPP.Models.EFRepository
 
         // [SK6] Prikaz ličnih i članskih podataka
         // [SK13] Prikaz ličnih i članskih podataka o članu
+        // [SK16] Upisivanje novog člana biblioteke
         public async Task<ClanBO?> TraziClanaPoClanID(int clanID)
         {
             Clan? clan = await bibliotekaContext.Clans.FirstOrDefaultAsync(c => c.ClanId == clanID);
@@ -52,6 +53,7 @@ namespace BibliotekaPPP.Models.EFRepository
         }
 
         // [SK12] Pretraga članova biblioteke po „Jedinstvenom Članskom Broju“ (JČB)
+        // [SK18] Kreiranje pozajmice za određenog člana
         public async Task<ClanBO?> TraziClanaPoJCB(string JCB)
         {
             Clan? clan = await bibliotekaContext.Clans.FirstOrDefaultAsync(c => c.Jcb == JCB);

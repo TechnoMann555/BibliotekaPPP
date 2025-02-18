@@ -4,7 +4,7 @@ namespace BibliotekaPPP.Models.Interfaces
 {
     public interface INalogRepository
     {
-        // [SK2] Registracija člana na platformu biblioteke 
+        // [SK3] Registracija člana na platformu biblioteke 
         public Task<KreiranjeNalogaResult> KreirajKorisnickiNalog(string JCB, string email, string lozinka);
 
         // [SK4] Logovanje na korisnički nalog

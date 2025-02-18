@@ -9,7 +9,7 @@ namespace BibliotekaPPP.Models.EFRepository
     {
         private BibliotekaContext bibliotekaContext = new BibliotekaContext();
 
-        // [SK2] Registracija člana na platformu biblioteke 
+        // [SK3] Registracija člana na platformu biblioteke 
         public async Task<KreiranjeNalogaResult> KreirajKorisnickiNalog(string JCB, string email, string lozinka)
         {
             Clan? trazenClan = await bibliotekaContext.Clans.FirstOrDefaultAsync(clan => clan.Jcb == JCB);
