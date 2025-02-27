@@ -1,0 +1,65 @@
+﻿@model BibliotekaPPP.Models.ViewModels.UpisClanaViewModel
+
+@{
+	ViewData["Title"] = "Upis novog člana";
+}
+
+<h1>Upis novog člana biblioteke</h1>
+<hr class="mb-5"/>
+
+<div class="d-flex justify-content-center">
+	<div class="card text-dark bg-light w-75">
+		<div class="card-body">
+			@if(ViewBag.PorukaKorisniku != null)
+			{
+				Poruka poruka = ViewBag.PorukaKorisniku;
+				await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
+			}
+			<form asp-controller="Clan" asp-action="UpisNovogClana" method="post">
+				<div class="mb-3">
+					<label asp-for="BrLicneKarte" class="form-label">Broj lične karte</label>
+					<input asp-for="BrLicneKarte" class="form-control" placeholder="XXXXXXXXX" required autocomplete="off"/>
+					<span asp-validation-for="BrLicneKarte" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label asp-for="ImePrezime" class="form-label">Ime i prezime</label>
+					<input asp-for="ImePrezime" class="form-control" required autocomplete="off" />
+					<span asp-validation-for="ImePrezime" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label asp-for="DatumRodjenja" class="form-label">Datum rođenja</label>
+					<input asp-for="DatumRodjenja" class="form-control" required autocomplete="off" />
+					<span asp-validation-for="DatumRodjenja" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label asp-for="ImeRoditelja" class="form-label">Ime jednog roditelja</label>
+					<input asp-for="ImeRoditelja" class="form-control" required autocomplete="off" />
+					<span asp-validation-for="ImeRoditelja" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label asp-for="AdresaStanovanja" class="form-label">Stalna adresa stanovanja sa poštanskim brojem</label>
+					<input asp-for="AdresaStanovanja" class="form-control" required autocomplete="off" />
+					<span asp-validation-for="AdresaStanovanja" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label asp-for="Zanimanje" class="form-label">Zanimanje</label>
+					<input asp-for="Zanimanje" class="form-control" required autocomplete="off" />
+					<span asp-validation-for="Zanimanje" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label asp-for="KontaktTelefon" class="form-label">Kontakt broj telefona</label>
+					<input asp-for="KontaktTelefon" class="form-control" placeholder="+3816XXXXXXX(X)" required autocomplete="off" />
+					<span asp-validation-for="KontaktTelefon" class="text-danger"></span>
+				</div>
+				<div class="mb-3">
+					<label asp-for="KontaktMejl" class="form-label">Kontakt e-mail adresa</label>
+					<input asp-for="KontaktMejl" class="form-control" required autocomplete="off" />
+					<span asp-validation-for="KontaktMejl" class="text-danger"></span>
+				</div>
+				<div class="d-flex flex-row-reverse">
+					<input type="submit" value="Upiši" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,74 @@
+﻿@model BibliotekaPPP.Models.BusinessObjects.ClanBO
+
+@{
+    ViewData["Title"] = "Prikaz ličnih i članskih podataka člana";
+}
+
+@section Stylesheets {
+    <link href="~/css/tablestylesheet.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<h1>Prikaz ličnih i članskih podataka člana</h1>
+<hr class="mb-5" />
+@{
+    await Html.RenderPartialAsync("~/Views/Shared/_PrikazPodatakaClan.cshtml", Model);
+}
+
+@* Prikaz funkcionalnosti brisanja clanskog korisnickog naloga ukoliko clan ima korisnicki nalog *@
+@if(Model.KorisnickiNalog != null)
+{
+    <hr />
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalBrisanjeNaloga">
+        Izbriši korisnički nalog
+    </button>
+
+    <div class="modal fade" id="modalBrisanjeNaloga" tabindex="-1" aria-labelledby="modalBrisanjeNalogaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalBrisanjeNalogaLabel">Brisanje korisničkog naloga</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="lead fw-bold text-danger">Da li ste sigurni da želite da izbrišite korisnički nalog člana?</p>
+                    <hr />
+                    <form asp-controller="Nalog" asp-action="BrisiKorisnickiNalog" asp-route-id="@Model.ClanId" method="post">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input type="checkbox" id="potvrdaBrisanja" class="form-check-input"/>
+                                <label for="potvrdaBrisanja" class="form-check-label">Da, siguran/na sam</label>
+                            </div>
+                            <input type="submit" id="submitBrisanje" value="Izbriši nalog" class="btn btn-danger" disabled/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Skripta koja enable-uje ili disable-uje submit dugme za brisanje naloga u zavisnosti od checkbox vrednosti *@
+    @section Scripts {
+        <script type="text/javascript" asp-append-version="true">
+            const potvrdaBrisanja = document.getElementById('potvrdaBrisanja');
+
+            potvrdaBrisanja.addEventListener("click", function() {
+                const submitBrisanje = document.getElementById('submitBrisanje');
+                
+                if(this.checked)
+                {
+                    submitBrisanje.removeAttribute('disabled');
+                }
+                else
+                {
+                    submitBrisanje.setAttribute('disabled', 'true');
+                }
+            });
+        </script>
+    }
+}
+
+@if (ViewBag.PorukaKorisniku != null)
+{
+    Poruka poruka = ViewBag.PorukaKorisniku;
+    await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
+}

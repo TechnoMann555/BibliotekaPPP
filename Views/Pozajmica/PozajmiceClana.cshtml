@@ -1,0 +1,62 @@
+﻿@{
+	ViewData["Title"] = "Pozajmice člana";
+}
+
+<h1>Prikaz pozajmica člana</h1>
+<hr class="mb-5" />
+
+<div class="mb-3">
+	@if (ViewBag.Clanarine.Count == 0)
+	{
+		Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
+	}
+	else
+	{
+		<form asp-controller="Pozajmica" asp-action="PozajmiceClanaPrikaz" asp-route-id="@ViewBag.ClanID" method="get">
+			@{
+				List<ClanarinaBO> clanarine = ViewBag.Clanarine;
+				int? clanarinaRbr = ViewBag.ClanarinaRbr;
+				await Html.RenderPartialAsync("_IzborClanarinePozajmica.cshtml", (clanarine, clanarinaRbr));
+			}
+		</form>
+	}
+</div>
+@if (ViewBag.Pozajmice != null)
+{
+	if (ViewBag.Pozajmice.Count == 0)
+	{
+		Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
+	}
+	else
+	{
+		List<PozajmicaBO> pozajmice = ViewBag.Pozajmice;
+		await Html.RenderPartialAsync("_PrikazPodatakaPozajmice.cshtml", pozajmice);
+	}
+}
+@if (ViewBag.PorukaGreskaRazduzivanje != null)
+{
+	Poruka poruka = ViewBag.PorukaGreskaRazduzivanje;
+	await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
+}
+
+@section Scripts {
+	<script type="text/javascript" asp-append-version="true">
+		async function prikaziModalRazduzivanjaPozajmice(clanFK, clanarinaFK, Rbr)
+		{
+			let myModal = new bootstrap.Modal(document.getElementById('modalRazduziPozajmicu'));
+
+			await $.ajax({
+				url: '@Url.Action("PrikaziFormuRazduzivanjaPozajmice", "Pozajmica")',
+				method: 'POST',
+				data: { clanID: clanFK, clanarinaID: clanarinaFK, pozajmicaRbr: Rbr },
+				success: function(result) {
+					$('#modal-razduzi-pozajmicu-body').html(result);
+				}
+			});
+
+			await myModal.show();
+		}
+	</script>
+}

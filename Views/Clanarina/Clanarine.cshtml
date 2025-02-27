@@ -1,0 +1,11 @@
+﻿@model List<BibliotekaPPP.Models.BusinessObjects.ClanarinaBO>
+
+@{
+	ViewData["Title"] = "Članarine";
+}
+
+<h1>Prikaz članarina</h1>
+<hr class="mb-5" />
+@{
+	await Html.RenderPartialAsync("_PrikazPodatakaClanarine.cshtml", Model);
+}

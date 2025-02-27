@@ -1,0 +1,14 @@
+﻿@model BibliotekaPPP.Models.BusinessObjects.ClanBO
+
+<div class="card text-dark bg-light">
+	<div class="card-body d-flex justify-content-between align-items-center">
+		<p class="lead mb-0">
+			<span class="fw-bold">@Model.Jcb</span> - @Model.ImePrezime
+		</p>
+		<div>
+			<a asp-controller="Clan" asp-action="LicniClanskiPodaciClana" asp-route-id="@Model.ClanId" target="_blank" class="btn btn-info">Lični i članski podaci</a>
+			<a asp-controller="Clanarina" asp-action="ClanarineClana" asp-route-id="@Model.ClanId" target="_blank" class="btn btn-info mx-1">Članarine</a>
+			<a asp-controller="Pozajmica" asp-action="PozajmiceClana" asp-route-id="@Model.ClanId" target="_blank" class="btn btn-info">Pozajmice</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,80 @@
+﻿@model BibliotekaPPP.Models.ViewModels.GradjaPretragaViewModel
+
+@{
+    ViewData["Title"] = "Pretraga";
+}
+
+@section Stylesheets {
+    <link href="~/css/biblioteka.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+
+<div class="card text-dark bg-light">
+    <div class="card-body">
+        <form asp-controller="Gradja" asp-action="PretragaRezultat" method="get">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="Naslov" class="form-label">Naslov</label>
+                    <input asp-for="Naslov" class="form-control"/>
+                </div>
+                <div class="col-6">
+                    <label asp-for="Autor" class="form-label">Autor</label>
+                    <input asp-for="Autor" class="form-control" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="Udk" class="form-label">UDK broj</label>
+                    <input asp-for="Udk" class="form-control" />
+                </div>
+                <div class="col-6">
+                    <label asp-for="Ogranak" class="form-label">Naziv ogranka</label>
+                    <input asp-for="Ogranak" class="form-control" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label asp-for="NazivIzdavaca" class="form-label">Naziv izdavača</label>
+                    <input asp-for="NazivIzdavaca" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="NaseljeIzdavanja" class="form-label">Naselje izdavanja</label>
+                    <input asp-for="NaseljeIzdavanja" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label asp-for="GodinaIzdavanja" class="form-label">Godina izdavanja</label>
+                    <input asp-for="GodinaIzdavanja" type="number" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input asp-for="StatusDostupnosti" class="form-check-input" type="checkbox"/>
+                        <label asp-for="StatusDostupnosti" class="form-check-label">Ima slobodnih primeraka</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-row-reverse">
+                <input type="submit" value="Pretraga" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@if(ViewBag.Gradja != null)
+{
+    <section class="mt-3">
+        @if(ViewBag.Gradja.Count == 0)
+        {
+            await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", new Poruka("Ne postoji građa sa unetim parametrima.", TipPoruke.Upozorenje));
+        }
+        else
+        {
+            <h3>Rezultati pretrage</h3>
+            <hr />
+            foreach(GradjaBO gradjaBO in ViewBag.Gradja)
+            {
+                await Html.RenderPartialAsync("_StavkaGradje.cshtml", gradjaBO);
+            }
+        }
+    </section>
+}

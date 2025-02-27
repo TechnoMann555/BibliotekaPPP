@@ -1,0 +1,135 @@
+﻿@model BibliotekaPPP.Models.BusinessObjects.GradjaBO
+
+@{
+	ViewData["Title"] = Model.Naslov;
+
+	// Formiranje putanje ka slici naslovne strane gradje
+	string putanjaNaslovne = "/Slike/NaslovneStraneGradje/" + Model.NaslovnaStranaPath;
+
+	// Formiranje liste imena i prezimena autora koji ce se prikazati
+	List<string> autori = new List<string>();
+	foreach (AutorBO autorBO in Model.Autori)
+	{
+		autori.Add(autorBO.ImePrezime);
+	}
+
+	// Formiranje stringa izdavanja
+	string izdavanje = $"{Model.Izdavanje?.NaseljeIzdavanja}, {Model.Izdavanje?.NazivIzdavaca}, {Model.Izdavanje?.GodinaIzdavanja}";
+}
+
+@section Stylesheets {
+	<link href="~/css/biblioteka.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+<div class="row">
+	<div class="col-3 naslovna-strana-gradje">
+		<img src="@putanjaNaslovne" />
+	</div>
+	<div class="col-6 d-flex flex-column justify-content-between">
+		<div>
+			<h2>@Model.Naslov</h2>
+			<h5>@string.Join(", ", autori)</h5>
+			<hr />
+			<p class="gradja-opis">@Model.Opis</p>
+		</div>
+		<div>
+			<hr />
+			<p><span class="fw-bold">Izdavanje: </span>@izdavanje</p>
+			<p><span class="fw-bold">ISBN: </span>@Model.Isbn</p>
+			<p><span class="fw-bold">UDK: </span>@Model.Udk</p>
+		</div>
+	</div>
+	@if(ViewBag.Korisnik != null)
+	{
+		<div class="col-3">
+		@if(ViewBag.Korisnik.Uloga == "Korisnik_Clan")
+		{
+			if(ViewBag.GradjaProcitana == true)
+			{
+				int ocena = (Model.Ocena != null) ? Model.Ocena.Ocena : -1;
+
+				<h3>Ocena pročitane građe</h3>
+				<label for="ocena" class="form-label me-2">Ocena građe: </label>
+				<select name="ocena" id="ocena" class="form-select w-auto d-inline" onchange="oceniGradju(@Model.GradjaId, this.value)">
+					<!option value="" @((ocena == -1) ? "selected" : "")>-</!option>
+					@for(int i = 1; i <= 10; i++)
+					{
+						<!option value="@i" @((ocena == i) ? "selected" : "") >@i</!option>
+					}
+				</select>
+				<div id="rezultat-ocenjivanja" class="mt-3">
+
+				</div>
+			}
+		}
+		else if(ViewBag.Korisnik.Uloga == "Admin_Bibliotekar")
+		{
+			<h3>Kreiranje pozajmice</h3>
+			<button type="button" class="btn btn-primary my-3" onclick="prikaziModalKreiranjaPozajmice()">Unesi pozajmicu</button>
+
+			if(ViewBag.AdminPorukaGreska != null)
+			{
+				Poruka porukaGreska = ViewBag.AdminPorukaGreska;
+				await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaGreska);
+			}
+
+			<div class="modal fade" id="modalUnesiPozajmicu" tabindex="-1" aria-labelledby="modalUnesiPozajmicuLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="modalUnesiPozajmicuLabel">Kreiranje pozajmice</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div id="modal-kreiraj-pozajmicu-body" class="modal-body">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+		</div>
+	}
+</div>
+@if (ViewBag.Korisnik != null)
+{
+	@section Scripts{
+		@if (ViewBag.Korisnik.Uloga == "Korisnik_Clan")
+		{
+			if (ViewBag.GradjaProcitana == true)
+			{
+				<script type="text/javascript" asp-append-version="true">
+					function oceniGradju(idGradje, ocena)
+					{
+						$.ajax({
+							url: '@Url.Action("OceniGradju", "Ocena")',
+							data: { gradjaID: idGradje, ocenaGradje: ocena },
+							method: "POST",
+							success: function(result) {
+								$('#rezultat-ocenjivanja').html(result);
+							}
+						});
+					}
+				</script>
+			}
+		}
+		else if (ViewBag.Korisnik.Uloga == "Admin_Bibliotekar")
+		{
+			<script type="text/javascript" asp-append-version="true">
+				async function prikaziModalKreiranjaPozajmice()
+				{
+					let myModal = new bootstrap.Modal(document.getElementById('modalUnesiPozajmicu'));
+
+					await $.ajax({
+						url: '@Url.Action("PrikaziFormuKreiranjaPozajmice", "Pozajmica", new { id = Model.GradjaId })',
+						method: 'POST',
+						success: function(result) {
+							$('#modal-kreiraj-pozajmicu-body').html(result);
+						}
+					});
+
+					await myModal.show();
+				}
+			</script>
+		}
+	}
+}

@@ -7,40 +7,73 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BibliotekaPPP.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Stylesheets", required: false)
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BibliotekaPPP</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Biblioteka</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Gradja" asp-action="Pretraga">Pretraga građe</a>
                         </li>
                     </ul>
+                    @if(ViewBag.Korisnik == null)
+                    {
+                        <a class="nav-link text-dark btn btn-light" asp-controller="Nalog" asp-action="RegistracijaClan">
+                            Registracija
+                        </a>
+                        <a class="nav-link text-dark btn btn-info ms-3" asp-controller="Nalog" asp-action="Login">
+                            Login
+                        </a>
+                    }
+                    else
+                    {
+                        if( ((NalogBO)ViewBag.Korisnik).Uloga == "Korisnik_Clan" )
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="clan-korisnik-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Članske funkcionalnosti <!-- TODO: Ime, prezime, JCB? -->
+                                </button>
+                                <ul class="dropdown-menu w-100" aria-labelledby="clan-korisnik-dropdown">
+                                    <li><a asp-controller="Clan" asp-action="LicniClanskiPodaci" class="dropdown-item">Lični i članski podaci</a></li>
+                                    <li><a asp-controller="Clanarina" asp-action="Clanarine" class="dropdown-item">Članarine</a></li>
+                                    <li><a asp-controller="Pozajmica" asp-action="Pozajmice" class="dropdown-item">Pozajmice</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a asp-controller="Nalog" asp-action="Logout" class="dropdown-item">Log out</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else if (((NalogBO)ViewBag.Korisnik).Uloga == "Admin_Bibliotekar")
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="bibliotekar-admin-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Bibliotekarske funkcionalnosti <!-- TODO: Ime, prezime, JBB? -->
+                                </button>
+                                <ul class="dropdown-menu w-100" aria-labelledby="bibliotekar-admin-dropdown">
+                                    <li><a asp-controller="Clan" asp-action="Pretraga" class="dropdown-item">Pretraga članova biblioteke</a></li>
+                                    <li><a asp-controller="Clan" asp-action="UpisNovogClana" class="dropdown-item">Upis novog člana</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a asp-controller="Nalog" asp-action="Logout" class="dropdown-item">Log out</a></li>
+                                </ul>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+    <main role="main" class="pb-3">
         <div class="container">
-            &copy; 2025 - BibliotekaPPP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            @RenderBody()
         </div>
-    </footer>
+    </main>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

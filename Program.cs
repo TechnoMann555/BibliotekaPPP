@@ -1,7 +1,22 @@
+using BibliotekaPPP.Filters;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Dodavanje filtera za autorizaciju
+builder.Services.AddScoped<KorisnikClanRequiredFilter>();
+builder.Services.AddScoped<AdminBibliotekarRequiredFilter>();
+
+// Omogucavanje sesija
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -22,6 +37,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Gradja}/{action=Pretraga}/{id?}");
 
 app.Run();

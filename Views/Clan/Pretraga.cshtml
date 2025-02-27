@@ -1,0 +1,27 @@
+﻿@{
+	ViewData["Title"] = "Pretraga člana";
+}
+
+<h1 class="text-center">Pretraga članova po Jedinstvenom Članskom Broju (JČB)</h1>
+<hr class="mb-5"/>
+
+<form asp-controller="Clan" asp-action="PretragaRezultat" method="get">
+	<div class="input-group mb-3">
+		<input type="text" name="jcb" id="jcb" value="@(ViewBag.JCB ?? "")" placeholder="Jedinstveni Članski Broj" class="form-control form-control-lg" />
+		<input type="submit" value="Pretraži" class="btn btn-lg btn-primary" />
+	</div>
+</form>
+
+@if(ViewBag.IzvrsenaPretraga == true)
+{
+	@if(ViewBag.PretrazenClan == null)
+	{
+		Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
+	}
+	else
+	{
+		ClanBO clan = ViewBag.PretrazenClan;
+		await Html.RenderPartialAsync("~/Views/Clan/_AdminClanPanel.cshtml", clan);
+	}
+}

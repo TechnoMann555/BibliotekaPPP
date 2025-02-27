@@ -1,0 +1,34 @@
+﻿@model (List<BibliotekaPPP.Models.BusinessObjects.OgranakBO> ogranci, int gradjaID)
+
+<form asp-controller="Pozajmica" asp-action="KreirajPozajmicu" method="post">
+	<div class="mb-3">
+		<p>
+			<span class="fw-bold">Datum početka: </span>
+			@(DateTime.Now.ToString("dd/MMM/yyyy"))
+		</p>
+	</div>
+	<div class="mb-3">
+		<p>
+			<span class="fw-bold">Rok razduženja: </span>
+			@((DateTime.Now.AddDays(20)).ToString("dd/MMM/yyyy"))
+		</p>
+	</div>
+	<div class="mb-3">
+		<label for="ogranak" class="form-label">Ogranak</label>
+		<select name="ogranakID" id="ogranak" required class="form-select">
+			@foreach(OgranakBO ogranakBO in Model.ogranci)
+			{
+				<option value="@ogranakBO.OgranakId">"@ogranakBO.Naziv" - @ogranakBO.NaseljeNaziv - @ogranakBO.Adresa</option>
+			}
+		</select>
+	</div>
+	<div class="mb-3">
+		<label for="clan-jcb" class="form-label">Jedinstveni Članski Broj člana</label>
+		<input type="text" name="clanJCB" id="clan-jcb" placeholder="JČB" value="" class="form-control" autocomplete="off" required/>
+	</div>
+	<hr />
+	<div class="d-flex flex-row-reverse">
+		<input type="hidden" name="gradjaID" value="@Model.gradjaID" />
+		<input type="submit" value="Kreiraj pozajmicu" class="btn btn-primary" />
+	</div>
+</form>

@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex flex-row justify-content-center">
+    <div class="card text-dark bg-light w-50">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @((ViewBag.Tab == "KorisnikLogin") ? "active" : "")" id="clan-tab" data-bs-toggle="tab" data-bs-target="#clan" type="button" role="tab" aria-controls="clan" aria-selected="true">Član biblioteke</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @((ViewBag.Tab == "AdminLogin") ? "active" : "")" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bibliotekar" type="button" role="tab" aria-controls="bibliotekar" aria-selected="false">Bibliotekar</button>
+            </li>
+        </ul>
+        <div class="tab-content p-3" id="myTabContent">
+            <div class="tab-pane fade show @((ViewBag.Tab == "KorisnikLogin") ? "active" : "")" id="clan" role="tabpanel" aria-labelledby="clan-tab">
+                <h2>Login - članski korisnički nalog</h2>
+                <hr />
+                @if (ViewBag.Poruka != null && ViewBag.Tab == "KorisnikLogin")
+                {
+                    Poruka poruka = ViewBag.Poruka;
+                    await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
+                }
+                <form asp-controller="Nalog" asp-action="LoginClan" method="post">
+                    <div class="mb-3">
+                        <label for="emailClan" class="form-label">E-mail adresa vezana za članstvo</label>
+                        <input type="email" name="emailClan" id="emailClan" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="lozinkaClan" class="form-label">Lozinka</label>
+                        <input type="password" name="lozinkaClan" id="lozinkaClan" class="form-control" required />
+                    </div>
+                    <div class="d-flex flex-row-reverse">
+                        <input type="submit" value="Uloguj me" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade show @((ViewBag.Tab == "AdminLogin") ? "active" : "")" id="bibliotekar" role="tabpanel" aria-labelledby="bibliotekar-tab">
+                <h2>Login - bibliotekarski nalog</h2>
+                <hr />
+                @if (ViewBag.Poruka != null && ViewBag.Tab == "AdminLogin")
+                {
+                    Poruka poruka = ViewBag.Poruka;
+                    await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", poruka);
+                }
+                <form asp-controller="Nalog" asp-action="LoginBibliotekar" method="post">
+                    <div class="mb-3">
+                        <label for="emailBibliotekar" class="form-label">E-mail adresa</label>
+                        <input type="email" name="emailBibliotekar" id="emailBibliotekar" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="lozinkaBibliotekar" class="form-label">Lozinka</label>
+                        <input type="password" name="lozinkaBibliotekar" id="lozinkaBibliotekar" class="form-control" required />
+                    </div>
+                    <div class="d-flex flex-row-reverse">
+                        <input type="submit" value="Uloguj me" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

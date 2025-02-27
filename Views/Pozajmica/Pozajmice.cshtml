@@ -1,0 +1,37 @@
+﻿@{
+	ViewData["Title"] = "Pozajmice";
+}
+
+<h1>Prikaz pozajmica</h1>
+<hr class="mb-5"/>
+
+<div class="mb-3">
+	@if(ViewBag.Clanarine.Count == 0)
+	{
+		Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
+	}
+	else
+	{
+		<form asp-controller="Pozajmica" asp-action="PozajmicePrikaz" method="get">
+			@{
+				List<ClanarinaBO> clanarine = ViewBag.Clanarine;
+				int? clanarinaRbr = ViewBag.ClanarinaRbr;
+				await Html.RenderPartialAsync("_IzborClanarinePozajmica.cshtml", (clanarine, clanarinaRbr));
+			}
+		</form>
+	}
+</div>
+@if(ViewBag.Pozajmice != null)
+{
+	if(ViewBag.Pozajmice.Count == 0)
+	{
+		Poruka porukaKorisniku = ViewBag.PorukaKorisniku;
+		await Html.RenderPartialAsync("~/Views/Shared/_PorukaKorisniku.cshtml", porukaKorisniku);
+	}
+	else
+	{
+		List<PozajmicaBO> pozajmice = ViewBag.Pozajmice;
+		await Html.RenderPartialAsync("_PrikazPodatakaPozajmice.cshtml", pozajmice);
+	}
+}

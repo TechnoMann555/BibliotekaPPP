@@ -1,3 +1,8 @@
-﻿@{
+﻿@using System.Text.Json
+
+@{
     Layout = "_Layout";
+
+    string? ulogovanNalog = Context.Request.Cookies["Korisnik"];
+    ViewBag.Korisnik = (ulogovanNalog != null) ? JsonSerializer.Deserialize<NalogBO>(ulogovanNalog) : null;
 }
